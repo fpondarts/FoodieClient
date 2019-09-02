@@ -3,8 +3,8 @@
     <string name="userName">Nombre de usuario</string>
     <string name="userPassword">Contraseña</string>
     <string name="signIn">Iniciar sesión</string>
-    <string name="newUser">Nuevo en Foodie?</string>
-    <string name="userRegister">Registrar Usuario</string>
+    <string name="noSignedUp">Nuevo en Foodie?</string>
+    <string name="userSignUp">Registrar Usuario</string>
     <string name="emailInput">Correo electrónico</string>
     <string name="birthdayInput">Fecha de nacimiento</string>
     <string name="alreadySignedUp">Ya tenés usuario en Foodie?</string>

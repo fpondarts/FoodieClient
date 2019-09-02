@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".controller.UserRegisterActivity">
+    tools:context=".controller.SignUpActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -12,7 +12,20 @@
         android:gravity="center"
         android:orientation="vertical"
         tools:layout_editor_absoluteX="16dp"
-        tools:layout_editor_absoluteY="37dp">
+        tools:layout_editor_absoluteY="37dp"
+        android:background="@color/colorPrimaryLight">
+
+        <TextView
+            android:id="@+id/AppName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/app_name"
+            android:gravity="center"
+            android:textColor="#000000"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:textSize="34dp"
+            android:layout_marginBottom="32dp"/>
+
 
         <EditText
             android:id="@+id/emailInput"
@@ -47,10 +60,10 @@
             android:inputType="date" />
 
         <Button
-            android:id="@+id/registerButton"
+            android:id="@+id/signUpButton"
             android:layout_width="256dp"
             android:layout_height="wrap_content"
-            android:text="@string/userRegister" />
+            android:text="@string/userSignUp" />
 
         <TextView
             android:id="@+id/alreadySignedUpText"
@@ -60,5 +73,12 @@
             android:gravity="center"
             android:layout_marginTop="20dp"
             android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+
+        <Button
+            android:id="@+id/toSignInButton"
+            android:layout_width="180dp"
+            android:layout_height="wrap_content"
+            android:text="@string/signIn" />
+
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

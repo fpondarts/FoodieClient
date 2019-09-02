@@ -4,23 +4,30 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".controller.LoginActivity">
+    tools:context=".controller.SignInActivity">
 
     <LinearLayout
         android:id="@+id/loginLayout"
-        android:layout_width="415dp"
-        android:layout_height="713dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginTop="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorPrimaryLight"
         android:gravity="center"
         android:orientation="vertical"
-        android:background="@color/colorPrimaryLight"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
+        <TextView
+            android:id="@+id/appNameText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="50dp"
+            android:gravity="center"
+            android:text="@string/app_name"
+            android:textColor="#000000"
+            android:textSize="40dp" />
+
         <EditText
-            android:id="@+id/editText3"
+            android:id="@+id/userNameInput"
             android:layout_width="267dp"
             android:layout_height="wrap_content"
             android:ems="10"
@@ -28,7 +35,7 @@
             android:inputType="textPersonName" />
 
         <EditText
-            android:id="@+id/editText4"
+            android:id="@+id/passwordInput"
             android:layout_width="267dp"
             android:layout_height="wrap_content"
             android:ems="10"
@@ -36,23 +43,24 @@
             android:inputType="textPassword" />
 
         <Button
-            android:id="@+id/button"
+            android:id="@+id/signInButton"
             android:layout_width="144dp"
             android:layout_height="wrap_content"
             android:layout_marginBottom="15dp"
             android:text="@string/signIn" />
 
         <TextView
-            android:id="@+id/textView2"
+            android:id="@+id/signUpText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="@string/newUser"
+            android:text="@string/noSignedUp"
             android:typeface="normal"></TextView>
 
         <Button
+            android:id="@+id/signUpButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/userRegister" />
+            android:text="@string/userSignUp" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
