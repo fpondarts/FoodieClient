@@ -1,4 +1,4 @@
-package com.example.foodie;
+package com.fpondarts.foodie;
 
 import android.content.Context;
 
