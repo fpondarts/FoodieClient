@@ -4,8 +4,25 @@
     <string name="userPassword">Contraseña</string>
     <string name="signIn">Iniciar sesión</string>
     <string name="noSignedUp">Nuevo en Foodie?</string>
-    <string name="userSignUp">Registrar Usuario</string>
+    <string name="manualSignUp">Registrarme en Foodie</string>
     <string name="emailInput">Correo electrónico</string>
     <string name="birthdayInput">Fecha de nacimiento</string>
     <string name="alreadySignedUp">Ya tenés usuario en Foodie?</string>
+    <string name="title_activity_firebase_auth_ui">FirebaseAuthUI</string>
+    <string name="facebook_app_id">396957251230558</string>
+    <string name="fb_login_protocol_scheme">fb396957251230558</string>
+    <string name="userSignUp">Registrar Usuario</string>
+    <string name="cancel">Cancelar</string>
+    <string name="next">Siguiente</string>
+    <string name="userRoleOption">Usuario</string>
+    <string name="deliveryRoleOption">Delivery</string>
+    <string name="firstNameHint">Nombre</string>
+    <string name="lastNameHint">Apellido</string>
+    <string name="phoneHint">Teléfono</string>
+    <string name="addressHint">Dirección</string>
+    <string name="streetHint">Calle</string>
+    <string name="addressNumberHint">Número</string>
+    <string name="cityHint">Ciudad</string>
+    <string name="finishRegister">Finalizar</string>
+    <string name="pickRegisterOption">Cómo deseas registrarte?</string>
 </resources>

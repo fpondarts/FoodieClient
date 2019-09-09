@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.fpondarts.foodie">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -9,8 +11,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name="com.fpondarts.foodie.controller.SignUpActivity"></activity>
-        <activity android:name="com.fpondarts.foodie.controller.SignInActivity">
+        <activity android:name=".controller.UserRegisterSecondInput"></activity>
+        <activity android:name=".controller.UserRegisterFirstInput" />
+        <activity android:name=".controller.UserDataActivity" />
+        <activity android:name=".controller.FirebaseAuthUI" />
+        <activity android:name=".controller.SignUpActivity" />
+        <activity android:name=".controller.SignInActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

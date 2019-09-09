@@ -6,6 +6,10 @@
     android:layout_height="match_parent"
     tools:context=".controller.SignInActivity">
 
+    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
     <LinearLayout
         android:id="@+id/loginLayout"
         android:layout_width="match_parent"
@@ -62,5 +66,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/userSignUp" />
+
+        <Button
+            android:id="@+id/toFirebase"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Firebase"
+            android:layout_marginTop="15dp"/>
     </LinearLayout>
+    </ScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>
