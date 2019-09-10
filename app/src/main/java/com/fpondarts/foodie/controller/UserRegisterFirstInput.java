@@ -23,7 +23,16 @@ public class UserRegisterFirstInput extends AppCompatActivity {
         Intent intent = getIntent();
         String name = intent.getStringExtra("name");
         String email = intent.getStringExtra("email");
-        Uri photoUrl = Uri.parse(intent.getStringExtra("photoUrl"));
+        //String photoUrl = intent.getStringExtra("photoUrl");
+
+        mName = (EditText) findViewById(R.id.editTextName);
+        mEmail = (EditText) findViewById(R.id.editTextEmail);
+        if (name!=null){
+            mName.setText(name);
+        }
+        if (email!=null){
+            mEmail.setText(email);
+        }
 
     }
 }

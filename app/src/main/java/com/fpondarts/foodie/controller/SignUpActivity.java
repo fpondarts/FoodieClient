@@ -19,6 +19,8 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -26,7 +28,7 @@ import retrofit2.Response;
 
 public class SignUpActivity extends AppCompatActivity {
 
-    private static final int RC_SIGN_IN = 234;
+    private static final int GOOGLE_SIGN_UP = 1;
 
     private Button mSignUpButton;
     private SignInButton mGoogleSignInButton;
@@ -73,17 +75,14 @@ public class SignUpActivity extends AppCompatActivity {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data){
         super.onActivityResult(requestCode,resultCode,data);
+        if (requestCode == GOOGLE_SIGN_UP){
+            if(resultCode==FirebaseAuthUI.SIGN_UP_OK){
 
-        if (requestCode == RC_SIGN_IN){
-            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
-            try {
-                GoogleSignInAccount account = task.getResult(ApiException.class);
+                CheckEmailService service = RetrofitClientInstance.getRetrofitInstance().create(CheckEmailService.class);
+                FirebaseUser account = FirebaseAuth.getInstance().getCurrentUser();
                 final String name = account.getDisplayName();
                 final String email = account.getEmail();
                 final Uri photoUrl = account.getPhotoUrl();
-
-                CheckEmailService service = RetrofitClientInstance.getRetrofitInstance().create(CheckEmailService.class);
-
 
 
                 Call<Void> call = service.checkEmailIsAvailable(account.getEmail());
@@ -92,31 +91,34 @@ public class SignUpActivity extends AppCompatActivity {
                     public void onResponse(Call<Void> call, Response<Void> response) {
 
                         if (response.code() == 404) {
-                            Intent intent = new Intent(SignUpActivity.this,UserRegisterFirstInput.class);
-                            intent.putExtra("name",name);
-                            intent.putExtra("email",email);
-                            intent.putExtra("photoUrl",photoUrl);
-
+                            Intent intent = new Intent(SignUpActivity.this, UserRegisterFirstInput.class);
+                            intent.putExtra("name", name);
+                            intent.putExtra("email", email);
+                            if (photoUrl!=null) {
+                                intent.putExtra("photoUrl", photoUrl.toString());
+                            }
                             startActivity(intent);
-                            finish();
+
                         } else {
-                            Toast.makeText(SignUpActivity.this,"Ya existe un usuario con esa cuenta",Toast.LENGTH_LONG).show();
+                            Toast.makeText(SignUpActivity.this,"Ya existe un usuario asociado a esa cuenta\nInicie sesión.",Toast.LENGTH_LONG).show();
                         }
                     }
 
                     @Override
-                    public void onFailure(Call<Void> call, Throwable t) {
-                        Toast.makeText(SignUpActivity.this, "Something went wrong...Please try later!", Toast.LENGTH_SHORT).show();
+                    public void onFailure(Call<Void> call, Throwable t){
+                        Toast.makeText(SignUpActivity.this,"Problemas de conexion con el servidor",Toast.LENGTH_LONG).show();
                     }
                 });
-                } catch (ApiException e){
-                e.printStackTrace();
+
+            } else {
+               Toast.makeText(SignUpActivity.this,"Hubo un error en el ingreso",Toast.LENGTH_LONG).show();
             }
         }
+
     }
 
     private void googleSignIn() {
-        Intent intent = mGoogleSignInClient.getSignInIntent();
-        startActivityForResult(intent,RC_SIGN_IN);
+        Intent intent = new Intent(SignUpActivity.this,FirebaseAuthUI.class);
+        startActivityForResult(intent,GOOGLE_SIGN_UP);
     }
 }

@@ -7,9 +7,9 @@
     tools:context=".controller.UserRegisterFirstInput">
 
     <EditText
-        android:id="@+id/editText"
-        android:layout_width="96dp"
-        android:layout_height="45dp"
+        android:id="@+id/editTextName"
+        android:layout_width="214dp"
+        android:layout_height="50dp"
         android:layout_marginStart="52dp"
         android:layout_marginLeft="52dp"
         android:layout_marginTop="112dp"
@@ -20,20 +20,9 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
-        android:id="@+id/editText3"
-        android:layout_width="165dp"
-        android:layout_height="45dp"
-        android:layout_marginTop="112dp"
-        android:ems="10"
-        android:hint="@string/lastNameHint"
-        android:inputType="textPersonName"
-        app:layout_constraintStart_toEndOf="@+id/editText"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <EditText
         android:id="@+id/editText2"
-        android:layout_width="234dp"
-        android:layout_height="48dp"
+        android:layout_width="214dp"
+        android:layout_height="55dp"
         android:layout_marginStart="52dp"
         android:layout_marginLeft="52dp"
         android:layout_marginTop="24dp"
@@ -41,7 +30,7 @@
         android:hint="@string/userName"
         android:inputType="textEmailAddress"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editText5" />
+        app:layout_constraintTop_toBottomOf="@+id/editTextEmail" />
 
     <Spinner
         android:id="@+id/spinner"
@@ -54,7 +43,7 @@
         app:layout_constraintTop_toBottomOf="@+id/editText6" />
 
     <EditText
-        android:id="@+id/editText5"
+        android:id="@+id/editTextEmail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="52dp"
@@ -64,13 +53,13 @@
         android:hint="@string/emailInput"
         android:inputType="textEmailAddress"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editText" />
+        app:layout_constraintTop_toBottomOf="@+id/editTextName" />
 
 
     <EditText
         android:id="@+id/editText6"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="214dp"
+        android:layout_height="54dp"
         android:layout_marginStart="52dp"
         android:layout_marginLeft="52dp"
         android:layout_marginTop="16dp"

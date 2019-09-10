@@ -3,10 +3,14 @@ package com.fpondarts.foodie.controller;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.widget.Toast;
 
 import com.firebase.ui.auth.AuthUI;
 import com.fpondarts.foodie.R;
+import com.fpondarts.foodie.services.CheckEmailService;
+import com.fpondarts.foodie.services.RetrofitClientInstance;
 import com.google.firebase.auth.FirebaseAuth;
 import com.firebase.ui.auth.IdpResponse;
 import com.google.firebase.auth.FirebaseUser;
@@ -14,23 +18,34 @@ import com.google.firebase.auth.FirebaseUser;
 import java.util.Arrays;
 import java.util.List;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class FirebaseAuthUI extends AppCompatActivity {
 
 
     private static final int RC_SIGN_IN = 123;
+    public static final int SIGN_UP_OK = 0;
+    public static final int SIGN_UP_ERROR = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (FirebaseAuth.getInstance()!=null){
+            FirebaseAuth.getInstance().signOut();
+        }
+        AuthUI.getInstance().signOut(FirebaseAuthUI.this);
         setContentView(R.layout.activity_firebase_auth_ui);
         createSignInIntent();
     }
+
+
 
     public void createSignInIntent() {
         // [START auth_fui_create_intent]
         // Choose authentication providers
         List<AuthUI.IdpConfig> providers = Arrays.asList(
-                new AuthUI.IdpConfig.EmailBuilder().build(),
                 new AuthUI.IdpConfig.GoogleBuilder().build()
                 );
 
@@ -47,26 +62,15 @@ public class FirebaseAuthUI extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
         if (requestCode == RC_SIGN_IN) {
-            IdpResponse response = IdpResponse.fromResultIntent(data);
-
             if (resultCode == RESULT_OK) {
-                // Successfully signed in
-                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                Intent intent = new Intent(FirebaseAuthUI.this,UserDataActivity.class);
-                startActivity(intent);
-                finish();
-
+                setResult(SIGN_UP_OK);
             } else {
-                // Sign in failed. If response is null the user canceled the
-                // sign-in flow using the back button. Otherwise check
-                // response.getError().getErrorCode() and handle the error.
-                // ...
+                setResult(SIGN_UP_ERROR);
             }
+            finish();
         }
+
     }
-
-
 
 }
