@@ -6,68 +6,77 @@
     android:layout_height="match_parent"
     tools:context=".controller.UserRegisterFirstInput">
 
-    <EditText
-        android:id="@+id/editTextName"
-        android:layout_width="214dp"
-        android:layout_height="50dp"
-        android:layout_marginStart="52dp"
-        android:layout_marginLeft="52dp"
-        android:layout_marginTop="112dp"
-        android:ems="10"
-        android:hint="@string/firstNameHint"
-        android:inputType="textPersonName"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <EditText
-        android:id="@+id/editText2"
-        android:layout_width="214dp"
-        android:layout_height="55dp"
-        android:layout_marginStart="52dp"
-        android:layout_marginLeft="52dp"
-        android:layout_marginTop="24dp"
-        android:ems="10"
-        android:hint="@string/userName"
-        android:inputType="textEmailAddress"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextEmail" />
-
-    <Spinner
-        android:id="@+id/spinner"
-        android:layout_width="253dp"
-        android:layout_height="52dp"
-        android:layout_marginStart="52dp"
-        android:layout_marginLeft="52dp"
-        android:layout_marginTop="8dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editText6" />
-
-    <EditText
-        android:id="@+id/editTextEmail"
+    <TextView
+        android:id="@+id/textViewWelcome"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="52dp"
-        android:layout_marginLeft="52dp"
-        android:layout_marginTop="28dp"
-        android:ems="10"
-        android:hint="@string/emailInput"
-        android:inputType="textEmailAddress"
+        android:layout_marginTop="40dp"
+        android:layout_marginLeft="60dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextName" />
+        app:layout_constraintTop_toTopOf="parent"
+        />
+
+    <ImageView
+        android:id="@+id/imageViewPhoto"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="60dp"
+        android:layout_marginLeft="60dp"
+        android:layout_marginTop="40dp"
+        android:src="@mipmap/ic_prof_pic_round"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/textViewWelcome"
+        tools:srcCompat="@tools:sample/avatars[1]" />
+
+    <Spinner
+        android:id="@+id/spinnerRoles"
+        android:layout_width="213dp"
+        android:layout_height="46dp"
+        android:layout_marginStart="60dp"
+        android:layout_marginLeft="60dp"
+        android:layout_marginTop="40dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageViewPhoto" />
 
 
     <EditText
-        android:id="@+id/editText6"
-        android:layout_width="214dp"
-        android:layout_height="54dp"
-        android:layout_marginStart="52dp"
-        android:layout_marginLeft="52dp"
-        android:layout_marginTop="16dp"
-        android:ems="10"
-        android:hint="@string/userPassword"
-        android:inputType="textPassword"
+        android:id="@+id/etPhone"
+        android:layout_width="210dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="60dp"
+        android:layout_marginLeft="60dp"
+        android:layout_marginTop="24dp"
+        android:hint="@string/phoneHint"
+        android:inputType="phone"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editText2" />
+        app:layout_constraintTop_toBottomOf="@id/spinnerRoles" />
+
+    <EditText
+        android:id="@+id/etCreditCard"
+        android:layout_width="205dp"
+        android:layout_height="45dp"
+        android:layout_marginStart="60dp"
+        android:layout_marginLeft="60dp"
+        android:layout_marginTop="24dp"
+        android:hint="Nro Tarjeta de crédito"
+        android:inputType="number"
+        android:maxLength="24"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/etPhone" />
+
+    <EditText
+        android:id="@+id/etCvv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="cvv"
+        android:layout_marginStart="60dp"
+        android:layout_marginLeft="60dp"
+        android:layout_marginTop="12dp"
+        android:maxLength="3"
+        app:layout_constraintTop_toBottomOf="@id/etCreditCard"
+        app:layout_constraintStart_toStartOf="parent"
+        />
+
 
     <Button
         android:id="@+id/button"
@@ -75,11 +84,11 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="60dp"
         android:layout_marginLeft="60dp"
-        android:layout_marginTop="56dp"
+        android:layout_marginTop="24dp"
         android:background="@color/fui_transparent"
         android:text="@string/cancel"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/spinner" />
+        app:layout_constraintTop_toBottomOf="@+id/etCvv" />
 
     <Button
         android:id="@+id/button2"

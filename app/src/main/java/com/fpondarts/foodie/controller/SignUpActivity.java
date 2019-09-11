@@ -34,6 +34,9 @@ public class SignUpActivity extends AppCompatActivity {
     private SignInButton mGoogleSignInButton;
     private Button mToSignInButton;
 
+    static CheckEmailService service = RetrofitClientInstance.getRetrofitInstance().create(CheckEmailService.class);
+
+
 
     GoogleSignInClient mGoogleSignInClient;
 
@@ -42,17 +45,11 @@ public class SignUpActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_register);
 
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(getString(R.string.default_web_client_id))
-                .requestEmail()
-                .build();
-
-        mGoogleSignInClient = GoogleSignIn.getClient(this,gso);
         mSignUpButton = (Button) findViewById(R.id.signUpButton);
         mSignUpButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
-                Toast.makeText(SignUpActivity.this,"SignUp",Toast.LENGTH_LONG).show();
+
             }
         });
 
@@ -70,6 +67,8 @@ public class SignUpActivity extends AppCompatActivity {
                 finish();
             }
         });
+
+
     }
 
     @Override
@@ -78,37 +77,13 @@ public class SignUpActivity extends AppCompatActivity {
         if (requestCode == GOOGLE_SIGN_UP){
             if(resultCode==FirebaseAuthUI.SIGN_UP_OK){
 
-                CheckEmailService service = RetrofitClientInstance.getRetrofitInstance().create(CheckEmailService.class);
                 FirebaseUser account = FirebaseAuth.getInstance().getCurrentUser();
                 final String name = account.getDisplayName();
                 final String email = account.getEmail();
                 final Uri photoUrl = account.getPhotoUrl();
+                final String uid = account.getUid();
 
-
-                Call<Void> call = service.checkEmailIsAvailable(account.getEmail());
-                call.enqueue(new Callback<Void>() {
-                    @Override
-                    public void onResponse(Call<Void> call, Response<Void> response) {
-
-                        if (response.code() == 404) {
-                            Intent intent = new Intent(SignUpActivity.this, UserRegisterFirstInput.class);
-                            intent.putExtra("name", name);
-                            intent.putExtra("email", email);
-                            if (photoUrl!=null) {
-                                intent.putExtra("photoUrl", photoUrl.toString());
-                            }
-                            startActivity(intent);
-
-                        } else {
-                            Toast.makeText(SignUpActivity.this,"Ya existe un usuario asociado a esa cuenta\nInicie sesión.",Toast.LENGTH_LONG).show();
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Call<Void> call, Throwable t){
-                        Toast.makeText(SignUpActivity.this,"Problemas de conexion con el servidor",Toast.LENGTH_LONG).show();
-                    }
-                });
+                toRegisterInput(name,email,null,photoUrl.toString(),uid);
 
             } else {
                Toast.makeText(SignUpActivity.this,"Hubo un error en el ingreso",Toast.LENGTH_LONG).show();
@@ -117,8 +92,42 @@ public class SignUpActivity extends AppCompatActivity {
 
     }
 
+    private void toRegisterInput(final String name,final String email,final String password,final String photo,final String uid){
+
+        Call<Void> call = service.checkEmailIsAvailable(email);
+
+        call.enqueue(new Callback<Void>() {
+             @Override
+             public void onResponse(Call<Void> call, Response<Void> response) {
+
+                 if (response.code() == 404) {
+                     Toast.makeText(SignUpActivity.this, "\nInicie sesión.", Toast.LENGTH_LONG).show();
+                     Intent intent = new Intent(SignUpActivity.this,UserRegisterFirstInput.class);
+                     intent.putExtra("name",name);
+                     intent.putExtra("email",email);
+                     intent.putExtra("password",password);
+                     intent.putExtra("photo",photo);
+                     intent.putExtra("uid",uid);
+                     startActivity(intent);
+                     finish();
+                 } else {
+                     Toast.makeText(SignUpActivity.this, "Ya existe un usuario asociado a esa cuenta\nInicie sesión.", Toast.LENGTH_LONG).show();
+                 }
+             }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t){
+                Toast.makeText(SignUpActivity.this,"Problemas de conexion con el servidor",Toast.LENGTH_LONG).show();
+            }
+         });
+    }
+
+
     private void googleSignIn() {
         Intent intent = new Intent(SignUpActivity.this,FirebaseAuthUI.class);
         startActivityForResult(intent,GOOGLE_SIGN_UP);
     }
+
+
+
 }
