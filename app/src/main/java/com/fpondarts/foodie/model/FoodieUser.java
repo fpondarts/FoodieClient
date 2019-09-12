@@ -3,38 +3,33 @@ package com.fpondarts.foodie.model;
 import android.graphics.Bitmap;
 
 public class FoodieUser {
-    private String mEmail;
-    private String mName ;
-    private Bitmap mPicture;
-    private String mPhone;
+
+
+    private String email;
+
+
+
+    private String fullName;
 
     public FoodieUser(String email, String name){
-        mEmail = email;
-        mName = name;
+        this.email = email;
+        this.fullName = name;
     }
 
-    public String getmEmail() {
-        return mEmail;
+    public String getEmail() {
+        return email;
     }
 
-
-    public String getmName() {
-        return mName;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
-    public Bitmap getmPicture() {
-        return mPicture;
+    public String getFullName() {
+        return fullName;
     }
 
-    public void setmPicture(Bitmap mPicture) {
-        this.mPicture = mPicture;
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
     }
 
-    public String getmPhone() {
-        return mPhone;
-    }
-
-    public void setmPhone(String mPhone) {
-        this.mPhone = mPhone;
-    }
 }

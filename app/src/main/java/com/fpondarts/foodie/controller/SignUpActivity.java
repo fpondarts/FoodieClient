@@ -10,15 +10,10 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.fpondarts.foodie.R;
-import com.fpondarts.foodie.services.CheckEmailService;
+import com.fpondarts.foodie.services.ServerAPI;
 import com.fpondarts.foodie.services.RetrofitClientInstance;
-import com.google.android.gms.auth.api.signin.GoogleSignIn;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.SignInButton;
-import com.google.android.gms.common.api.ApiException;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -34,7 +29,7 @@ public class SignUpActivity extends AppCompatActivity {
     private SignInButton mGoogleSignInButton;
     private Button mToSignInButton;
 
-    static CheckEmailService service = RetrofitClientInstance.getRetrofitInstance().create(CheckEmailService.class);
+    static ServerAPI service = RetrofitClientInstance.getRetrofitInstance().create(ServerAPI.class);
 
 
 

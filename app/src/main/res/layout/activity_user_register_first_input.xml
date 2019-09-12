@@ -79,7 +79,7 @@
 
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/buttonCancelSignUp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="60dp"
@@ -91,13 +91,13 @@
         app:layout_constraintTop_toBottomOf="@+id/etCvv" />
 
     <Button
-        android:id="@+id/button2"
+        android:id="@+id/buttonFinishSignUp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="52dp"
         android:layout_marginLeft="52dp"
         android:text="@string/next"
-        app:layout_constraintStart_toEndOf="@+id/button"
-        app:layout_constraintTop_toTopOf="@+id/button" />
+        app:layout_constraintStart_toEndOf="@+id/buttonCancelSignUp"
+        app:layout_constraintTop_toTopOf="@+id/buttonCancelSignUp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

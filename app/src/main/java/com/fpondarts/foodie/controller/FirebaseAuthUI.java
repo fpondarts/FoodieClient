@@ -3,24 +3,14 @@ package com.fpondarts.foodie.controller;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
-import android.widget.Toast;
 
 import com.firebase.ui.auth.AuthUI;
 import com.fpondarts.foodie.R;
-import com.fpondarts.foodie.services.CheckEmailService;
-import com.fpondarts.foodie.services.RetrofitClientInstance;
 import com.google.firebase.auth.FirebaseAuth;
-import com.firebase.ui.auth.IdpResponse;
-import com.google.firebase.auth.FirebaseUser;
 
 import java.util.Arrays;
 import java.util.List;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class FirebaseAuthUI extends AppCompatActivity {
 

@@ -23,9 +23,10 @@ public class UserDataActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_data);
 
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-
-        String text = user.getDisplayName()+"\n"+user.getEmail();
+        Intent intent = getIntent();
+        String fullName = intent.getStringExtra("fullName");
+        String email = intent.getStringExtra("email");
+        String text = fullName.concat("\n\n").concat(email);
         userData = (TextView) findViewById(R.id.userDataText);
         userData.setText(text);
 

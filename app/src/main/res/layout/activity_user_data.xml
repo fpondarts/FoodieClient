@@ -20,6 +20,9 @@
         android:id="@+id/signOutButton"
         android:layout_width="85dp"
         android:layout_height="50dp"
+        android:layout_marginStart="160dp"
+        android:layout_marginLeft="160dp"
+        android:layout_marginTop="312dp"
         android:text="signOut"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
