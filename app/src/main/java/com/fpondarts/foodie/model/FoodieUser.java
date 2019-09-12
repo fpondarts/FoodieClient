@@ -2,16 +2,17 @@ package com.fpondarts.foodie.model;
 
 import android.graphics.Bitmap;
 
-public class FoodieUser {
+import java.io.Serializable;
+import java.io.StringReader;
+
+public class FoodieUser implements Serializable {
 
 
     private String email;
-
-
-
     private String fullName;
 
-    public FoodieUser(String email, String name){
+
+    public FoodieUser(String name, String email){
         this.email = email;
         this.fullName = name;
     }

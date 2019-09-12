@@ -15,7 +15,12 @@ import com.google.firebase.auth.FirebaseUser;
 
 public class UserDataActivity extends AppCompatActivity {
 
-    private TextView userData;
+    private TextView mTvFullname;
+    private TextView mTvEmail;
+    //private TextView mTvRole;
+
+
+
     private Button mSignOutButton;
 
     @Override
@@ -24,11 +29,13 @@ public class UserDataActivity extends AppCompatActivity {
         setContentView(R.layout.activity_user_data);
 
         Intent intent = getIntent();
-        String fullName = intent.getStringExtra("fullName");
-        String email = intent.getStringExtra("email");
-        String text = fullName.concat("\n\n").concat(email);
-        userData = (TextView) findViewById(R.id.userDataText);
-        userData.setText(text);
+        mTvFullname = (TextView) findViewById(R.id.tvFullName);
+        mTvEmail = (TextView) findViewById(R.id.tvEmail);
+        //mTvRole = (TextView) findViewById(R.id.tvRole);
+        mTvFullname.setText(intent.getStringExtra("fullName"));
+        mTvEmail.setText(intent.getStringExtra("email"));
+        //mTvRole.setText(intent.getStringExtra("role"));
+
 
         mSignOutButton = (Button) findViewById(R.id.signOutButton);
         mSignOutButton.setOnClickListener(new View.OnClickListener(){

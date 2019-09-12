@@ -78,9 +78,8 @@ public class UserRegisterFirstInput extends AppCompatActivity implements Adapter
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item,ROLES);
 
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
         mSpRoles.setAdapter(adapter);
-
+        mSpRoles.setSelection(0);
         mSignUp = (Button) findViewById(R.id.buttonFinishSignUp);
         mSignUp.setOnClickListener(new View.OnClickListener() {
             @Override

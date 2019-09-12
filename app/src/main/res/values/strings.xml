@@ -25,4 +25,6 @@
     <string name="cityHint">Ciudad</string>
     <string name="finishRegister">Finalizar</string>
     <string name="pickRegisterOption">Cómo deseas registrarte?</string>
+    <string name="pickARole">Tipo de usuario</string>
+    <string name="welcomeToFoodie">Bienvenido a Foodie!</string>
 </resources>

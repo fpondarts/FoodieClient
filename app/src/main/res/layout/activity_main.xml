@@ -66,13 +66,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/userSignUp" />
-
-        <Button
-            android:id="@+id/toFirebase"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Firebase"
-            android:layout_marginTop="15dp"/>
+\
     </LinearLayout>
     </ScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>

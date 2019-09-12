@@ -5,8 +5,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.fpondarts.foodie.R;
@@ -29,6 +31,11 @@ public class SignUpActivity extends AppCompatActivity {
     private SignInButton mGoogleSignInButton;
     private Button mToSignInButton;
 
+    private EditText mEtFullName;
+    private EditText mEtEmail;
+    private EditText mEtPassword;
+
+
     static ServerAPI service = RetrofitClientInstance.getRetrofitInstance().create(ServerAPI.class);
 
 
@@ -40,11 +47,26 @@ public class SignUpActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_register);
 
+        mEtFullName = (EditText) findViewById(R.id.etName);
+        mEtEmail = (EditText) findViewById(R.id.etEmail);
+        mEtPassword = (EditText) findViewById(R.id.etPassword);
+
         mSignUpButton = (Button) findViewById(R.id.signUpButton);
         mSignUpButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
 
+                if (mEtFullName.getText().toString().isEmpty() || mEtEmail.getText().toString().isEmpty() ||
+                    mEtPassword.getText().toString().isEmpty()){
+
+                    Toast.makeText(SignUpActivity.this,"Los campos son obligatorios",Toast.LENGTH_LONG).show();
+
+                } else {
+                    toRegisterInput(mEtFullName.getText().toString(),
+                            mEtEmail.getText().toString(),
+                            mEtPassword.getText().toString(),
+                            null, null);
+                }
             }
         });
 
@@ -96,7 +118,6 @@ public class SignUpActivity extends AppCompatActivity {
              public void onResponse(Call<Void> call, Response<Void> response) {
 
                  if (response.code() == 404) {
-                     Toast.makeText(SignUpActivity.this, "\nInicie sesión.", Toast.LENGTH_LONG).show();
                      Intent intent = new Intent(SignUpActivity.this,UserRegisterFirstInput.class);
                      intent.putExtra("name",name);
                      intent.putExtra("email",email);

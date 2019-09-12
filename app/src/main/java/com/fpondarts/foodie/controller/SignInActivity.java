@@ -10,15 +10,18 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.fpondarts.foodie.R;
+import com.fpondarts.foodie.services.RetrofitClientInstance;
+import com.fpondarts.foodie.services.ServerAPI;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class SignInActivity extends AppCompatActivity {
 
     private Button mSignInButton;
     private Button mSignUpButton;
-    private Button mToFirebaseButton;
     private EditText mUsername;
     private EditText mPassword;
+
+    static ServerAPI service = RetrofitClientInstance.getRetrofitInstance().create(ServerAPI.class);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,10 +45,11 @@ public class SignInActivity extends AppCompatActivity {
             mSignInButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (mUsername.toString().isEmpty()){
-
+                    if (mUsername.toString().isEmpty() || mPassword.toString().isEmpty()){
+                        Toast.makeText(SignInActivity.this,"Ingrese usuario y contraseña",Toast.LENGTH_LONG).show();
                     }
-                    Toast.makeText(SignInActivity.this, "Inicio sesion",Toast.LENGTH_LONG).show();
+
+                    Toast.makeText(SignInActivity.this,"Sign In",Toast.LENGTH_SHORT).show();
                 }
             });
 
@@ -57,17 +61,6 @@ public class SignInActivity extends AppCompatActivity {
                     startActivity(intent);
                 }
             });
-
-            mToFirebaseButton = (Button) findViewById(R.id.toFirebase);
-            mToFirebaseButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v){
-                    Intent intent = new Intent(SignInActivity.this,FirebaseAuthUI.class);
-                    startActivity(intent);
-                }
-            });
-
-
 
         }
     }
