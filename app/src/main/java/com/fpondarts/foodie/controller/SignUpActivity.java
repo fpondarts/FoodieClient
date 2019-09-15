@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.firebase.ui.auth.AuthUI;
 import com.fpondarts.foodie.R;
 import com.fpondarts.foodie.services.ServerAPI;
 import com.fpondarts.foodie.services.RetrofitClientInstance;
@@ -19,13 +20,16 @@ import com.google.android.gms.common.SignInButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import java.util.Arrays;
+import java.util.List;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 public class SignUpActivity extends AppCompatActivity {
 
-    private static final int GOOGLE_SIGN_UP = 1;
+    private static final int RC_SIGN_IN = 123;
 
     private Button mSignUpButton;
     private SignInButton mGoogleSignInButton;
@@ -91,8 +95,8 @@ public class SignUpActivity extends AppCompatActivity {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data){
         super.onActivityResult(requestCode,resultCode,data);
-        if (requestCode == GOOGLE_SIGN_UP){
-            if(resultCode==FirebaseAuthUI.SIGN_UP_OK){
+        if (requestCode == RC_SIGN_IN){
+            if (resultCode == RESULT_OK) {
 
                 FirebaseUser account = FirebaseAuth.getInstance().getCurrentUser();
                 final String name = account.getDisplayName();
@@ -138,10 +142,28 @@ public class SignUpActivity extends AppCompatActivity {
          });
     }
 
+    public void createSignInIntent() {
+        // [START auth_fui_create_intent]
+        // Choose authentication providers
+        List<AuthUI.IdpConfig> providers = Arrays.asList(
+                new AuthUI.IdpConfig.GoogleBuilder().build()
+        );
+
+        // Create and launch sign-in intent
+        startActivityForResult(
+                AuthUI.getInstance()
+                        .createSignInIntentBuilder()
+                        .setAvailableProviders(providers)
+                        .build(),
+                RC_SIGN_IN);
+        // [END auth_fui_create_intent]
+    }
+
+
 
     private void googleSignIn() {
-        Intent intent = new Intent(SignUpActivity.this,FirebaseAuthUI.class);
-        startActivityForResult(intent,GOOGLE_SIGN_UP);
+        AuthUI.getInstance().signOut(SignUpActivity.this);
+        createSignInIntent();
     }
 
 
