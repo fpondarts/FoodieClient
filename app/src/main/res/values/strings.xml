@@ -27,4 +27,8 @@
     <string name="pickRegisterOption">Cómo deseas registrarte?</string>
     <string name="pickARole">Tipo de usuario</string>
     <string name="welcomeToFoodie">Bienvenido a Foodie!</string>
+    <string name="title_activity_maps">Map</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
