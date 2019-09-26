@@ -5,19 +5,15 @@ import androidx.appcompat.app.AppCompatActivity
 
 import android.content.Intent
 import android.os.Bundle
-import android.view.View
 import android.widget.Button
-import android.widget.EditText
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProviders
 import com.firebase.ui.auth.AuthUI
 
 import com.fpondarts.foodie.R
-import com.fpondarts.foodie.controller.MainActivity
 import com.fpondarts.foodie.databinding.ActivitySignInBinding
-import com.fpondarts.foodie.services.RetrofitClientInstance
-import com.fpondarts.foodie.services.ServerAPI
+import com.fpondarts.foodie.ui.home.HomeActivity
 import com.google.firebase.auth.FirebaseAuth
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.kodein
@@ -46,7 +42,7 @@ class SignInActivity : AppCompatActivity(), AuthListener, KodeinAware {
 
         viewModel.sessionToken.observe(this, androidx.lifecycle.Observer {
             if (! it.isNullOrBlank()){
-                val intent = Intent(this,MainActivity::class.java)
+                val intent = Intent(this, HomeActivity::class.java)
                 startActivity(intent)
             }
         })
