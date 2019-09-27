@@ -1,16 +1,15 @@
 package com.fpondarts.foodie.ui.auth
 
 import android.view.View
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.fpondarts.foodie.data.repository.UserRepository
+import com.fpondarts.foodie.data.repository.Repository
 import com.fpondarts.foodie.util.Coroutines
 import com.fpondarts.foodie.util.exception.FoodieApiException
 import com.google.firebase.auth.FirebaseAuth
 
 class SignUpViewModel(
-    private val repository: UserRepository
+    private val repository: Repository
 ): ViewModel()
 
 {

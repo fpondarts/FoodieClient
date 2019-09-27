@@ -1,10 +1,9 @@
 package com.fpondarts.foodie.ui.auth
 
 import android.view.View
-import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.fpondarts.foodie.data.repository.UserRepository
+import com.fpondarts.foodie.data.repository.Repository
 import com.fpondarts.foodie.util.Coroutines
 import com.fpondarts.foodie.util.exception.FoodieApiException
 import com.google.android.gms.tasks.Task
@@ -14,7 +13,7 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GetTokenResult
 
 class SignInViewModel(
-    private val repository: UserRepository
+    private val repository: Repository
 ) : ViewModel(){
 
     val STAY = 0

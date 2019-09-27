@@ -5,10 +5,6 @@ import androidx.appcompat.app.AppCompatActivity
 
 import android.content.Intent
 import android.os.Bundle
-import android.os.Message
-import android.view.View
-import android.widget.Button
-import android.widget.EditText
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
@@ -18,18 +14,10 @@ import com.firebase.ui.auth.AuthUI
 import com.fpondarts.foodie.R
 import com.fpondarts.foodie.controller.UserRegisterFirstInput
 import com.fpondarts.foodie.databinding.ActivitySignUpBinding
-import com.fpondarts.foodie.services.ServerAPI
-import com.fpondarts.foodie.services.RetrofitClientInstance
-import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.common.SignInButton
-import com.google.firebase.auth.FirebaseAuth
 import org.kodein.di.KodeinAware
 
 import java.util.Arrays
-
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
 import org.kodein.di.android.kodein
 import org.kodein.di.generic.instance
@@ -38,7 +26,7 @@ class SignUpActivity : AppCompatActivity(),AuthListener, KodeinAware{
 
     override val kodein by kodein()
 
-    private val factory: SignUpViewModelFactory by instance()
+    private val factory: FoodieViewModelFactory by instance()
 
     private var mGoogleSignInButton: SignInButton? = null
 

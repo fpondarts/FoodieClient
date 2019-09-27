@@ -15,7 +15,7 @@ import java.security.PrivateKey
 import javax.security.auth.callback.Callback
 
 
-class UserRepository(
+class Repository(
     private val api: FoodieApi,
     private val db : FoodieDatabase
 ):SafeApiRequest() {
@@ -34,6 +34,8 @@ class UserRepository(
     }
 
     suspend fun saveUser(user: User) = db.getUserDao()
+
+
 
 
 }

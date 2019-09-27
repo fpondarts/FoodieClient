@@ -25,7 +25,7 @@ class SignInActivity : AppCompatActivity(), AuthListener, KodeinAware {
 
     override val kodein by kodein()
 
-    private val factory: SignInViewModelFactory by instance()
+    private val factory: FoodieViewModelFactory by instance()
 
     private var mGoogleSignInButton: Button? = null
 

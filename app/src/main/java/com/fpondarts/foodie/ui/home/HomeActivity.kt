@@ -14,8 +14,14 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import android.view.Menu
 import com.fpondarts.foodie.R
+import org.kodein.di.KodeinAware
+import org.kodein.di.android.kodein
+import org.kodein.di.generic.instance
 
-class HomeActivity : AppCompatActivity() {
+
+class HomeActivity : AppCompatActivity(), KodeinAware {
+
+    override val kodein by kodein()
 
     private lateinit var appBarConfiguration: AppBarConfiguration
 
