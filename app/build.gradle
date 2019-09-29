@@ -73,9 +73,11 @@ dependencies {
     implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
     implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
 
-
+    // databinding
     kapt "com.android.databinding:compiler:3.0.1"
 
+    //
+    implementation 'androidx.core:core-ktx:1.0.0'
 
     implementation 'com.squareup.retrofit2:adapter-rxjava2:2.4.0'
     implementation 'com.google.firebase:firebase-analytics:17.0.1'

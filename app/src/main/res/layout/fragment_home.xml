@@ -16,18 +16,29 @@
     android:layout_height="match_parent"
     tools:context=".ui.home.HomeActivity">
 
+
     <com.google.android.material.textfield.TextInputEditText
         android:id="@+id/searchView"
+        android:layout_width="230dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="48dp"
+        android:layout_marginLeft="48dp"
+        android:layout_marginTop="68dp"
         android:text="@{viewModel.searchText}"
-        android:layout_width="match_parent"
-        android:layout_height="45dp"
-        android:layout_marginStart="64dp"
-        android:layout_marginEnd="64dp"
-        android:layout_marginLeft="64dp"
-        android:layout_marginTop="64dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/searchShopButton"
+        android:layout_height="48dp"
+        android:layout_width="64dp"
+        app:layout_constraintStart_toEndOf="@id/searchView"
+        app:layout_constraintTop_toTopOf="@id/searchView"
+        android:text="Buscar"
+        android:textSize="8dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/shop_recycler_view"

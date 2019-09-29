@@ -1,4 +1,4 @@
-package com.fpondarts.foodie.data.db
+package com.fpondarts.foodie.data.db.dao
 
 import androidx.lifecycle.LiveData
 import androidx.room.Dao

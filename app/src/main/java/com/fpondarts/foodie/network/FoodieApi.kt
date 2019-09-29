@@ -1,6 +1,7 @@
 package com.fpondarts.foodie.network
 
 import androidx.lifecycle.LiveData
+import com.fpondarts.foodie.data.db.entity.Shop
 import com.fpondarts.foodie.model.FoodieUser
 import com.fpondarts.foodie.network.response.AvailabilityResponse
 import com.fpondarts.foodie.network.response.SignInResponse
@@ -18,6 +19,9 @@ interface FoodieApi {
 
     @POST
     suspend fun signIn(email: String, password: String?, fbToken: String):Response<SignInResponse>
+
+    @GET("shops/{id}")
+    suspend fun getShop(@Path("id") id:Int):Response<Shop>
 
 
     companion object {

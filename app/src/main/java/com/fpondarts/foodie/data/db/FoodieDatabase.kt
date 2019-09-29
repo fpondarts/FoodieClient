@@ -4,16 +4,20 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import com.fpondarts.foodie.data.db.dao.ShopDao
+import com.fpondarts.foodie.data.db.dao.UserDao
+import com.fpondarts.foodie.data.db.entity.Shop
 import com.fpondarts.foodie.data.db.entity.User
 
 
 @Database(
-    entities = [User::class],
+    entities = [User::class, Shop::class],
     version = 1
 )
 abstract class FoodieDatabase: RoomDatabase(){
 
     abstract fun getUserDao() : UserDao
+    abstract fun getShopDao() : ShopDao
 
     companion object{
         @Volatile

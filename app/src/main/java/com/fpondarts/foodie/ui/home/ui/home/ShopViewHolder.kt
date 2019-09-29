@@ -25,11 +25,12 @@ class ShopViewHolder(inflater: LayoutInflater, parent:ViewGroup):
 
     }
 
-    fun bind(shop : Shop){
+    fun bind(shop : Shop, listener: OnShopClickListener){
 
         mShopIm?.setImageURI(Uri.parse(shop.photoUrl))
         mShopName?.text = shop.name
         mShopRating?.rating = shop.rating
+        itemView.setOnClickListener { listener.onItemClick(shop) }
 
     }
 }
