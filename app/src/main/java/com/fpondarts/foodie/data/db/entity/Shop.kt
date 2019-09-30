@@ -9,7 +9,5 @@ data class Shop(
     val id:Int,
     val name: String,
     val rating: Float,
-    val photoUrl: String,
-    val menu: Menu?
-){
-}
+    val photoUrl: String
+){}

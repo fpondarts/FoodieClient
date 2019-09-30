@@ -27,7 +27,6 @@ interface FoodieApi {
     @GET("shops/{id}/menu")
     suspend fun getMenu(@Header("FOODIE-API-KEY") token:String, @Path("id") id:Int):Response<Menu>
 
-
     companion object {
         operator fun invoke() : FoodieApi {
             return Retrofit

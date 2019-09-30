@@ -39,8 +39,10 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/order_item_name" />
 
+
+
         <TextView
-            android:id="@+id/item_price"
+            android:id="@+id/order_item_unit_price"
             android:layout_width="62dp"
             android:layout_height="30dp"
             android:layout_marginStart="140dp"
@@ -50,13 +52,24 @@
             app:layout_constraintStart_toEndOf="@id/order_item_name"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <TextView
+            android:id="@+id/order_item_units"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:layout_marginStart="140dp"
+            android:layout_marginLeft="140dp"
+            android:hint="x Unidades"
+            app:layout_constraintStart_toEndOf="@id/order_item_name"
+            app:layout_constraintTop_toBottomOf="@id/order_item_unit_price" />
+
         <com.google.android.material.button.MaterialButton
-            android:layout_width="71dp"
+            android:id="@+id/button_remove_item"
+            android:layout_width="wrap_content"
             android:layout_height="37dp"
             android:layout_marginStart="216dp"
             android:layout_marginLeft="216dp"
             android:layout_marginTop="8dp"
-            android:text="Pedir"
+            android:text="Eliminar"
             app:layout_constraintStart_toEndOf="@id/order_item_name"
             app:layout_constraintTop_toTopOf="parent" />
 

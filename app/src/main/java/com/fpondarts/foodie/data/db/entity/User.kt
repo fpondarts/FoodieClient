@@ -8,15 +8,14 @@ const val CURRENT_USER_ID = 0
 
 @Entity
 data class User(
+    @PrimaryKey
+    var uId: Int,
     var name:String,
     var email:String,
     var password:String?,
-    var uid:String?,
+    var fbUid:String?,
     var photoUrl:String?,
     var registered:Boolean?,
     var sessionToken:String?
 ){
-    @PrimaryKey(autoGenerate = false)
-    var appUserId: Int = CURRENT_USER_ID
-
 }

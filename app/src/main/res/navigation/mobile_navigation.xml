@@ -48,7 +48,7 @@
         android:id="@+id/shopFragment"
         android:name="com.fpondarts.foodie.ui.home.ui.home.ShopMenuFragment"
         android:label="shop_fragment"
-        tools:layout="@layout/shop_menu_fragment" >
+        tools:layout="@layout/fragment_shop_menu" >
         <argument
             android:name="shopId"
             app:argType="long" />
