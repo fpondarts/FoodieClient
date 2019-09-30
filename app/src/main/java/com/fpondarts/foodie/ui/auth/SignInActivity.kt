@@ -87,7 +87,6 @@ class SignInActivity : AppCompatActivity(), AuthListener, KodeinAware {
                 Toast.makeText(this@SignInActivity, "Hubo un error en el ingreso", Toast.LENGTH_LONG).show()
             }
         }
-
     }
 
     override fun onStarted() {

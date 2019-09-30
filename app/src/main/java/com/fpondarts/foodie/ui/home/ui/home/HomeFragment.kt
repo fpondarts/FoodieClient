@@ -54,9 +54,6 @@ class HomeFragment : Fragment(), KodeinAware, OnShopClickListener {
 
         shop_recycler_view.adapter = ShopAdapter(homeViewModel.shops,this)
 
-
-
-
         homeViewModel.shopsLiveData.observe(this, Observer {
             shop_recycler_view.adapter?.notifyDataSetChanged()
         })
