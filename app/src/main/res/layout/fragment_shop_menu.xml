@@ -5,16 +5,16 @@
     <data>
         <variable
             name="viewModel"
-            type="com.fpondarts.foodie.ui.home.ui.home.ShopViewModel" />
+            type="com.fpondarts.foodie.ui.home.ui.home.shop_menu.ShopViewModel" />
     </data>
 
 <androidx.constraintlayout.widget.ConstraintLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.home.ui.home.ShopMenuFragment">
+    tools:context=".ui.home.ui.home.shop_menu.ShopMenuFragment">
 
 
-    <com.google.android.material.button.MaterialButton
+    <Button
         android:id="@+id/button_pedido_actual"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -25,7 +25,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <com.google.android.material.button.MaterialButton
+    <Button
         android:id="@+id/button_fin_pedido"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

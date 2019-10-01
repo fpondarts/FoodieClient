@@ -1,4 +1,4 @@
-package com.fpondarts.foodie.ui.home.ui.home
+package com.fpondarts.foodie.ui.home.ui.home.shop_menu
 
 import androidx.lifecycle.ViewModelProviders
 import android.os.Bundle
@@ -14,12 +14,15 @@ import com.fpondarts.foodie.R
 import com.fpondarts.foodie.data.db.entity.MenuItem
 import com.fpondarts.foodie.databinding.FragmentShopMenuBinding
 import com.fpondarts.foodie.ui.auth.FoodieViewModelFactory
+import com.fpondarts.foodie.ui.home.ui.home.menu_item_sheet.MenuItemBottomSheet
+import com.fpondarts.foodie.ui.home.ui.home.OnMenuItemClickListener
 import kotlinx.android.synthetic.main.fragment_shop_menu.*
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.kodein
 import org.kodein.di.generic.instance
 
-class ShopMenuFragment : Fragment(), KodeinAware, OnMenuItemClickListener {
+class ShopMenuFragment : Fragment(), KodeinAware,
+    OnMenuItemClickListener {
 
     override val kodein by kodein()
 
@@ -48,7 +51,11 @@ class ShopMenuFragment : Fragment(), KodeinAware, OnMenuItemClickListener {
 
         val shopId = arguments!!.getInt("shopId")
 
-        shop_menu_recycler_view.adapter = ShopMenuAdapter(viewModel.liveMenu.value!!,this)
+        shop_menu_recycler_view.adapter =
+            ShopMenuAdapter(
+                viewModel.liveMenu.value!!,
+                this
+            )
 
         shop_menu_recycler_view.apply {
             layoutManager = LinearLayoutManager(activity)
@@ -64,7 +71,7 @@ class ShopMenuFragment : Fragment(), KodeinAware, OnMenuItemClickListener {
     override fun onItemClick(item: MenuItem) {
         val dialog = MenuItemBottomSheet().apply{
             arguments = Bundle().apply {
-                putInt("itemId",item.itemId)
+                putLong("itemId",item.itemId)
                 putString("name",item.name)
             }
         }

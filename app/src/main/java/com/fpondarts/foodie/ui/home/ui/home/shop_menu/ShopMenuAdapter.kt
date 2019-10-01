@@ -1,11 +1,10 @@
-package com.fpondarts.foodie.ui.home.ui.home
+package com.fpondarts.foodie.ui.home.ui.home.shop_menu
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.fpondarts.foodie.data.db.entity.Menu
 import com.fpondarts.foodie.data.db.entity.MenuItem
-import com.fpondarts.foodie.data.db.entity.Shop
+import com.fpondarts.foodie.ui.home.ui.home.OnMenuItemClickListener
 
 class ShopMenuAdapter(private val menu: ArrayList<MenuItem>, val listener: OnMenuItemClickListener)
     : RecyclerView.Adapter<MenuItemViewHolder>() {
@@ -16,7 +15,7 @@ class ShopMenuAdapter(private val menu: ArrayList<MenuItem>, val listener: OnMen
 
         val inflater = LayoutInflater.from(parent.context)
 
-        return MenuItemViewHolder(inflater,parent)
+        return MenuItemViewHolder(inflater, parent)
     }
 
     override fun onBindViewHolder(holder: MenuItemViewHolder, position: Int) {

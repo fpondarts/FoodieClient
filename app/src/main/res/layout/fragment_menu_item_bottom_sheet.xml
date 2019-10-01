@@ -7,7 +7,7 @@
     <data>
         <variable
             name="viewModel"
-            type="com.fpondarts.foodie.ui.home.ui.home.MIBottomSheetViewModel" />
+            type="com.fpondarts.foodie.ui.home.ui.home.menu_item_sheet.MIBottomSheetViewModel" />
     </data>
 <androidx.constraintlayout.widget.ConstraintLayout
     android:layout_width="match_parent"
@@ -43,7 +43,7 @@
         android:layout_marginStart="156dp"
         android:layout_marginLeft="156dp"
         android:layout_marginTop="76dp"
-        android:onValueChange="@{(picker) -> viewModel.onNumberChange(picker)}"
+        android:onValueChange="@{(picker,oldval,newval) -> viewModel.onNumberChange(picker)}"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/bs_item_name" />
 

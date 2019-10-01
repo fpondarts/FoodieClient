@@ -1,8 +1,7 @@
-package com.fpondarts.foodie.ui.home.ui.home
+package com.fpondarts.foodie.ui.home.ui.home.menu_item_sheet
 
 import android.view.View
 import android.widget.NumberPicker
-import android.widget.TextView
 import androidx.lifecycle.ViewModel
 import com.fpondarts.foodie.data.repository.Repository
 import com.fpondarts.foodie.ui.auth.AuthListener

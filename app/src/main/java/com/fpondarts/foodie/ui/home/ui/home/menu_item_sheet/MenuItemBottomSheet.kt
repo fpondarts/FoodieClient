@@ -1,8 +1,7 @@
-package com.fpondarts.foodie.ui.home.ui.home
+package com.fpondarts.foodie.ui.home.ui.home.menu_item_sheet
 
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,13 +10,11 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProviders
 
 import com.fpondarts.foodie.R
-import com.fpondarts.foodie.data.repository.Repository
 import com.fpondarts.foodie.databinding.FragmentMenuItemBottomSheetBinding
 import com.fpondarts.foodie.ui.auth.AuthListener
 import com.fpondarts.foodie.ui.auth.FoodieViewModelFactory
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import kotlinx.android.synthetic.main.fragment_menu_item_bottom_sheet.*
-import org.kodein.di.Kodein
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.kodein
 import org.kodein.di.generic.instance
@@ -29,7 +26,7 @@ class MenuItemBottomSheet : BottomSheetDialogFragment(), KodeinAware, AuthListen
 
     private val factory: FoodieViewModelFactory by instance()
 
-    private var mViewModel:MIBottomSheetViewModel? = null
+    private var mViewModel: MIBottomSheetViewModel? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

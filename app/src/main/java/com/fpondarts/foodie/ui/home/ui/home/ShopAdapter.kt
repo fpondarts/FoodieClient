@@ -12,7 +12,7 @@ class ShopAdapter(private val list: MutableList<Shop>,val listener: OnShopClickL
 
         val inflater = LayoutInflater.from(parent.context)
 
-        return ShopViewHolder(inflater,parent)
+        return ShopViewHolder(inflater, parent)
     }
 
     override fun onBindViewHolder(holder: ShopViewHolder, position: Int) {

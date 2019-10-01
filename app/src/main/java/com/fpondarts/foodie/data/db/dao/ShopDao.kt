@@ -13,6 +13,9 @@ interface ShopDao {
     @Query("Select * from shop where id = :shopId")
     fun loadShop(shopId:Int):LiveData<Shop>
 
+    @Query("Select * from shop Limit 10")
+    fun loadShops():LiveData<List<Shop>>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun upsert(shop:Shop)
 

@@ -1,25 +1,21 @@
 package com.fpondarts.foodie.model
 
-class Order(userId:Int,shopId:Int) {
-    val prices = HashMap<Int,Float>()
-    val items = HashMap<Int,Int>()
-
+class Order(val userId:Int,val shopId:Int) {
+    val items = HashMap<Int,OrderItem>()
     var price = 0.0
-
     fun addItems(id:Int,number:Int,price:Float){
         if (items.containsKey(id)){
-            items.put(id,items.get(id)!! + number)
+            items[id]!!.addUnits(number)
         } else {
-            items.put(id,number)
+            items[id] = OrderItem(id.toLong(),number,price)
         }
-        prices.put(id,price)
         updatePrice()
     }
 
     fun updatePrice() {
         price = 0.0
-        for ((id,number) in items){
-            price += prices.get(id)!! * number
+        for ((id,item) in items){
+            price += item.itemPrice()
         }
     }
 

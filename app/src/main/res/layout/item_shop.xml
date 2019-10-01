@@ -46,9 +46,10 @@
             app:layout_constraintStart_toEndOf="@id/shop_im"
             app:layout_constraintTop_toBottomOf="@id/shop_name" />
 
-        <com.google.android.material.button.MaterialButton
+        <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:id="@+id/button_begin_order"
             android:layout_marginStart="32dp"
             android:layout_marginLeft="32dp"
             android:text="Pedir"

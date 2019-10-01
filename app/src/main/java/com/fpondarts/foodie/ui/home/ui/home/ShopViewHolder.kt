@@ -9,6 +9,8 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.fpondarts.foodie.R
 import com.fpondarts.foodie.data.db.entity.Shop
+import com.fpondarts.foodie.ui.home.ui.home.OnShopClickListener
+import kotlinx.android.synthetic.main.item_shop.view.*
 
 class ShopViewHolder(inflater: LayoutInflater, parent:ViewGroup):
     RecyclerView.ViewHolder(inflater.inflate(R.layout.item_shop, parent, false)){
@@ -30,7 +32,7 @@ class ShopViewHolder(inflater: LayoutInflater, parent:ViewGroup):
         mShopIm?.setImageURI(Uri.parse(shop.photoUrl))
         mShopName?.text = shop.name
         mShopRating?.rating = shop.rating
-        itemView.setOnClickListener { listener.onItemClick(shop) }
+        itemView.button_begin_order.setOnClickListener { listener.onItemClick(shop) }
 
     }
 }

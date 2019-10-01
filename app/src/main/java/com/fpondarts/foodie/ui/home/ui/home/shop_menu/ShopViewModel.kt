@@ -1,14 +1,11 @@
-package com.fpondarts.foodie.ui.home.ui.home
+package com.fpondarts.foodie.ui.home.ui.home.shop_menu
 
 import androidx.lifecycle.*
-import com.fpondarts.foodie.data.db.entity.Menu
 import com.fpondarts.foodie.data.db.entity.MenuItem
-import com.fpondarts.foodie.data.db.entity.Shop
 import com.fpondarts.foodie.data.repository.Repository
 import com.fpondarts.foodie.ui.auth.AuthListener
 import com.fpondarts.foodie.util.Coroutines
 import com.fpondarts.foodie.util.exception.FoodieApiException
-import java.lang.Exception
 
 class ShopViewModel (private val repository: Repository ) : ViewModel() {
 
@@ -16,12 +13,14 @@ class ShopViewModel (private val repository: Repository ) : ViewModel() {
         value = ArrayList()
     }
 
+
     var listener : AuthListener? = null
 
     val menu = ArrayList<MenuItem>()
 
     fun setShop(shopId:Int){
         Coroutines.main {
+            repository.newOrder(shopId)
             try{
                 liveMenu.value =  repository.getShopMenu(shopId).items
             } catch (e:FoodieApiException){

@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.fpondarts.foodie.data.db.FoodieDatabase
 import com.fpondarts.foodie.data.db.entity.Menu
+import com.fpondarts.foodie.data.db.entity.MenuItem
 import com.fpondarts.foodie.data.db.entity.Shop
 import com.fpondarts.foodie.data.db.entity.User
 import com.fpondarts.foodie.model.Order
@@ -14,11 +15,6 @@ import com.fpondarts.foodie.network.response.SignInResponse
 import com.fpondarts.foodie.util.Coroutines
 import com.fpondarts.foodie.util.exception.FoodieApiException
 import com.google.android.gms.common.api.ApiException
-import okhttp3.Call
-import okhttp3.ResponseBody
-import retrofit2.Response
-import java.security.PrivateKey
-import javax.security.auth.callback.Callback
 
 
 class Repository(
@@ -60,6 +56,10 @@ class Repository(
         return apiRequest { api.signIn(email,password, fbToken) }
     }
 
+    suspend fun getShops():LiveData<List<Shop>>{
+        return db.getShopDao().loadShops()
+    }
+
     fun getShop(shopId:Int):LiveData<Shop> {
         val shop = db.getShopDao().loadShop(shopId)
         Coroutines.main{
@@ -79,13 +79,21 @@ class Repository(
         currentOrder = Order(currentUser.value!!.uId,shopId)
     }
 
-    suspend fun getShopMenu(shopId:Int):Menu{
-        val liveMenu = db.getMenuDao().loadMenu(shopId)
+    suspend fun getShopMenu(shopId:Int): Menu{
+        val liveMenu = db.getMenuItemDao().loadMenu(shopId)
+
         liveMenu.value?.let{
-            return it
+            return Menu(shopId,ArrayList<MenuItem>(liveMenu.value!!))
         } ?: run{
            return api.getMenu(currentUser.value!!.sessionToken!!,shopId).body()!!
         }
+    }
+
+    fun getItemName(itemId:Long):String?{
+        return db.getMenuItemDao().loadItem(itemId).value?.let {
+            return it.name
+        }
+        return null
     }
 
 

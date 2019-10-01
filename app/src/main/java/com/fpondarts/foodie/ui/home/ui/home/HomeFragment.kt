@@ -46,17 +46,7 @@ class HomeFragment : Fragment(), KodeinAware, OnShopClickListener {
 
         val binding : FragmentHomeBinding = DataBindingUtil.inflate(inflater,R.layout.fragment_home, container, false)
         binding.viewModel = homeViewModel
-        shop_recycler_view.apply {
 
-            layoutManager = LinearLayoutManager(activity)
-
-        }
-
-        shop_recycler_view.adapter = ShopAdapter(homeViewModel.shops,this)
-
-        homeViewModel.shopsLiveData.observe(this, Observer {
-            shop_recycler_view.adapter?.notifyDataSetChanged()
-        })
 
         return binding.root
     }
@@ -64,6 +54,19 @@ class HomeFragment : Fragment(), KodeinAware, OnShopClickListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         navController = Navigation.findNavController(view)
+
+        shop_recycler_view?.apply {
+
+            layoutManager = LinearLayoutManager(activity)
+
+        }
+
+        homeViewModel.shopsLiveData.observe(this, Observer {
+            shop_recycler_view.adapter?.notifyDataSetChanged()
+        })
+
+        shop_recycler_view.adapter = ShopAdapter(homeViewModel.shops,this)
+
     }
 
     override fun onItemClick(shop:Shop){

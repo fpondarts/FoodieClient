@@ -5,38 +5,28 @@
     <data>
         <variable
             name="viewModel"
-            type="com.fpondarts.foodie.ui.home.ui.home.ShopViewModel" />
+            type="com.fpondarts.foodie.ui.home.ui.home.current_order.CurrentOrderViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".ui.home.ui.home.CurrentOrderFragment">
+        tools:context=".ui.home.ui.home.current_order.CurrentOrderFragment">
 
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/button_pedido_actual"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="76dp"
-            android:layout_marginLeft="76dp"
-            android:layout_marginTop="40dp"
-            android:text="Ver pedido"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <com.google.android.material.button.MaterialButton
+        <Button
             android:id="@+id/button_fin_pedido"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="48dp"
-            android:layout_marginLeft="48dp"
+            android:layout_marginStart="148dp"
+            android:layout_marginLeft="148dp"
+            android:layout_marginTop="52dp"
             android:text="Finalizar"
-            app:layout_constraintStart_toEndOf="@id/button_pedido_actual"
-            app:layout_constraintTop_toTopOf="@id/button_pedido_actual" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/shop_menu_recycler_view"
+            android:id="@+id/current_order_recycler_view"
             android:layout_width="match_parent"
             android:layout_height="570dp"
             android:layout_marginTop="164dp"
