@@ -23,27 +23,25 @@
         android:layout_height="48dp"
         android:layout_marginStart="48dp"
         android:layout_marginLeft="48dp"
-        android:layout_marginTop="44dp"
+        android:layout_marginTop="28dp"
         android:text="@{viewModel.searchText}"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/searchShopButton"
-        android:layout_height="48dp"
         android:layout_width="64dp"
-        app:layout_constraintStart_toEndOf="@id/searchView"
-        app:layout_constraintTop_toTopOf="@id/searchView"
+        android:layout_height="48dp"
         android:text="Buscar"
         android:textSize="8dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
-        />
+        app:layout_constraintStart_toEndOf="@id/searchView"
+        app:layout_constraintTop_toTopOf="@id/searchView" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/shop_recycler_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="474dp"
+        android:layout_height="match_parent"
+        android:layout_marginTop="96dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/searchView"
         tools:listitem="@layout/item_shop" />

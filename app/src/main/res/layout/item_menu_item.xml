@@ -13,7 +13,7 @@
     android:minHeight="90dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <TextView
@@ -24,6 +24,7 @@
             android:layout_marginLeft="8dp"
             android:layout_marginTop="8dp"
             android:hint="Item name"
+            android:autoSizeTextType="uniform"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -36,6 +37,7 @@
             android:layout_marginLeft="8dp"
             android:layout_marginTop="16dp"
             android:hint="Item description"
+            android:autoSizeTextType="uniform"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/order_item_name" />
 
