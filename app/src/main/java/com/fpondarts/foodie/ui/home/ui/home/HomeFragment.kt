@@ -8,6 +8,7 @@ import androidx.core.os.bundleOf
 import android.widget.AdapterView
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -19,6 +20,7 @@ import com.fpondarts.foodie.R
 import com.fpondarts.foodie.data.db.entity.Shop
 import com.fpondarts.foodie.databinding.ActivitySignInBinding
 import com.fpondarts.foodie.databinding.FragmentHomeBinding
+import com.fpondarts.foodie.ui.auth.AuthListener
 import com.fpondarts.foodie.ui.auth.FoodieViewModelFactory
 import com.google.android.material.navigation.NavigationView
 import kotlinx.android.synthetic.main.fragment_home.*
@@ -27,7 +29,20 @@ import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.kodein
 import org.kodein.di.generic.instance
 
-class HomeFragment : Fragment(), KodeinAware, OnShopClickListener {
+class HomeFragment : Fragment(), KodeinAware, OnShopClickListener, AuthListener {
+
+
+    override fun onStarted() {
+        Toast.makeText(activity,"Started api call",Toast.LENGTH_SHORT).show()
+    }
+
+    override fun onSuccess() {
+        Toast.makeText(activity,"Succeded api call",Toast.LENGTH_SHORT).show()
+    }
+
+    override fun onFailure(message: String) {
+        Toast.makeText(activity,"Failed API CALL",Toast.LENGTH_SHORT).show()
+    }
 
     override val kodein: Kodein by kodein()
 
@@ -56,16 +71,21 @@ class HomeFragment : Fragment(), KodeinAware, OnShopClickListener {
         navController = Navigation.findNavController(view)
 
         shop_recycler_view?.apply {
-
             layoutManager = LinearLayoutManager(activity)
-
         }
 
-        homeViewModel.shopsLiveData.observe(this, Observer {
-            shop_recycler_view.adapter?.notifyDataSetChanged()
-        })
+        homeViewModel.authListener = this
+        val shops = homeViewModel.getTopShops()
 
-        shop_recycler_view.adapter = ShopAdapter(homeViewModel.shops,this)
+        shops.observe(this, Observer {
+            it?.let{
+                if (it.isEmpty()){
+                    Toast.makeText(activity,"Sheit",Toast.LENGTH_SHORT).show()
+                }
+                shop_recycler_view.adapter = ShopAdapter(it!!,this)
+                shop_recycler_view.adapter?.notifyDataSetChanged()
+            }
+        })
 
     }
 

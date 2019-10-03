@@ -8,6 +8,6 @@ data class Shop(
     @PrimaryKey
     val id:Int,
     val name: String,
-    val rating: Float,
-    val photoUrl: String
+    val photoUrl: String,
+    val rating: Float
 ){}

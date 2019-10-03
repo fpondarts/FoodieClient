@@ -22,6 +22,8 @@ class Repository(
     private val db : FoodieDatabase
 ):SafeApiRequest() {
 
+    val topRanked = db.getShopDao().getAllOrdered()
+
     val currentUser = MutableLiveData<User>().apply {
         value = User(0,"Flavio Perez"
             ,"perezflavio94@gmail.com"
@@ -60,6 +62,24 @@ class Repository(
         return db.getShopDao().loadShops()
     }
 
+    fun getTopShops():LiveData<List<Shop>>{
+        val ans = db.getShopDao().getAllOrdered()
+        if (ans.value==null || ans.value!!.isEmpty()){
+            Coroutines.io{
+                try {
+                    val top = api.getTopShops(currentUser.value!!.sessionToken!!)
+                    if (top.isSuccessful){
+                        db.getShopDao().upsertBatch((top.body()!!))
+                    }
+                } catch (e:FoodieApiException) {
+                    throw e
+                }
+            }
+        }
+
+        return ans
+    }
+
     fun getShop(shopId:Int):LiveData<Shop> {
         val shop = db.getShopDao().loadShop(shopId)
         Coroutines.main{
@@ -69,7 +89,6 @@ class Repository(
                     db.getShopDao().upsert(apiShop)
                 }
             } catch (e:FoodieApiException){
-
             }
         }
         return shop

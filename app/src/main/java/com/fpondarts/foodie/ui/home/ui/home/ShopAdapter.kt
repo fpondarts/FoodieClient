@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.fpondarts.foodie.data.db.entity.Shop
 
-class ShopAdapter(private val list: MutableList<Shop>,val listener: OnShopClickListener)
+class ShopAdapter(private val list: List<Shop>,val listener: OnShopClickListener)
     : RecyclerView.Adapter<ShopViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ShopViewHolder {
@@ -20,9 +20,6 @@ class ShopAdapter(private val list: MutableList<Shop>,val listener: OnShopClickL
         holder.bind(movie,listener)
     }
 
-    fun updateShops(newShops:List<Shop>){
-        list.addAll(newShops);
-    }
 
     override fun getItemCount(): Int = list.size
 

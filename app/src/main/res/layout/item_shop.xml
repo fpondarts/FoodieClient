@@ -38,23 +38,25 @@
 
         <RatingBar
             android:id="@+id/shop_rating"
-            android:layout_width="148dp"
-            android:layout_height="42dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginTop="8dp"
+            style="@style/Widget.AppCompat.RatingBar.Small"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="32dp"
             app:layout_constraintStart_toEndOf="@id/shop_im"
             app:layout_constraintTop_toBottomOf="@id/shop_name" />
 
         <Button
+            android:id="@+id/button_begin_order"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/button_begin_order"
-            android:layout_marginStart="32dp"
-            android:layout_marginLeft="32dp"
+            android:layout_marginStart="40dp"
+            android:layout_marginLeft="40dp"
+            android:layout_marginTop="20dp"
             android:text="Pedir"
             app:layout_constraintStart_toEndOf="@id/shop_rating"
-            app:layout_constraintTop_toTopOf="@id/shop_rating" />
+            app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

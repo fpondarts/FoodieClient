@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.fpondarts.foodie.data.db.entity.Shop
 import com.fpondarts.foodie.data.repository.Repository
+import com.fpondarts.foodie.ui.auth.AuthListener
 import com.fpondarts.foodie.util.Coroutines
 import com.fpondarts.foodie.util.exception.FoodieApiException
 
@@ -15,25 +16,27 @@ class HomeViewModel (
 
     val shops = ArrayList<Shop>()
     val searchText : String? = null
+    var authListener: AuthListener? = null
 
-
-    val shopsLiveData = MutableLiveData<List<Shop>>().apply {
-        value = shops
-    }
 
     fun onSearchClick(view: View?){
         Coroutines.main{
             try{
-
+                repository.getShops()
             } catch(e:FoodieApiException) {
 
             }
         }
     }
 
-    private fun addNewShops(newShops:List<Shop>){
-        shops.addAll(newShops)
-        shopsLiveData.value = shops
+    fun getTopShops():LiveData<List<Shop>>{
+        var live:LiveData<List<Shop>>? = null
+        try {
+            live = repository.getTopShops()
+        } catch (e:FoodieApiException){
+            authListener!!.onFailure("APIFAIL")
+        }
+        return live!!
     }
 
 }
