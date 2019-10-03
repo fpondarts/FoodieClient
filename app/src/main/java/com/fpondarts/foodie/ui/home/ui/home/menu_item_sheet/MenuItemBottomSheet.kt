@@ -33,32 +33,29 @@ class MenuItemBottomSheet : BottomSheetDialogFragment(), KodeinAware, AuthListen
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-
         val binding: FragmentMenuItemBottomSheetBinding = DataBindingUtil.inflate(inflater,R.layout.fragment_menu_item_bottom_sheet,container,false)
         mViewModel = ViewModelProviders.of(this,factory).get(MIBottomSheetViewModel::class.java)
         mViewModel!!.listener = this
 
-
         binding.viewModel = mViewModel
-
-        bs_number_picker.minValue = 1
-        bs_number_picker.maxValue = 99
-
-        bs_item_name.text = arguments?.getString("itemName")
-        bs_price.text = "- $"+arguments?.getFloat("price").toString()
-
-        bs_cancel.setOnClickListener(View.OnClickListener {
-            childFragmentManager.popBackStack()
-        })
 
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        bs_number_picker.minValue = 1
+        bs_number_picker.maxValue = 99
+        bs_price.text = "- $"+arguments?.getFloat("price").toString()
+        bs_cancel.setOnClickListener(View.OnClickListener {
+            childFragmentManager.popBackStack()
+        })
+
         arguments?.let{
-            mViewModel!!.itemId = it.getInt("itemId")
+            mViewModel!!.itemId = it.getLong("id")
             mViewModel!!.itemPrice = it.getFloat("price")
+            mViewModel!!.name = it.getString("name")
         } ?: kotlin.run {
             childFragmentManager.popBackStack()
         }

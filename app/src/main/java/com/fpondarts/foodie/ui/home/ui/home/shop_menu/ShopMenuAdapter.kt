@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.fpondarts.foodie.data.db.entity.MenuItem
 import com.fpondarts.foodie.ui.home.ui.home.OnMenuItemClickListener
 
-class ShopMenuAdapter(private val menu: ArrayList<MenuItem>, val listener: OnMenuItemClickListener)
+class ShopMenuAdapter(private val menu: List<MenuItem>, val listener: OnMenuItemClickListener)
     : RecyclerView.Adapter<MenuItemViewHolder>() {
 
 

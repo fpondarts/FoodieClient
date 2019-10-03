@@ -22,11 +22,10 @@ class CurrentOrderViewHolder(inflater: LayoutInflater, parent: ViewGroup):
         units = itemView.findViewById(R.id.order_item_units)
     }
 
-    fun bind(itemAndName:Pair<String?, OrderItem>, listener: OnOrderItemClickListener){
-        itemAndName.first?.apply {
-            name!!.text = this
-        }
-        price?.text = "x $" + itemAndName.second.price.toString()
-        itemView.findViewById<Button>(R.id.button_remove_item).setOnClickListener{ listener.onItemClick(itemAndName.second) }
+    fun bind(item:OrderItem, listener: OnOrderItemClickListener){
+
+        name?.text = item.name
+        price?.text = "x $" + item.price.toString()
+        itemView.findViewById<Button>(R.id.button_remove_item).setOnClickListener{ listener.onItemClick(item) }
     }
 }

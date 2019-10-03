@@ -6,6 +6,6 @@ import androidx.room.PrimaryKey
 @Entity
 class Menu (
     @PrimaryKey
-    val shopId:Int,
+    val shopId:Long,
     val items:ArrayList<MenuItem>
 ){}

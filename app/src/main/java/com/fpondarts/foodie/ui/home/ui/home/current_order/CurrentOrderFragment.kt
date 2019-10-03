@@ -7,15 +7,28 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.LinearLayoutManager
 
 import com.fpondarts.foodie.R
 import com.fpondarts.foodie.databinding.CurrentOrderFragmentBinding
+import com.fpondarts.foodie.model.OrderItem
 import com.fpondarts.foodie.ui.auth.FoodieViewModelFactory
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import kotlinx.android.synthetic.main.current_order_fragment.*
 import org.kodein.di.KodeinAware
+import org.kodein.di.android.kodein
 import org.kodein.di.android.x.kodein
 import org.kodein.di.generic.instance
 
-class CurrentOrderFragment : Fragment(), KodeinAware {
+class CurrentOrderFragment : BottomSheetDialogFragment(), KodeinAware, OnOrderItemClickListener{
+
+
+    override fun onItemClick(item: OrderItem) {
+        viewModel?.removeFromOrder(item.id)
+    }
 
 
     override val kodein by kodein()
@@ -44,6 +57,21 @@ class CurrentOrderFragment : Fragment(), KodeinAware {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
+        viewModel!!.getCurrentOrder()
+
+        current_order_recycler_view.apply {
+            layoutManager = LinearLayoutManager(activity)
+        }
+
+        MutableLiveData<MutableCollection<OrderItem>>().apply {
+            value = viewModel!!.getCurrentOrder().items!!.values
+        }.observe(this, Observer{
+            it?.let{
+                current_order_recycler_view.adapter = CurrentOrderAdapter(it,this)
+                current_order_recycler_view.adapter!!.notifyDataSetChanged()
+            }
+
+        })
     }
 
 }

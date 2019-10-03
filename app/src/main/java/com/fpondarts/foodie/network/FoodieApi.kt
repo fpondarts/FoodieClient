@@ -25,10 +25,10 @@ interface FoodieApi {
     suspend fun signIn(email: String, password: String?, fbToken: String):Response<SignInResponse>
 
     @GET(API_PREFIX+"shops/{id}")
-    suspend fun getShop(@Header(API_KEY_HEADER) token:String, @Path("id") id:Int):Response<Shop>
+    suspend fun getShop(@Header(API_KEY_HEADER) token:String, @Path("id") id:Long):Response<Shop>
 
     @GET(API_PREFIX+"shops/{id}/menu")
-    suspend fun getMenu(@Header(API_KEY_HEADER) token:String, @Path("id") id:Int):Response<Menu>
+    suspend fun getMenu(@Header(API_KEY_HEADER) token:String, @Path("id") id:Long):Response<Menu>
 
     @GET(API_PREFIX+"shops/top")
     suspend fun getTopShops(@Header(API_KEY_HEADER) token: String):Response<List<Shop>>

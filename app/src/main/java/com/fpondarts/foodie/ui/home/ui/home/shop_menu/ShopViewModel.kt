@@ -18,14 +18,19 @@ class ShopViewModel (private val repository: Repository ) : ViewModel() {
 
     val menu = ArrayList<MenuItem>()
 
-    fun setShop(shopId:Int){
-        Coroutines.main {
-            repository.newOrder(shopId)
-            try{
-                liveMenu.value =  repository.getShopMenu(shopId).items
-            } catch (e:FoodieApiException){
-                listener!!.onFailure("FoodieApiException")
-            }
-        }
+    fun setShop(shopId: Long){
+        repository.newOrder(shopId)
     }
+
+    fun getMenu(shopId: Long): LiveData<List<MenuItem>>{
+        var liveData: LiveData<List<MenuItem>>? = null
+        try {
+            return repository.getShopMenu(shopId)
+        } catch (e: FoodieApiException){
+            listener!!.onFailure(e.message!!)
+        }
+        return liveData!!
+    }
+
+
 }
