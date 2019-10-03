@@ -1,0 +1,53 @@
+package com.fpondarts.foodie.ui.home.ui.home.confirm_order
+
+import androidx.lifecycle.ViewModelProviders
+import android.os.Bundle
+import androidx.fragment.app.Fragment
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.get
+
+import com.fpondarts.foodie.R
+import com.fpondarts.foodie.databinding.ConfirmOrderFragmentBinding
+import com.fpondarts.foodie.ui.auth.FoodieViewModelFactory
+import kotlinx.android.synthetic.main.confirm_order_fragment.*
+import org.kodein.di.Kodein
+import org.kodein.di.KodeinAware
+import org.kodein.di.android.x.kodein
+import org.kodein.di.generic.instance
+
+class ConfirmOrderFragment : Fragment(), KodeinAware {
+
+    companion object {
+        fun newInstance() =
+            ConfirmOrderFragment()
+    }
+
+
+    override val kodein by kodein()
+
+    val factory: FoodieViewModelFactory by instance()
+
+    private var viewModel: ConfirmOrderViewModel? = null
+
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        val binding: ConfirmOrderFragmentBinding = DataBindingUtil.inflate(inflater,R.layout.confirm_order_fragment,container,false)
+        val viewModel = ViewModelProviders.of(this,factory).get(ConfirmOrderViewModel::class.java)
+        binding.viewModel = viewModel
+        this.viewModel = viewModel
+        return binding.root
+    }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+
+        viewModel!!.points = et_points
+
+    }
+
+}

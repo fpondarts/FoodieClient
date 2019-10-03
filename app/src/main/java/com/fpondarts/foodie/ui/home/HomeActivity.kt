@@ -1,6 +1,7 @@
 package com.fpondarts.foodie.ui.home
 
 import android.os.Bundle
+import android.util.Log
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import androidx.navigation.findNavController
@@ -13,6 +14,7 @@ import com.google.android.material.navigation.NavigationView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import android.view.Menu
+import com.amitshekhar.DebugDB
 import com.fpondarts.foodie.R
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.kodein

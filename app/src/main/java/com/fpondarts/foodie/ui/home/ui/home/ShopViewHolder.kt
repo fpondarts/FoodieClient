@@ -29,7 +29,9 @@ class ShopViewHolder(inflater: LayoutInflater, parent:ViewGroup):
 
     fun bind(shop : Shop, listener: OnShopClickListener){
 
-        mShopIm?.setImageURI(Uri.parse(shop.photoUrl))
+        shop.photoUrl?.let{
+            mShopIm?.setImageURI(Uri.parse(shop.photoUrl))
+        }
         mShopName?.text = shop.name
         mShopRating?.rating = shop.rating
         itemView.button_begin_order.setOnClickListener { listener.onItemClick(shop) }

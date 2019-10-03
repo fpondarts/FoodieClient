@@ -53,11 +53,11 @@
             android:name="shopId"
             app:argType="long" />
         <action
-            android:id="@+id/action_shopFragment_to_currentOrderFragment"
-            app:destination="@id/currentOrderFragment" />
+            android:id="@+id/action_shopFragment_to_confirmOrderFragment"
+            app:destination="@+id/confirmOrderFragment" />
     </fragment>
     <fragment
-        android:id="@+id/currentOrderFragment"
-        android:name="com.fpondarts.foodie.ui.home.ui.home.current_order.CurrentOrderFragment"
-        android:label="CurrentOrderFragment" />
+        android:id="@+id/confirmOrderFragment"
+        android:name="com.fpondarts.foodie.ui.home.ui.home.confirm_order.ConfirmOrderFragment"
+        android:label="ConfirmOrderFragment" />
 </navigation>

@@ -10,6 +10,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
+import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 
 import com.fpondarts.foodie.R
@@ -60,6 +61,12 @@ class CurrentOrderFragment : BottomSheetDialogFragment(), KodeinAware, OnOrderIt
         super.onActivityCreated(savedInstanceState)
 
         viewModel!!.getCurrentOrder()
+
+
+        button_fin_pedido.setOnClickListener(View.OnClickListener {
+            Navigation.findNavController(parentFragment!!.view!!).navigate(R.id.confirmOrderFragment)
+            dismiss()
+        })
 
         current_order_recycler_view.apply {
             layoutManager = LinearLayoutManager(activity)

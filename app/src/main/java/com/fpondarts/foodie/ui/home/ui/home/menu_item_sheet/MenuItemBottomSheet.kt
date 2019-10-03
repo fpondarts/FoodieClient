@@ -52,6 +52,10 @@ class MenuItemBottomSheet : BottomSheetDialogFragment(), KodeinAware, AuthListen
             childFragmentManager.popBackStack()
         })
 
+        bs_cancel.setOnClickListener(View.OnClickListener {
+            this.dismiss()
+        })
+
         arguments?.let{
             mViewModel!!.itemId = it.getLong("id")
             mViewModel!!.itemPrice = it.getFloat("price")
@@ -66,12 +70,12 @@ class MenuItemBottomSheet : BottomSheetDialogFragment(), KodeinAware, AuthListen
 
     override fun onSuccess() {
         Toast.makeText(context,"Agregado al pedido",Toast.LENGTH_SHORT).show()
-        childFragmentManager.popBackStack()
+        this.dismiss()
     }
 
     override fun onFailure(message: String) {
         Toast.makeText(context,message,Toast.LENGTH_SHORT).show()
-        childFragmentManager.popBackStack()
+        this.dismiss()
     }
 
 

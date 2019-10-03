@@ -86,8 +86,8 @@ class Repository(
     }
 
     fun getShopMenu(shopId:Long): LiveData<List<MenuItem>>{
-        val liveMenu = db.getMenuItemDao().loadAll()
-
+        val liveMenu = db.getMenuItemDao().loadMenu(shopId)
+        Log.d("TAG shopId query",shopId.toString())
         if (liveMenu.value.isNullOrEmpty()){
             Coroutines.io {
                 val menu: Menu? = api.getMenu(currentUser.value!!.sessionToken!!,shopId).body()

@@ -54,7 +54,7 @@ dependencies {
     // Retrofit and GSON
     implementation 'com.squareup.retrofit2:retrofit:2.6.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.6.0'
-    compile 'com.squareup.okhttp3:logging-interceptor:3.9.0'
+    implementation 'com.squareup.okhttp3:logging-interceptor:3.9.0'
 
     // Kotlin Coroutines
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.1.1'
@@ -68,6 +68,9 @@ dependencies {
     implementation 'androidx.room:room-runtime:2.1.0-rc01'
     implementation 'androidx.room:room-ktx:2.1.0-rc01'
     kapt 'androidx.room:room-compiler:2.1.0-rc01'
+
+    //Room debugging
+    debugImplementation 'com.amitshekhar.android:debug-db:1.0.6'
 
 
     // Navigation

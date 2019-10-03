@@ -1,7 +1,6 @@
 package com.fpondarts.foodie.data.db.entity
 
 import androidx.room.Entity
-import androidx.room.PrimaryKey
 
 @Entity(primaryKeys = ["shopId","id"])
 data class MenuItem (
