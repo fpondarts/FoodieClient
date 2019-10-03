@@ -74,6 +74,8 @@ class ShopMenuFragment : Fragment(), KodeinAware, AuthListener,
 
         viewModel.setShop(shopId)
 
+        Toast.makeText(activity,shopId.toString(),Toast.LENGTH_SHORT).show()
+
         viewModel.getMenu(shopId).observe(this, Observer {
             it?.let{
                 shop_menu_recycler_view.adapter = ShopMenuAdapter(it,this)

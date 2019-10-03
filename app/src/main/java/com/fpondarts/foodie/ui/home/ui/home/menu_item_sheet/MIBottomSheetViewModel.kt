@@ -27,7 +27,7 @@ class MIBottomSheetViewModel(val repository:Repository): ViewModel(){
 
     }
 
-    fun onNumberChange(picker:NumberPicker){
-        number = picker.value
+    fun onNumberChange(newval:Int){
+        number = newval
     }
 }

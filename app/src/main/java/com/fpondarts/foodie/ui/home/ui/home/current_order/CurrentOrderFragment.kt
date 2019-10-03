@@ -18,6 +18,7 @@ import com.fpondarts.foodie.model.OrderItem
 import com.fpondarts.foodie.ui.auth.FoodieViewModelFactory
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import kotlinx.android.synthetic.main.current_order_fragment.*
+import kotlinx.android.synthetic.main.fragment_home.*
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.kodein
 import org.kodein.di.android.x.kodein
@@ -28,6 +29,7 @@ class CurrentOrderFragment : BottomSheetDialogFragment(), KodeinAware, OnOrderIt
 
     override fun onItemClick(item: OrderItem) {
         viewModel?.removeFromOrder(item.id)
+        current_order_recycler_view.adapter!!.notifyDataSetChanged()
     }
 
 
