@@ -11,6 +11,7 @@ import androidx.lifecycle.get
 
 import com.fpondarts.foodie.R
 import com.fpondarts.foodie.databinding.ConfirmOrderFragmentBinding
+import com.fpondarts.foodie.ui.auth.AuthListener
 import com.fpondarts.foodie.ui.auth.FoodieViewModelFactory
 import kotlinx.android.synthetic.main.confirm_order_fragment.*
 import org.kodein.di.Kodein
@@ -18,7 +19,24 @@ import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.kodein
 import org.kodein.di.generic.instance
 
-class ConfirmOrderFragment : Fragment(), KodeinAware {
+class ConfirmOrderFragment : Fragment(), AuthListener, KodeinAware {
+
+
+
+    override fun onStarted() {
+
+
+    }
+
+    override fun onSuccess() {
+
+
+    }
+
+    override fun onFailure(message: String) {
+
+
+    }
 
     companion object {
         fun newInstance() =
@@ -45,7 +63,7 @@ class ConfirmOrderFragment : Fragment(), KodeinAware {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-
+        et_points.isEnabled = false
         viewModel!!.points = et_points
 
     }

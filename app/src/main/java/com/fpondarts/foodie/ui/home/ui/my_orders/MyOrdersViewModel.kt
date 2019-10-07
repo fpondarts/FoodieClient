@@ -1,10 +1,11 @@
-package com.fpondarts.foodie.ui.home.ui.gallery
+package com.fpondarts.foodie.ui.home.ui.my_orders
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.fpondarts.foodie.data.repository.Repository
 
-class GalleryViewModel : ViewModel() {
+class MyOrdersViewModel(val repository: Repository): ViewModel() {
 
     private val _text = MutableLiveData<String>().apply {
         value = "This is gallery Fragment"

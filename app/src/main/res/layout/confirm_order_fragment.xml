@@ -58,7 +58,7 @@
                     android:layout_height="wrap_content"
                     android:focusedByDefault="true"
                     android:onClick="@{viewModel::onRadioButtonClicked}"
-                    android:hint="$xxx.xx" />
+                    android:text="@{viewModel.priceStr}" />
 
                 <RadioButton
                     android:id="@+id/rb_favor"
