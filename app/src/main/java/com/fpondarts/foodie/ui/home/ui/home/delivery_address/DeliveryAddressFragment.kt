@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.addCallback
 import androidx.lifecycle.Observer
 import androidx.navigation.Navigation
 
@@ -32,6 +33,7 @@ class DeliveryAddressFragment : Fragment(), KodeinAware {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
         return inflater.inflate(R.layout.delivery_address_fragment, container, false)
     }
 
@@ -39,14 +41,13 @@ class DeliveryAddressFragment : Fragment(), KodeinAware {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProviders.of(this,factory).get(DeliveryAddressViewModel::class.java)
 
+        val callback = requireActivity().onBackPressedDispatcher.addCallback(this){
+            viewModel.price.postValue(null)
+        }
+        callback.isEnabled=true
         choose_location_card.isClickable = true
         current_location_card.isClickable = true
 
-        viewModel.price.observe(this, Observer {
-            it?.let {
-                Navigation.findNavController(parentFragment!!.view!!).navigate(R.id.confirmOrderFragment)
-            }
-        })
 
         current_location_card.setOnClickListener(View.OnClickListener {
             onCurrentLocationClick()
@@ -62,11 +63,18 @@ class DeliveryAddressFragment : Fragment(), KodeinAware {
 
     fun onCurrentLocationClick(){
         fusedLocationProviderClient.lastLocation.addOnSuccessListener {
-            viewModel.getDeliveryPrice(it.latitude,it.longitude)
+            viewModel.getDeliveryPrice(it.latitude,it.longitude).observe(this, Observer {
+            it?.let {
+                Navigation.findNavController(parentFragment!!.view!!).navigate(R.id.confirmOrderFragment)
+                viewModel.price.removeObservers(this)
+            }
+        })
         }.addOnFailureListener{
             Toast.makeText(activity,it.message,Toast.LENGTH_LONG).show()
         }
     }
+
+
 
 /*    fun onChooseLocationClick(){
         val dialog = MapBottomSheetFragment().apply {

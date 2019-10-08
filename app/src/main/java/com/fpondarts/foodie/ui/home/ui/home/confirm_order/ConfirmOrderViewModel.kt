@@ -7,6 +7,8 @@ import androidx.lifecycle.ViewModel
 import com.fpondarts.foodie.R
 import com.fpondarts.foodie.data.repository.Repository
 import com.fpondarts.foodie.ui.auth.AuthListener
+import com.fpondarts.foodie.util.Coroutines
+import com.fpondarts.foodie.util.exception.FoodieApiException
 
 class ConfirmOrderViewModel(val repository: Repository) : ViewModel() {
 
@@ -33,6 +35,18 @@ class ConfirmOrderViewModel(val repository: Repository) : ViewModel() {
     }
 
     fun onConfirmOrder(view:View){
+        if (checkedButton == R.id.rb_favor) {
+            if ((pointsStr.toInt() == 0) || (pointsStr.toInt() > repository.getUserPoints())){
+                //TODO manejar error de
+            }
+        }
+        Coroutines.io{
+            try{
+                repository.confirmOrder()
+            } catch(e:FoodieApiException) {
+
+            }
+        }
 
     }
 

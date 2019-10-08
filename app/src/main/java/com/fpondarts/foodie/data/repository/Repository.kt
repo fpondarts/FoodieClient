@@ -127,5 +127,13 @@ class Repository(
         }
     }
 
+    fun confirmOrder(){
+        //TODO
+    }
+
+    fun getUserPoints():Int{
+        //TODO
+        return 0
+    }
 
 }
