@@ -5,13 +5,13 @@
     <data>
         <variable
             name="viewModel"
-            type="com.fpondarts.foodie.ui.home.ui.home.shop_menu.ShopViewModel" />
+            type="com.fpondarts.foodie.ui.home.shop_menu.ShopViewModel" />
     </data>
 
 <androidx.constraintlayout.widget.ConstraintLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.home.ui.home.shop_menu.ShopMenuFragment">
+    tools:context=".ui.home.shop_menu.ShopMenuFragment">
 
 
     <Button

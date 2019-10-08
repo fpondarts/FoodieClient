@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/nav_home"
-        android:name="com.fpondarts.foodie.ui.home.ui.home.HomeFragment"
+        android:name="com.fpondarts.foodie.ui.home.HomeFragment"
         android:label="@string/menu_home"
         tools:layout="@layout/fragment_home" >
         <action
@@ -17,35 +17,35 @@
 
     <fragment
         android:id="@+id/nav_gallery"
-        android:name="com.fpondarts.foodie.ui.home.ui.my_orders.MyOrdersFragment"
+        android:name="com.fpondarts.foodie.ui.my_orders.MyOrdersFragment"
         android:label="@string/menu_gallery"
         tools:layout="@layout/fragment_my_orders" />
 
     <fragment
         android:id="@+id/nav_profile"
-        android:name="com.fpondarts.foodie.ui.home.ui.profile.ProfileFragment"
+        android:name="com.fpondarts.foodie.ui.profile.ProfileFragment"
         android:label="@string/menu_profile" />
 
     <fragment
         android:id="@+id/nav_tools"
-        android:name="com.fpondarts.foodie.ui.home.ui.tools.ToolsFragment"
+        android:name="com.fpondarts.foodie.ui.tools.ToolsFragment"
         android:label="@string/menu_tools"
         tools:layout="@layout/fragment_tools" />
 
     <fragment
         android:id="@+id/nav_share"
-        android:name="com.fpondarts.foodie.ui.home.ui.share.ShareFragment"
+        android:name="com.fpondarts.foodie.ui.share.ShareFragment"
         android:label="@string/menu_share"
         tools:layout="@layout/fragment_share" />
 
     <fragment
         android:id="@+id/nav_send"
-        android:name="com.fpondarts.foodie.ui.home.ui.send.SendFragment"
+        android:name="com.fpondarts.foodie.ui.send.SendFragment"
         android:label="@string/menu_send"
         tools:layout="@layout/fragment_send" />
     <fragment
         android:id="@+id/shopFragment"
-        android:name="com.fpondarts.foodie.ui.home.ui.home.shop_menu.ShopMenuFragment"
+        android:name="com.fpondarts.foodie.ui.home.shop_menu.ShopMenuFragment"
         android:label="shop_fragment"
         tools:layout="@layout/fragment_shop_menu" >
         <argument
@@ -57,11 +57,11 @@
     </fragment>
     <fragment
         android:id="@+id/confirmOrderFragment"
-        android:name="com.fpondarts.foodie.ui.home.ui.home.confirm_order.ConfirmOrderFragment"
+        android:name="com.fpondarts.foodie.ui.home.confirm_order.ConfirmOrderFragment"
         android:label="ConfirmOrderFragment" />
     <fragment
         android:id="@+id/deliveryAddressFragment"
-        android:name="com.fpondarts.foodie.ui.home.ui.home.delivery_address.DeliveryAddressFragment"
+        android:name="com.fpondarts.foodie.ui.home.delivery_address.DeliveryAddressFragment"
         android:label="delivery_address_fragment"
         tools:layout="@layout/delivery_address_fragment" >
         <action

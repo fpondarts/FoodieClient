@@ -8,13 +8,13 @@
     <data>
         <variable
             name="viewModel"
-            type="com.fpondarts.foodie.ui.home.ui.home.HomeViewModel" />
+            type="com.fpondarts.foodie.ui.home.HomeViewModel" />
 
     </data>
 <androidx.constraintlayout.widget.ConstraintLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.home.HomeActivity">
+    tools:context=".ui.HomeActivity">
 
 
     <com.google.android.material.textfield.TextInputEditText

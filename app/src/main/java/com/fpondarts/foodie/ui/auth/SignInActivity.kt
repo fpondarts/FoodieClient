@@ -13,7 +13,7 @@ import com.firebase.ui.auth.AuthUI
 
 import com.fpondarts.foodie.R
 import com.fpondarts.foodie.databinding.ActivitySignInBinding
-import com.fpondarts.foodie.ui.home.HomeActivity
+import com.fpondarts.foodie.ui.HomeActivity
 import com.google.firebase.auth.FirebaseAuth
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.kodein

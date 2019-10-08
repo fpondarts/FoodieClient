@@ -5,13 +5,13 @@
     <data>
         <variable
             name="viewModel"
-            type="com.fpondarts.foodie.ui.home.ui.home.current_order.CurrentOrderViewModel" />
+            type="com.fpondarts.foodie.ui.home.current_order.CurrentOrderViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".ui.home.ui.home.current_order.CurrentOrderFragment">
+        tools:context=".ui.home.current_order.CurrentOrderFragment">
 
 
         <Button

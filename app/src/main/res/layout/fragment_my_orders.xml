@@ -5,7 +5,7 @@
     <data>
         <variable
             name="viewModel"
-            type="com.fpondarts.foodie.ui.home.ui.my_orders.MyOrdersViewModel" />
+            type="com.fpondarts.foodie.ui.my_orders.MyOrdersViewModel" />
     </data>
     
 <androidx.constraintlayout.widget.ConstraintLayout   
