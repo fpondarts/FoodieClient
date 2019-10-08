@@ -64,7 +64,7 @@ class CurrentOrderFragment : BottomSheetDialogFragment(), KodeinAware, OnOrderIt
 
 
         button_fin_pedido.setOnClickListener(View.OnClickListener {
-            Navigation.findNavController(parentFragment!!.view!!).navigate(R.id.confirmOrderFragment)
+            Navigation.findNavController(parentFragment!!.view!!).navigate(R.id.deliveryAddressFragment)
             dismiss()
         })
 

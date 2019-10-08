@@ -6,6 +6,7 @@ import android.app.Dialog
 import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
@@ -119,8 +120,7 @@ class ProfileFragment : DialogFragment(), KodeinAware {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-            val imageBitmap = data?.extras?.get("data") as Bitmap?
-            profilePic.setImageBitmap(imageBitmap)
+            setPic()
         }
     }
 
@@ -139,6 +139,34 @@ class ProfileFragment : DialogFragment(), KodeinAware {
             currentPhotoPath = absolutePath
         }
     }
+
+    private fun setPic() {
+
+        val targetW: Int = profilePic.width
+        val targetH: Int = profilePic.height
+
+        val bmOptions = BitmapFactory.Options().apply {
+            // Get the dimensions of the bitmap
+            inJustDecodeBounds = true
+
+            val photoW: Int = outWidth
+            val photoH: Int = outHeight
+
+            // Determine how much to scale down the image
+            val scaleFactor: Int = Math.min(photoW / targetW, photoH / targetH)
+
+            // Decode the image file into a Bitmap sized to fill the View
+            inJustDecodeBounds = false
+            inSampleSize = scaleFactor
+            inPurgeable = true
+        }
+
+        BitmapFactory.decodeFile(currentPhotoPath, bmOptions)?.also { bitmap ->
+            profilePic.setImageBitmap(bitmap)
+        }
+
+    }
+
 
     fun onGallery(){}
 }

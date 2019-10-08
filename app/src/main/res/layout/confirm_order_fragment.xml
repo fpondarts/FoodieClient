@@ -15,42 +15,68 @@
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/priceCard"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="266dp"
+        android:layout_height="66dp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginLeft="24dp"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="10dp">
+        android:layout_marginLeft="32dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="32dp">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content">
 
             <TextView
                 android:id="@+id/price_no_delivery"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:layout_marginTop="16dp"
+                android:layout_marginLeft="8dp"
                 android:text="Precio de compra"
+                android:textSize="18sp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="266dp"
+        android:layout_height="120dp"
+        android:id="@+id/delivery_price_card"
+        android:layout_marginStart="32dp"
+        android:layout_marginLeft="32dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/priceCard"
+        >
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+
             <TextView
-                android:id="@+id/delivery_options_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="Costo de envío"
+                android:layout_width="102dp"
+                android:layout_height="47dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginTop="8dp"
+                android:text="Precio de Envío"
+                android:textSize="16sp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/price_no_delivery" />
+                app:layout_constraintTop_toTopOf="parent" />
 
             <RadioGroup
+                android:id="@+id/delivery_radiogroup"
                 android:layout_width="183dp"
                 android:layout_height="63dp"
-                android:id="@+id/delivery_radiogroup"
+                android:layout_marginLeft="100dp"
                 android:checkedButton="@{viewModel.checkedButton}"
-                app:layout_constraintStart_toEndOf="@+id/delivery_options_title"
-                app:layout_constraintTop_toTopOf="@id/delivery_options_title">
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
 
                 <RadioButton
                     android:id="@+id/rb_money_price"
@@ -64,21 +90,51 @@
                     android:id="@+id/rb_favor"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Puntos de favor"
-                    android:onClick="@{viewModel::onRadioButtonClicked}"/>
+                    android:onClick="@{viewModel::onRadioButtonClicked}"
+                    android:text="Puntos de favor" />
             </RadioGroup>
 
             <EditText
+                android:id="@+id/et_points"
                 android:layout_width="181dp"
                 android:layout_height="39dp"
-                android:text="@{viewModel.pointsStr}"
-                android:id="@+id/et_points"
-                android:inputType="number"
+                android:layout_marginTop="16dp"
                 android:accessibilityPaneTitle="Puntos a ofrecer"
+                android:hint="Puntos a ofrecer"
+                android:inputType="number"
+                android:text="@{viewModel.pointsStr}"
                 app:layout_constraintStart_toStartOf="@id/delivery_radiogroup"
-                app:layout_constraintTop_toBottomOf="@id/delivery_radiogroup"
-                android:hint="Puntos a ofrecer"/>
+                app:layout_constraintTop_toBottomOf="@id/delivery_radiogroup" />
 
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/total_price_card"
+        android:layout_width="266dp"
+        android:layout_height="66dp"
+        android:layout_marginStart="36dp"
+        android:layout_marginLeft="36dp"
+        android:layout_marginTop="20dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/delivery_price_card">
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="20dp"
+                android:text="Precio Total"
+                android:textSize="18sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -87,24 +143,24 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginLeft="24dp"
-        android:layout_marginTop="32dp"
-        android:text="Cancelar"
+        android:layout_marginStart="52dp"
+        android:layout_marginLeft="52dp"
+        android:layout_marginTop="124dp"
         android:onClick="@{viewModel::onCancel}"
+        android:text="Cancelar"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/priceCard" />
+        app:layout_constraintTop_toBottomOf="@+id/total_price_card" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="176dp"
-        android:layout_marginLeft="176dp"
-        android:layout_marginTop="32dp"
-        android:text="Confirmar"
+        android:layout_marginStart="192dp"
+        android:layout_marginLeft="192dp"
+        android:layout_marginTop="124dp"
         android:onClick="@{viewModel::onConfirmOrder}"
+        android:text="Confirmar"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/priceCard" />
+        app:layout_constraintTop_toBottomOf="@+id/total_price_card" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

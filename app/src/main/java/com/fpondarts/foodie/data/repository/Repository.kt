@@ -33,7 +33,7 @@ class Repository(
     };
 
     var currentOrder: Order? = null
-    
+
 
     val AVAILABLE = "Available"
     val UNAVAILABLE = "Unavailable"
@@ -116,9 +116,15 @@ class Repository(
     fun addItemToOrder(item: OrderItem) {
         currentOrder!!.addItem(item)
     }
+
     suspend fun saveUser(user: User) = db.getUserDao().upsert(user)
 
-
+    suspend fun askDeliveryPrice(lat:Double,long:Double): Float{
+        val price = api.getDeliveryPrice(currentUser.value!!.sessionToken!!,currentOrder!!.shopId,lat,long)
+        price.isSuccessful?.let {
+            return price.body()!!.price
+        }
+    }
 
 
 }

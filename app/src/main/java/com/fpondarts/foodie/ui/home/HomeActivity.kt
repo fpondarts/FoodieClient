@@ -14,6 +14,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import android.view.Menu
 import com.fpondarts.foodie.R
+import com.google.android.gms.location.FusedLocationProviderClient
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.kodein
 
@@ -21,6 +22,8 @@ import org.kodein.di.android.kodein
 class HomeActivity : AppCompatActivity(), KodeinAware {
 
     override val kodein by kodein()
+
+    private lateinit var fusedLocationProviderClient:FusedLocationProviderClient
 
     private lateinit var appBarConfiguration: AppBarConfiguration
 
@@ -48,6 +51,8 @@ class HomeActivity : AppCompatActivity(), KodeinAware {
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
+
+        fusedLocationProviderClient = FusedLocationProviderClient(this)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

@@ -4,7 +4,9 @@ import androidx.lifecycle.LiveData
 import com.fpondarts.foodie.data.db.entity.Menu
 import com.fpondarts.foodie.data.db.entity.Shop
 import com.fpondarts.foodie.model.FoodieUser
+import com.fpondarts.foodie.network.FoodieApi.Companion.API_PREFIX
 import com.fpondarts.foodie.network.response.AvailabilityResponse
+import com.fpondarts.foodie.network.response.DeliveryPriceResponse
 import com.fpondarts.foodie.network.response.SignInResponse
 import okhttp3.OkHttpClient
 import okhttp3.ResponseBody
@@ -32,6 +34,11 @@ interface FoodieApi {
 
     @GET(API_PREFIX+"shops/top")
     suspend fun getTopShops(@Header(API_KEY_HEADER) token: String):Response<List<Shop>>
+
+    @GET(API_PREFIX+"shops/{id}/deliveryPrice")
+    suspend fun getDeliveryPrice(@Header(API_KEY_HEADER) token:String,
+                                 @Path("id")id:Long,
+                                 @Query("lat")lat:Double, @Query("long")long:Double):Response<DeliveryPriceResponse>
 
     companion object {
 

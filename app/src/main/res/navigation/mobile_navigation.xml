@@ -52,11 +52,20 @@
             android:name="shopId"
             app:argType="long" />
         <action
-            android:id="@+id/action_shopFragment_to_confirmOrderFragment"
-            app:destination="@+id/confirmOrderFragment" />
+            android:id="@+id/action_shopFragment_to_deliveryAddressFragment"
+            app:destination="@id/deliveryAddressFragment" />
     </fragment>
     <fragment
         android:id="@+id/confirmOrderFragment"
         android:name="com.fpondarts.foodie.ui.home.ui.home.confirm_order.ConfirmOrderFragment"
         android:label="ConfirmOrderFragment" />
+    <fragment
+        android:id="@+id/deliveryAddressFragment"
+        android:name="com.fpondarts.foodie.ui.home.ui.home.delivery_address.DeliveryAddressFragment"
+        android:label="delivery_address_fragment"
+        tools:layout="@layout/delivery_address_fragment" >
+        <action
+            android:id="@+id/action_deliveryAddressFragment_to_confirmOrderFragment"
+            app:destination="@id/confirmOrderFragment" />
+    </fragment>
 </navigation>
