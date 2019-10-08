@@ -21,6 +21,5 @@ class FoodieApp: Application(), KodeinAware {
         bind() from singleton { FoodieDatabase(instance()) }
         bind() from singleton { Repository(instance(),instance()) }
         bind() from provider { FoodieViewModelFactory(instance()) }
-
     }
 }

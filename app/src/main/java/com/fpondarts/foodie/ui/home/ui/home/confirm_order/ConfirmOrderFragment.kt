@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.Observer
 import androidx.lifecycle.get
 
 import com.fpondarts.foodie.R
@@ -66,6 +67,9 @@ class ConfirmOrderFragment : Fragment(), AuthListener, KodeinAware {
         et_points.isEnabled = false
         viewModel!!.points = et_points
 
+        viewModel!!.totalPriceStr.observe(this, Observer {
+            total_price.text = it!!
+        })
     }
 
 }

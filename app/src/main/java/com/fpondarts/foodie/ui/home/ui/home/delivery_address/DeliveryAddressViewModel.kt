@@ -16,7 +16,7 @@ class DeliveryAddressViewModel(val repository: Repository): ViewModel() {
     fun getDeliveryPrice(lat:Double,long:Double):LiveData<Float?>{
         Coroutines.io{
             try{
-                price.value = repository.askDeliveryPrice(lat,long)
+                price.postValue(repository.askDeliveryPrice(lat,long))
             } catch (e:FoodieApiException){
 
             }

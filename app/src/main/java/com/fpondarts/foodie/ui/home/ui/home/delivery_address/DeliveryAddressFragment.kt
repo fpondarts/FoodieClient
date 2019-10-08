@@ -11,14 +11,19 @@ import androidx.lifecycle.Observer
 import androidx.navigation.Navigation
 
 import com.fpondarts.foodie.R
+import com.fpondarts.foodie.ui.auth.FoodieViewModelFactory
 import com.google.android.gms.location.FusedLocationProviderClient
 import kotlinx.android.synthetic.main.delivery_address_fragment.*
+import org.kodein.di.Kodein
+import org.kodein.di.android.x.kodein
+import org.kodein.di.KodeinAware
+import org.kodein.di.generic.instance
 
-class DeliveryAddressFragment : Fragment() {
+class DeliveryAddressFragment : Fragment(), KodeinAware {
 
-    companion object {
-        fun newInstance() = DeliveryAddressFragment()
-    }
+    override val kodein by kodein()
+
+    private val factory:FoodieViewModelFactory by instance()
 
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
     private lateinit var viewModel: DeliveryAddressViewModel
@@ -32,7 +37,7 @@ class DeliveryAddressFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProviders.of(this).get(DeliveryAddressViewModel::class.java)
+        viewModel = ViewModelProviders.of(this,factory).get(DeliveryAddressViewModel::class.java)
 
         choose_location_card.isClickable = true
         current_location_card.isClickable = true
@@ -41,6 +46,10 @@ class DeliveryAddressFragment : Fragment() {
             it?.let {
                 Navigation.findNavController(parentFragment!!.view!!).navigate(R.id.confirmOrderFragment)
             }
+        })
+
+        current_location_card.setOnClickListener(View.OnClickListener {
+            onCurrentLocationClick()
         })
 
         fusedLocationProviderClient = FusedLocationProviderClient(context!!)

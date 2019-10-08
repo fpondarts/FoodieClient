@@ -120,9 +120,10 @@ class Repository(
     suspend fun saveUser(user: User) = db.getUserDao().upsert(user)
 
     suspend fun askDeliveryPrice(lat:Double,long:Double): Float{
-        val price = api.getDeliveryPrice(currentUser.value!!.sessionToken!!,currentOrder!!.shopId,lat,long)
-        price.isSuccessful?.let {
-            return price.body()!!.price
+        val priceResponse = api.getDeliveryPrice(currentUser.value!!.sessionToken!!,currentOrder!!.shopId,lat,long)
+        priceResponse.isSuccessful?.let {
+            currentOrder?.setDeliveryPrice(priceResponse.body()!!.price)
+            return priceResponse.body()!!.price
         }
     }
 

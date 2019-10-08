@@ -13,6 +13,7 @@ import com.google.android.material.navigation.NavigationView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import android.view.Menu
+import androidx.core.app.ActivityCompat
 import com.fpondarts.foodie.R
 import com.google.android.gms.location.FusedLocationProviderClient
 import org.kodein.di.KodeinAware
@@ -53,7 +54,11 @@ class HomeActivity : AppCompatActivity(), KodeinAware {
         navView.setupWithNavController(navController)
 
         fusedLocationProviderClient = FusedLocationProviderClient(this)
+
+        val permissions = arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION)
+        ActivityCompat.requestPermissions(this, permissions,0)
     }
+
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.

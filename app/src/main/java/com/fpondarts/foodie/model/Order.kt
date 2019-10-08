@@ -3,6 +3,7 @@ package com.fpondarts.foodie.model
 class Order(val userId:Int,val shopId:Long) {
     val items = HashMap<Long,OrderItem>()
     var price = 0.0
+    private var deliveryPrice:Float?=null
 
     fun addItem(item:OrderItem){
         if (items.containsKey(item.id)){
@@ -24,6 +25,17 @@ class Order(val userId:Int,val shopId:Long) {
         items.remove(itemId)
         updatePrice()
     }
+
+    fun setDeliveryPrice(price:Float){
+        if (price > 0){
+            deliveryPrice = price
+        }
+    }
+
+    fun getDeliveryPrice():Float?{
+        return deliveryPrice
+    }
+
 
 }
 
