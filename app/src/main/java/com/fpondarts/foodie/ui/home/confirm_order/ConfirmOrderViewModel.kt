@@ -20,6 +20,11 @@ class ConfirmOrderViewModel(val repository: Repository) : ViewModel() {
     val totalPriceStr = MutableLiveData<String>().apply {
         value = "$" + totalPrice.toString()
     }
+
+    val confirmed = MutableLiveData<Boolean>().apply {
+        value = false
+    }
+
     var checkedButton = R.id.rb_money_price
 
     var listener: AuthListener? = null
@@ -42,7 +47,7 @@ class ConfirmOrderViewModel(val repository: Repository) : ViewModel() {
         }
         Coroutines.io{
             try{
-                repository.confirmOrder()
+                confirmed.postValue(repository.confirmOrder())
             } catch(e:FoodieApiException) {
 
             }

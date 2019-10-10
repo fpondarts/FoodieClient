@@ -58,7 +58,13 @@
     <fragment
         android:id="@+id/confirmOrderFragment"
         android:name="com.fpondarts.foodie.ui.home.confirm_order.ConfirmOrderFragment"
-        android:label="ConfirmOrderFragment" />
+        android:label="ConfirmOrderFragment" >
+        <action
+            android:id="@+id/action_confirmOrderFragment_to_deliveryMapFragment"
+            app:destination="@id/deliveryMapFragment"
+            app:popUpTo="@layout/fragment_home"
+            app:popUpToInclusive="false"/>
+    </fragment>
     <fragment
         android:id="@+id/deliveryAddressFragment"
         android:name="com.fpondarts.foodie.ui.home.delivery_address.DeliveryAddressFragment"
@@ -66,6 +72,12 @@
         tools:layout="@layout/delivery_address_fragment" >
         <action
             android:id="@+id/action_deliveryAddressFragment_to_confirmOrderFragment"
-            app:destination="@id/confirmOrderFragment" />
+            app:destination="@id/confirmOrderFragment"
+            />
     </fragment>
+
+    <fragment
+        android:id="@+id/deliveryMapFragment"
+        android:name="com.fpondarts.foodie.ui.home.delivery_map.DeliveryMapFragment"
+        android:label="DeliveryMapFragment" />
 </navigation>

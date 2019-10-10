@@ -3,10 +3,6 @@ package com.fpondarts.foodie.data.repository
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.fpondarts.foodie.data.db.FoodieDatabase
-import com.fpondarts.foodie.data.db.entity.Menu
-import com.fpondarts.foodie.data.db.entity.MenuItem
-import com.fpondarts.foodie.data.db.entity.Shop
-import com.fpondarts.foodie.data.db.entity.User
 import com.fpondarts.foodie.model.Order
 import com.fpondarts.foodie.network.FoodieApi
 import com.fpondarts.foodie.network.SafeApiRequest
@@ -16,7 +12,9 @@ import com.fpondarts.foodie.util.Coroutines
 import com.fpondarts.foodie.util.exception.FoodieApiException
 import com.google.android.gms.common.api.ApiException
 import android.util.Log
+import com.fpondarts.foodie.data.db.entity.*
 import com.fpondarts.foodie.model.OrderItem
+import com.fpondarts.foodie.network.request.OrderRequest
 
 class Repository(
     private val api: FoodieApi,
@@ -33,7 +31,7 @@ class Repository(
     };
 
     var currentOrder: Order? = null
-
+    val availableDeliveries = db.getDeliveryDao().getByAvailability(true)
 
     val AVAILABLE = "Available"
     val UNAVAILABLE = "Unavailable"
@@ -127,9 +125,38 @@ class Repository(
         }
     }
 
-    fun confirmOrder(){
-        //TODO
+
+    suspend fun confirmOrder():Boolean {
+        val orderId = apiRequest{ api.confirmOrder(currentUser.value!!.sessionToken!!, OrderRequest(currentOrder!!.shopId
+            ,currentOrder!!.items.values,currentOrder!!.coordinates!!,currentOrder!!.payWitPoints,currentOrder!!.favourPoints)) }
+        currentOrder!!.id = orderId
+        return true
     }
+
+    fun getShop(id:Long):LiveData<Shop>{
+        val shop = db.getShopDao().loadShop(id)
+        shop.value?: Coroutines.io {
+            val fetched = apiRequest { api.getShop(currentUser.value!!.sessionToken!!,id) }
+            db.getShopDao().upsert(fetched)
+        }
+        return shop
+    }
+
+    fun getCurrentShop():LiveData<Shop>{
+        return getShop(currentOrder!!.shopId!!)
+    }
+
+    fun refreshDeliveries(lat:Double,long:Double){
+        Coroutines.io{
+           try {
+               db.getDeliveryDao().upsert(apiRequest{ api.getDeliveries(currentUser.value!!.sessionToken!!,lat,long) })
+           } catch (e: FoodieApiException){
+
+           }
+
+        }
+    }
+
 
     fun getUserPoints():Int{
         //TODO

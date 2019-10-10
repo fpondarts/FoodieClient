@@ -8,11 +8,13 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
+import androidx.navigation.Navigation
 
 import com.fpondarts.foodie.R
 import com.fpondarts.foodie.databinding.ConfirmOrderFragmentBinding
 import com.fpondarts.foodie.ui.auth.AuthListener
 import com.fpondarts.foodie.ui.auth.FoodieViewModelFactory
+import com.fpondarts.foodie.ui.home.delivery_map.DeliveryMapFragment
 import kotlinx.android.synthetic.main.confirm_order_fragment.*
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.kodein
@@ -68,6 +70,15 @@ class ConfirmOrderFragment : Fragment(), AuthListener, KodeinAware {
         viewModel!!.totalPriceStr.observe(this, Observer {
             total_price.text = it!!
         })
+
+        viewModel!!.confirmed.observe(this, Observer {
+            if (it) {
+                Navigation.findNavController(parentFragment!!.view!!).navigate(R.id.deliveryMapFragment)
+            }
+        })
+
+
     }
+
 
 }

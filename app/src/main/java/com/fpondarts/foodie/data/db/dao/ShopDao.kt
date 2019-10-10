@@ -11,7 +11,7 @@ import com.fpondarts.foodie.data.db.entity.Shop
 interface ShopDao {
 
     @Query("Select * from shop where id = :shopId")
-    fun loadShop(shopId:Int):LiveData<Shop>
+    fun loadShop(shopId:Long):LiveData<Shop>
 
     @Query("Select * from shop Limit 10")
     fun loadShops():LiveData<List<Shop>>

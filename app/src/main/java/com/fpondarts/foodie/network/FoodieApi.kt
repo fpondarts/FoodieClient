@@ -1,10 +1,12 @@
 package com.fpondarts.foodie.network
 
 import androidx.lifecycle.LiveData
+import com.fpondarts.foodie.data.db.entity.Delivery
 import com.fpondarts.foodie.data.db.entity.Menu
 import com.fpondarts.foodie.data.db.entity.Shop
 import com.fpondarts.foodie.model.FoodieUser
 import com.fpondarts.foodie.network.FoodieApi.Companion.API_PREFIX
+import com.fpondarts.foodie.network.request.OrderRequest
 import com.fpondarts.foodie.network.response.AvailabilityResponse
 import com.fpondarts.foodie.network.response.DeliveryPriceResponse
 import com.fpondarts.foodie.network.response.SignInResponse
@@ -38,7 +40,14 @@ interface FoodieApi {
     @GET(API_PREFIX+"shops/{id}/deliveryPrice")
     suspend fun getDeliveryPrice(@Header(API_KEY_HEADER) token:String,
                                  @Path("id")id:Long,
-                                 @Query("lat")lat:Double, @Query("long")long:Double):Response<DeliveryPriceResponse>
+                                 @Query("latitude")lat:Double, @Query("longitude")long:Double):Response<DeliveryPriceResponse>
+
+
+    @POST(API_PREFIX+"orders")
+    suspend fun confirmOrder(@Header(API_KEY_HEADER)token:String, @Body order:OrderRequest):Response<Long>
+
+    @GET(API_PREFIX+"deliveries")
+    suspend fun getDeliveries(@Header(API_KEY_HEADER)token: String, @Query("latitude") lat:Double, @Query("longitude") long:Double):Response<List<Delivery>>
 
     companion object {
 
