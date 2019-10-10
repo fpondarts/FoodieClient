@@ -120,15 +120,22 @@ class Repository(
     suspend fun askDeliveryPrice(lat:Double,long:Double): Float{
         val priceResponse = api.getDeliveryPrice(currentUser.value!!.sessionToken!!,currentOrder!!.shopId,lat,long)
         priceResponse.isSuccessful?.let {
-            currentOrder?.setDeliveryPrice(priceResponse.body()!!.price)
+            currentOrder!!.setDeliveryPrice(priceResponse.body()!!.price)
+            currentOrder!!.latitude = lat
+            currentOrder!!.longitude = long
             return priceResponse.body()!!.price
         }
     }
 
 
     suspend fun confirmOrder():Boolean {
-        val orderId = apiRequest{ api.confirmOrder(currentUser.value!!.sessionToken!!, OrderRequest(currentOrder!!.shopId
-            ,currentOrder!!.items.values,currentOrder!!.coordinates!!,currentOrder!!.payWitPoints,currentOrder!!.favourPoints)) }
+        val orderId = apiRequest{ api.confirmOrder(currentUser.value!!.sessionToken!!,
+            OrderRequest(2
+            ,currentOrder!!.items.values
+            ,currentOrder!!.latitude!!
+            ,currentOrder!!.longitude!!
+            ,currentOrder!!.payWitPoints
+            ,currentOrder!!.favourPoints)) }.orderId
         currentOrder!!.id = orderId
         return true
     }

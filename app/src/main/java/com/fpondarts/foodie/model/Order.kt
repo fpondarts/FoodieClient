@@ -4,7 +4,8 @@ class Order(val userId:Int,val shopId:Long) {
     val items = HashMap<Long,OrderItem>()
     var price = 0.0
     var id:Long?=null
-    var coordinates:Coordinates?=null
+    var latitude: Double? = null
+    var longitude: Double? = null
     var payWitPoints:Boolean = false
     var favourPoints:Int = 0
     private var deliveryPrice:Float?=null

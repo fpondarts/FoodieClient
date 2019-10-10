@@ -45,7 +45,7 @@ class ConfirmOrderViewModel(val repository: Repository) : ViewModel() {
                 //TODO manejar error de
             }
         }
-        Coroutines.io{
+        Coroutines.io {
             try{
                 confirmed.postValue(repository.confirmOrder())
             } catch(e:FoodieApiException) {

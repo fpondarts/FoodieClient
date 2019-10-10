@@ -8,6 +8,7 @@ import com.fpondarts.foodie.model.FoodieUser
 import com.fpondarts.foodie.network.FoodieApi.Companion.API_PREFIX
 import com.fpondarts.foodie.network.request.OrderRequest
 import com.fpondarts.foodie.network.response.AvailabilityResponse
+import com.fpondarts.foodie.network.response.ConfirmOrderResponse
 import com.fpondarts.foodie.network.response.DeliveryPriceResponse
 import com.fpondarts.foodie.network.response.SignInResponse
 import okhttp3.OkHttpClient
@@ -44,7 +45,7 @@ interface FoodieApi {
 
 
     @POST(API_PREFIX+"orders")
-    suspend fun confirmOrder(@Header(API_KEY_HEADER)token:String, @Body order:OrderRequest):Response<Long>
+    suspend fun confirmOrder(@Header(API_KEY_HEADER)token:String, @Body order:OrderRequest):Response<ConfirmOrderResponse>
 
     @GET(API_PREFIX+"deliveries")
     suspend fun getDeliveries(@Header(API_KEY_HEADER)token: String, @Query("latitude") lat:Double, @Query("longitude") long:Double):Response<List<Delivery>>
