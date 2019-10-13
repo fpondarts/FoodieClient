@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+    
+    <data>
+        <variable
+            name="viewModel"
+            type="com.fpondarts.foodie.ui.home.menu_item_sheet.MIBottomSheetViewModel" />
+    </data>
+<androidx.constraintlayout.widget.ConstraintLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+
+    <TextView
+        android:id="@+id/bs_item_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="72dp"
+        android:layout_marginLeft="72dp"
+        android:layout_marginTop="24dp"
+        android:hint="Item Name"
+        android:text="@{viewModel.name}"
+        android:textSize="24dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/bs_price"
+        android:layout_width="96dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="140dp"
+        android:layout_marginLeft="140dp"
+        android:layout_marginTop="60dp"
+        android:hint="$xx.xx"
+        android:textSize="24dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/bs_item_name" />
+
+    <NumberPicker
+        android:id="@+id/bs_number_picker"
+        android:layout_width="62dp"
+        android:layout_height="119dp"
+        android:layout_marginStart="156dp"
+        android:layout_marginLeft="156dp"
+        android:layout_marginTop="76dp"
+        android:onValueChange="@{(picker,oldval,newval) -> viewModel.onNumberChange(newval)}"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/bs_item_name" />
+
+    <Button
+        android:id="@+id/bs_cancel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="44dp"
+        android:layout_marginLeft="44dp"
+        android:layout_marginTop="40dp"
+        android:text="Cancelar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/bs_number_picker" />
+
+    <Button
+        android:id="@+id/bs_add"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="84dp"
+        android:layout_marginLeft="84dp"
+        android:layout_marginTop="40dp"
+        android:onClick="@{viewModel::onAddClick}"
+        android:text="Agregar"
+        app:layout_constraintStart_toEndOf="@id/bs_cancel"
+        app:layout_constraintTop_toBottomOf="@id/bs_number_picker" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</layout>
