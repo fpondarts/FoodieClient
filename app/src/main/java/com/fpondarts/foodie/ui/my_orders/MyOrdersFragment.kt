@@ -4,11 +4,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.fpondarts.foodie.R
 import com.fpondarts.foodie.databinding.FragmentMyOrdersBinding
 import com.fpondarts.foodie.ui.auth.FoodieViewModelFactory
@@ -17,7 +19,7 @@ import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.kodein
 import org.kodein.di.generic.instance
 
-class MyOrdersFragment : Fragment(), KodeinAware, OnActiveOrderClickListener, OnPastOrderClickListener {
+class MyOrdersFragment : Fragment(), KodeinAware, OnActiveOrderClickListener{
 
     override val kodein by kodein()
 
@@ -41,17 +43,46 @@ class MyOrdersFragment : Fragment(), KodeinAware, OnActiveOrderClickListener, On
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        recycler_active_orders.apply {
+            layoutManager = LinearLayoutManager(activity)
+        }
+
+        recycler_past_orders.apply{
+            layoutManager = LinearLayoutManager(activity)
+        }
+
+
+
+        viewModel!!.getActiveOrders().observe(this, Observer {
+            it?.let{
+                val listener = this
+                recycler_active_orders.adapter?.let{
+                    it.notifyDataSetChanged()
+                } ?.run {
+                    recycler_active_orders.adapter = ActiveOrderAdapter(it,true,listener)
+                }
+            }
+        })
+
+        viewModel!!.getDeliveredOrders().observe(this, Observer {
+            val listener = this
+            it?.let{
+                recycler_past_orders.adapter?.let {
+                    it.notifyDataSetChanged()
+                } ?.run {
+                    recycler_past_orders.adapter = ActiveOrderAdapter(it,false,listener)
+                }
+            }
+        })
+        viewModel!!.getDeliveredOrders()
     }
 
-    override fun onActiveOrderClick() {
+    override fun onActiveOrderClick(active:Boolean){
+        if (active){
 
+        } else {
 
-
+        }
     }
 
-    override fun onPastOrderClick() {
-
-
-
-    }
 }
