@@ -3,7 +3,7 @@ package com.fpondarts.foodie.data.repository
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.fpondarts.foodie.data.db.FoodieDatabase
-import com.fpondarts.foodie.model.Order
+import com.fpondarts.foodie.model.OrderModel
 import com.fpondarts.foodie.network.FoodieApi
 import com.fpondarts.foodie.network.SafeApiRequest
 import com.fpondarts.foodie.network.response.AvailabilityResponse
@@ -14,6 +14,7 @@ import com.google.android.gms.common.api.ApiException
 import android.util.Log
 import com.fpondarts.foodie.data.db.entity.*
 import com.fpondarts.foodie.model.OrderItem
+import com.fpondarts.foodie.model.OrderState
 import com.fpondarts.foodie.network.request.OrderRequest
 
 class Repository(
@@ -30,7 +31,7 @@ class Repository(
             ,true,"myToken")
     };
 
-    var currentOrder: Order? = null
+    var currentOrder: OrderModel? = null
     val availableDeliveries = db.getDeliveryDao().getByAvailability(true)
 
     val AVAILABLE = "Available"
@@ -80,7 +81,7 @@ class Repository(
     }
 
     fun newOrder(shopId:Long){
-        currentOrder = Order(currentUser.value!!.uId,shopId)
+        currentOrder = OrderModel(currentUser.value!!.uId,shopId)
     }
 
     fun getShopMenu(shopId:Long): LiveData<List<MenuItem>>{
@@ -168,6 +169,51 @@ class Repository(
         
     }
 
+    fun getOrder(id:Long): LiveData<com.fpondarts.foodie.data.db.entity.Order>{
+        val order = db.getOrderDao().getOrder(id)
+        if (order.value == null) {
+            Coroutines.io {
+                try {
+                    val order = apiRequest { api.getOrder(currentUser.value!!.sessionToken!!, id) }
+                    db.getOrderDao().upsert(order)
+                } catch (e: FoodieApiException) {
+
+                }
+            }
+        }
+        return order
+    }
+
+    fun getDelivery(id:Long): LiveData<Delivery> {
+        val delivery = db.getDeliveryDao().getDelivery(id)
+        if (delivery.value == null){
+            Coroutines.io {
+                try {
+                    val fetched = apiRequest{ api.getDelivery(currentUser.value!!.sessionToken!!,id) }
+                    db.getDeliveryDao().upsert(fetched)
+                } catch (e:FoodieApiException){
+
+                }
+            }
+        }
+        return delivery
+    }
+
+
+    fun getOrdersByState(state: OrderState):LiveData<List<Order>>{
+        val res = db.getOrderDao().getOrdersByState(state)
+        Coroutines.io{
+            try {
+                val fetched = apiRequest{ api.getOrdersByState(currentUser.value!!.sessionToken!!
+                    ,currentUser.value!!.uId!!
+                    ,state.stringVal,db.getOrderDao().getCount().value!!,10)}
+                db.getOrderDao().upsert(fetched)
+            } catch (e: FoodieApiException){
+
+            }
+        }
+        return res
+    }
 
     fun getUserPoints():Int{
         //TODO

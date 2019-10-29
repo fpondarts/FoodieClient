@@ -2,12 +2,12 @@ package com.fpondarts.foodie.ui.home.current_order
 
 import androidx.lifecycle.ViewModel
 import com.fpondarts.foodie.data.repository.Repository
-import com.fpondarts.foodie.model.Order
+import com.fpondarts.foodie.model.OrderModel
 
 class CurrentOrderViewModel(val repository: Repository) : ViewModel() {
 
 
-    fun getCurrentOrder():Order{
+    fun getCurrentOrder():OrderModel{
        return repository.currentOrder!!
     }
 

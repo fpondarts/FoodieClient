@@ -1,10 +1,7 @@
 package com.fpondarts.foodie.network
 
 import androidx.lifecycle.LiveData
-import com.fpondarts.foodie.data.db.entity.Delivery
-import com.fpondarts.foodie.data.db.entity.Menu
-import com.fpondarts.foodie.data.db.entity.Offer
-import com.fpondarts.foodie.data.db.entity.Shop
+import com.fpondarts.foodie.data.db.entity.*
 import com.fpondarts.foodie.model.FoodieUser
 import com.fpondarts.foodie.network.FoodieApi.Companion.API_PREFIX
 import com.fpondarts.foodie.network.request.OrderRequest
@@ -55,6 +52,23 @@ interface FoodieApi {
     @POST(API_PREFIX+"offer")
     suspend fun postOffer(@Header(API_KEY_HEADER)token:String, @Body deliveryId:Long, @Body orderId: Long):Response<Offer>
 
+
+    @GET(API_PREFIX+"orders/{orderId}")
+    suspend fun getOrder(@Header(API_KEY_HEADER)token:String, @Body orderId:Long):Response<Order>
+
+    @GET(API_PREFIX+"deliveries/{id}")
+    suspend fun getDelivery(@Header(API_KEY_HEADER)token:String, @Body id:Long):Response<Delivery>
+
+    @GET(API_PREFIX+"orders")
+    suspend fun getOrdersByState(@Header(API_KEY_HEADER)token:String,
+                                 @Query("userId")userId:Long,
+                                 @Query("state")state:String?,
+                                 @Query("offset")offset:Int,
+                                 @Query("limit")limit:Int):Response<List<Order>>
+
+
+
+
     companion object {
 
         val logging = HttpLoggingInterceptor().apply {
@@ -78,7 +92,7 @@ interface FoodieApi {
                 .create(FoodieApi::class.java)
         }
 
-         const val API_PREFIX = "FoodieAPI/FoodieAPI/1.0.0-oas3/"
+        const val API_PREFIX = "FoodieAPI/FoodieAPI/1.0.0-oas3/"
         const val API_KEY_HEADER = "FOODIE-API-KEY"
     }
 

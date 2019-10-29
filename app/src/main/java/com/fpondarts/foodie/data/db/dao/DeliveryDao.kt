@@ -13,6 +13,16 @@ interface DeliveryDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun upsert(deliveries: Collection<Delivery>)
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun upsert(delivery:Delivery)
+
     @Query("SELECT * FROM DELIVERY WHERE available=:available")
     fun getByAvailability(available:Boolean):LiveData<List<Delivery>>
+
+    @Query("Select * From Delivery Where id=:id")
+    fun getDelivery(id:Long):LiveData<Delivery>
+
+
+
+
 }

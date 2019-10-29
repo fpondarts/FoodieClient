@@ -5,15 +5,12 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import com.fpondarts.foodie.data.db.dao.DeliveryDao
-import com.fpondarts.foodie.data.db.dao.MenuItemDao
-import com.fpondarts.foodie.data.db.dao.ShopDao
-import com.fpondarts.foodie.data.db.dao.UserDao
+import com.fpondarts.foodie.data.db.dao.*
 import com.fpondarts.foodie.data.db.entity.*
 
 
 @Database(
-    entities = [User::class, Shop::class, MenuItem::class, Delivery::class, Offer::class],
+    entities = [User::class, Shop::class, MenuItem::class, Delivery::class, Offer::class, Order::class],
     version = 1
 )
 
@@ -24,6 +21,7 @@ abstract class FoodieDatabase: RoomDatabase(){
     abstract fun getShopDao() : ShopDao
     abstract fun getMenuItemDao() : MenuItemDao
     abstract fun getDeliveryDao() : DeliveryDao
+    abstract fun getOrderDao(): OrderDao
 
     companion object{
         @Volatile

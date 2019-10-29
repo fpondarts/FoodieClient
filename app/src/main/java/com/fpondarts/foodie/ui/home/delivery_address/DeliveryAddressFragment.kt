@@ -54,9 +54,6 @@ class DeliveryAddressFragment : Fragment(), KodeinAware {
 
         fusedLocationProviderClient = FusedLocationProviderClient(context!!)
 
-        fusedLocationProviderClient.lastLocation.addOnSuccessListener {
-
-        }
 
     }
 

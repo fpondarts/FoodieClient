@@ -9,7 +9,7 @@ const val CURRENT_USER_ID = 0
 @Entity
 data class User(
     @PrimaryKey
-    var uId: Int,
+    var uId: Long,
     var name:String,
     var email:String,
     var password:String?,

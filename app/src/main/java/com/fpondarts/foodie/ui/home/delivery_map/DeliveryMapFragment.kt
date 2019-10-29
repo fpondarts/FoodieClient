@@ -61,7 +61,7 @@ class DeliveryMapFragment : Fragment()
             mMap?.apply {
                 this.clear()
                 it.forEach {
-                    val marker = mMap.addMarker(MarkerOptions().position(LatLng(it.latitude,it.longitude)))
+                    val marker = mMap.addMarker(MarkerOptions().draggable(false).position(LatLng(it.latitude,it.longitude)))
                     marker.tag = it.id
                 }
             }

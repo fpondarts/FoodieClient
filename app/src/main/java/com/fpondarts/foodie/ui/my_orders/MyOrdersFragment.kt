@@ -45,9 +45,13 @@ class MyOrdersFragment : Fragment(), KodeinAware, OnActiveOrderClickListener, On
 
     override fun onActiveOrderClick() {
 
+
+
     }
 
     override fun onPastOrderClick() {
+
+
 
     }
 }

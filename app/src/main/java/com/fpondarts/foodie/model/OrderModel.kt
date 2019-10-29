@@ -1,6 +1,6 @@
 package com.fpondarts.foodie.model
 
-class Order(val userId:Int,val shopId:Long) {
+class OrderModel(val userId:Long, val shopId:Long) {
     val items = HashMap<Long,OrderItem>()
     var price = 0.0
     var id:Long?=null
