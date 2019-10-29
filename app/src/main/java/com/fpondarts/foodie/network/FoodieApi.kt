@@ -3,6 +3,7 @@ package com.fpondarts.foodie.network
 import androidx.lifecycle.LiveData
 import com.fpondarts.foodie.data.db.entity.Delivery
 import com.fpondarts.foodie.data.db.entity.Menu
+import com.fpondarts.foodie.data.db.entity.Offer
 import com.fpondarts.foodie.data.db.entity.Shop
 import com.fpondarts.foodie.model.FoodieUser
 import com.fpondarts.foodie.network.FoodieApi.Companion.API_PREFIX
@@ -11,6 +12,7 @@ import com.fpondarts.foodie.network.response.AvailabilityResponse
 import com.fpondarts.foodie.network.response.ConfirmOrderResponse
 import com.fpondarts.foodie.network.response.DeliveryPriceResponse
 import com.fpondarts.foodie.network.response.SignInResponse
+import com.google.gson.annotations.SerializedName
 import okhttp3.OkHttpClient
 import okhttp3.ResponseBody
 import okhttp3.logging.HttpLoggingInterceptor
@@ -49,6 +51,9 @@ interface FoodieApi {
 
     @GET(API_PREFIX+"deliveries")
     suspend fun getDeliveries(@Header(API_KEY_HEADER)token: String, @Query("latitude") lat:Double, @Query("longitude") long:Double):Response<List<Delivery>>
+
+    @POST(API_PREFIX+"offer")
+    suspend fun postOffer(@Header(API_KEY_HEADER)token:String, @Body deliveryId:Long, @Body orderId: Long):Response<Offer>
 
     companion object {
 

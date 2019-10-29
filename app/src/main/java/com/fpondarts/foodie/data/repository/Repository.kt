@@ -164,6 +164,10 @@ class Repository(
         }
     }
 
+    fun postOffer(deliveryId:Long){
+        
+    }
+
 
     fun getUserPoints():Int{
         //TODO

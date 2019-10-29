@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.room.TypeConverters
 import com.fpondarts.foodie.data.db.dao.DeliveryDao
 import com.fpondarts.foodie.data.db.dao.MenuItemDao
 import com.fpondarts.foodie.data.db.dao.ShopDao
@@ -12,9 +13,11 @@ import com.fpondarts.foodie.data.db.entity.*
 
 
 @Database(
-    entities = [User::class, Shop::class, MenuItem::class, Delivery::class],
+    entities = [User::class, Shop::class, MenuItem::class, Delivery::class, Offer::class],
     version = 1
 )
+
+@TypeConverters(Converters::class)
 abstract class FoodieDatabase: RoomDatabase(){
 
     abstract fun getUserDao() : UserDao

@@ -13,36 +13,19 @@
         <action
             android:id="@+id/action_nav_home_to_shopFragment"
             app:destination="@id/shopFragment" />
+        <action
+            android:id="@+id/action_nav_home_to_nav_profile"
+            app:destination="@id/nav_profile" />
+        <action
+            android:id="@+id/action_nav_home_to_myOrdersFragment"
+            app:destination="@id/navigation" />
     </fragment>
-
-    <fragment
-        android:id="@+id/nav_gallery"
-        android:name="com.fpondarts.foodie.ui.my_orders.MyOrdersFragment"
-        android:label="@string/menu_gallery"
-        tools:layout="@layout/fragment_my_orders" />
 
     <fragment
         android:id="@+id/nav_profile"
         android:name="com.fpondarts.foodie.ui.profile.ProfileFragment"
         android:label="@string/menu_profile" />
 
-    <fragment
-        android:id="@+id/nav_tools"
-        android:name="com.fpondarts.foodie.ui.tools.ToolsFragment"
-        android:label="@string/menu_tools"
-        tools:layout="@layout/fragment_tools" />
-
-    <fragment
-        android:id="@+id/nav_share"
-        android:name="com.fpondarts.foodie.ui.share.ShareFragment"
-        android:label="@string/menu_share"
-        tools:layout="@layout/fragment_share" />
-
-    <fragment
-        android:id="@+id/nav_send"
-        android:name="com.fpondarts.foodie.ui.send.SendFragment"
-        android:label="@string/menu_send"
-        tools:layout="@layout/fragment_send" />
     <fragment
         android:id="@+id/shopFragment"
         android:name="com.fpondarts.foodie.ui.home.shop_menu.ShopMenuFragment"
@@ -80,4 +63,12 @@
         android:id="@+id/deliveryMapFragment"
         android:name="com.fpondarts.foodie.ui.home.delivery_map.DeliveryMapFragment"
         android:label="DeliveryMapFragment" />
+    <navigation
+        android:id="@+id/navigation"
+        app:startDestination="@id/myOrdersFragment" >
+        <fragment
+            android:id="@+id/myOrdersFragment"
+            android:name="com.fpondarts.foodie.ui.my_orders.MyOrdersFragment"
+            android:label="MyOrdersFragment" />
+    </navigation>
 </navigation>
