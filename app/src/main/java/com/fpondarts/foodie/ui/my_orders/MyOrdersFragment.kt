@@ -6,10 +6,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.core.os.bundleOf
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.Navigation
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.fpondarts.foodie.R
 import com.fpondarts.foodie.databinding.FragmentMyOrdersBinding
@@ -77,9 +80,10 @@ class MyOrdersFragment : Fragment(), KodeinAware, OnActiveOrderClickListener{
         viewModel!!.getDeliveredOrders()
     }
 
-    override fun onActiveOrderClick(active:Boolean){
+    override fun onActiveOrderClick(active:Boolean,orderId:Long){
         if (active){
-
+            val bundle = bundleOf("orderId" to orderId)
+            Navigation.findNavController(parentFragment!!.view!!).navigate(R.id.activeOrderFragment,bundle)
         } else {
 
         }

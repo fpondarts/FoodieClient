@@ -69,6 +69,18 @@
         <fragment
             android:id="@+id/myOrdersFragment"
             android:name="com.fpondarts.foodie.ui.my_orders.MyOrdersFragment"
-            android:label="MyOrdersFragment" />
+            android:label="MyOrdersFragment" >
+            <action
+                android:id="@+id/checkActiveOrder"
+                app:destination="@id/activeOrderFragment" />
+        </fragment>
+        <fragment
+            android:id="@+id/activeOrderFragment"
+            android:name="com.fpondarts.foodie.ui.my_orders.ActiveOrderFragment"
+            android:label="ActiveOrderFragment">
+            <argument
+                android:name="orderId"
+                app:argType="long" />
+        </fragment>
     </navigation>
 </navigation>

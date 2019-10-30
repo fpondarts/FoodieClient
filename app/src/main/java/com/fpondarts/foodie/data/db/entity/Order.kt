@@ -15,6 +15,8 @@ data class Order(
     val userId: Long,
     val shopId:Long,
     val state: OrderState,
-    val deliveryId: Long
+    val deliveryId: Long,
+    val deliveryRating:Float?,
+    val shopRating:Float?
     ) {
 }
