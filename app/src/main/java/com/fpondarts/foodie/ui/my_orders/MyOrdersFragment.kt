@@ -4,15 +4,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.LinearLayout
-import android.widget.TextView
 import androidx.core.os.bundleOf
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.Navigation
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.fpondarts.foodie.R
 import com.fpondarts.foodie.databinding.FragmentMyOrdersBinding
@@ -22,7 +19,7 @@ import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.kodein
 import org.kodein.di.generic.instance
 
-class MyOrdersFragment : Fragment(), KodeinAware, OnActiveOrderClickListener{
+class MyOrdersFragment : Fragment(), KodeinAware, OnMyOrderClickListener{
 
     override val kodein by kodein()
 
@@ -80,12 +77,13 @@ class MyOrdersFragment : Fragment(), KodeinAware, OnActiveOrderClickListener{
         viewModel!!.getDeliveredOrders()
     }
 
-    override fun onActiveOrderClick(active:Boolean,orderId:Long){
+    override fun onActiveOrderClick(active:Boolean,orderId:Long,shopId:Long?,deliveryId:Long?){
         if (active){
             val bundle = bundleOf("orderId" to orderId)
             Navigation.findNavController(parentFragment!!.view!!).navigate(R.id.activeOrderFragment,bundle)
         } else {
-
+            val bundle = bundleOf("orderId" to orderId, "shopId" to shopId, "deliveryId" to deliveryId)
+            Navigation.findNavController(parentFragment!!.view!!).navigate(R.id.orderRatingFragment,bundle)
         }
     }
 

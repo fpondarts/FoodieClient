@@ -29,6 +29,7 @@
 
                 <TextView
                     android:id="@+id/order_rating_shop_name"
+                    android:text="@{viewModel.shopName}"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
@@ -40,6 +41,7 @@
 
                 <androidx.appcompat.widget.AppCompatRatingBar
                     android:id="@+id/order_rating_shop_rating"
+                    android:rating="@{viewModel.shopRating}"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:max="5"
@@ -62,6 +64,7 @@
                     android:layout_marginLeft="88dp"
                     android:layout_marginTop="16dp"
                     android:text="Calificar"
+                    android:enabled="@{viewModel.rateShopEnabled}"
                     app:layout_constraintStart_toEndOf="@id/order_rating_shop_name"
                     app:layout_constraintTop_toTopOf="parent" />
 
@@ -86,6 +89,7 @@
 
                 <TextView
                     android:id="@+id/order_rating_delivery_name"
+                    android:text="@{viewModel.deliveryName}"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
@@ -97,6 +101,7 @@
 
                 <androidx.appcompat.widget.AppCompatRatingBar
                     android:id="@+id/order_rating_delivery_rating"
+                    android:rating="@{viewModel.deliveryRating}"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:max="5"
@@ -118,6 +123,7 @@
                     android:layout_marginStart="88dp"
                     android:layout_marginLeft="88dp"
                     android:layout_marginTop="16dp"
+                    android:enabled="@{viewModel.rateDeliveryEnabled}"
                     android:text="Calificar"
                     app:layout_constraintStart_toEndOf="@id/order_rating_delivery_name"
                     app:layout_constraintTop_toTopOf="parent" />

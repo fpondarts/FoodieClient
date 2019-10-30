@@ -73,6 +73,9 @@
             <action
                 android:id="@+id/checkActiveOrder"
                 app:destination="@id/activeOrderFragment" />
+            <action
+                android:id="@+id/action_myOrdersFragment_to_orderRatingFragment"
+                app:destination="@id/orderRatingFragment" />
         </fragment>
         <fragment
             android:id="@+id/activeOrderFragment"
@@ -80,6 +83,20 @@
             android:label="ActiveOrderFragment">
             <argument
                 android:name="orderId"
+                app:argType="long" />
+        </fragment>
+        <fragment
+            android:id="@+id/orderRatingFragment"
+            android:name="com.fpondarts.foodie.ui.my_orders.OrderRatingFragment"
+            android:label="OrderRatingFragment" >
+            <argument
+                android:name="orderId"
+                app:argType="long" />
+            <argument
+                android:name="deliveryId"
+                app:argType="long" />
+            <argument
+                android:name="shopId"
                 app:argType="long" />
         </fragment>
     </navigation>

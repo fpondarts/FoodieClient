@@ -6,7 +6,6 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.fpondarts.foodie.R
 import com.fpondarts.foodie.data.db.entity.Order
-import java.util.*
 
 class OrderViewHolder(inflater:LayoutInflater, parent:ViewGroup):
     RecyclerView.ViewHolder(inflater.inflate(R.layout.item_order,parent,false)) {
@@ -21,8 +20,9 @@ class OrderViewHolder(inflater:LayoutInflater, parent:ViewGroup):
         mPrice = itemView.findViewById(R.id.order_card_price)
     }
 
-    fun bind(order: Order, listener: OnActiveOrderClickListener,active:Boolean){
+    fun bind(order: Order, listener: OnMyOrderClickListener, active:Boolean){
         mDate!!.text = order.dateTime
         mPrice!!.text = order.dateTime
+        listener.onActiveOrderClick(active,order.id,order.shopId,order.deliveryId)
     }
 }

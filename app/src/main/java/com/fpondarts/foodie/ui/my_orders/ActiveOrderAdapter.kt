@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.fpondarts.foodie.data.db.entity.Order
 
-class ActiveOrderAdapter(private val list: List<Order>, val active: Boolean, val listener: OnActiveOrderClickListener )
+class ActiveOrderAdapter(private val list: List<Order>, val active: Boolean, val listener: OnMyOrderClickListener )
     : RecyclerView.Adapter<OrderViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): OrderViewHolder {
         val inflater = LayoutInflater.from(parent.context)
