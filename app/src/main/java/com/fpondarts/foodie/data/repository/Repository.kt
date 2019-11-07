@@ -16,11 +16,15 @@ import com.fpondarts.foodie.data.db.entity.*
 import com.fpondarts.foodie.model.OrderItem
 import com.fpondarts.foodie.model.OrderState
 import com.fpondarts.foodie.network.request.OrderRequest
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
 
 class Repository(
     private val api: FoodieApi,
     private val db : FoodieDatabase
 ):SafeApiRequest() {
+
+    lateinit var fbDb : DatabaseReference
 
     val topRanked = db.getShopDao().getAllOrdered()
 
@@ -37,6 +41,12 @@ class Repository(
     val AVAILABLE = "Available"
     val UNAVAILABLE = "Unavailable"
     val ERROR = "Error"
+
+
+    fun initializeRealtime(){
+        fbDb = FirebaseDatabase.getInstance().reference
+
+    }
 
     suspend fun checkAvailability(email:String):AvailabilityResponse{
         return apiRequest{ api.checkEmailIsAvailable(email) }
@@ -215,9 +225,18 @@ class Repository(
         return res
     }
 
+    fun sendMessage(orderId:Long, message:String, to: String){
+        val newMessage = ChatMessage(orderId,currentUser.value!!.fbUid!!, to,message,System.currentTimeMillis()/1000)
+        val key = fbDb.child("chats").child(orderId.toString()).child("messages").push().key
+        if (key == null){
+
+        }
+        fbDb.child("chats").child(orderId.toString()).child("messages/$key").setValue(newMessage)
+    }
+
     fun getUserPoints():Int{
         //TODO
-        return 0
+        return -1
     }
 
 }

@@ -8,7 +8,7 @@ android {
     buildToolsVersion "29.0.2"
     defaultConfig {
         applicationId 'com.fpondarts.foodie'
-        minSdkVersion 16
+        minSdkVersion 26
         targetSdkVersion 29
         versionCode 1
         versionName "1.0"
@@ -107,6 +107,11 @@ dependencies {
     //Firebase cloud-storage
     implementation 'com.google.firebase:firebase-storage:19.0.1'
 
+    // Firebase real-time db
+    implementation 'com.google.firebase:firebase-database:19.2.0'
+
+    // Picasso (image loader)
+    implementation 'com.squareup.picasso:picasso:2.71828'
 
     implementation 'androidx.lifecycle:lifecycle-extensions:2.1.0-alpha01'
 }

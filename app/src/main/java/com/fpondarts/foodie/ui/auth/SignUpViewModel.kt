@@ -46,7 +46,7 @@ class SignUpViewModel(
                 val availabilityResponse = repository.checkAvailability(email!!)
                 availabilityResponse.isAvailable?.let{
                     if (!it){
-                        authListener?.onFailure("Email not available")
+                        authListener?.onFailure("Ya exixte un usuario con ese correo")
                     } else {
                         changeActivity.value = SIGN_UP_INPUT;
                     }

@@ -57,7 +57,6 @@ class SignInViewModel(
                 authListener?.onFailure("Authentication failed")
             }
         }
-
     }
 
 
@@ -67,6 +66,7 @@ class SignInViewModel(
             if (task.isSuccessful){
                 Coroutines.main {
                     try{
+                        auth.currentUser!!
                         val signInResponse = repository.foodieSignIn(user.email!!,password!!,task.getResult()!!.token!!)
                         this.sessionToken.value = signInResponse.sessionToken
                     }catch (e:FoodieApiException){
