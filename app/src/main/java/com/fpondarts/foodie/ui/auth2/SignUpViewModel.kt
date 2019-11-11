@@ -15,6 +15,11 @@ class SignUpViewModel : ViewModel() {
     @Bindable
     val password = MutableLiveData<String>()
 
+    var handler: GoogleAuthHandler? = null
+
+    fun onGoogleSignUp(){
+        handler?.handleAuth()
+    }
 
 
 

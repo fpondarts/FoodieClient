@@ -68,6 +68,8 @@ class RegisterDataFragment : DialogFragment(), KodeinAware {
     private var password:String? = null
     private var uid:String? = null
 
+    private var uploading = false
+
     val REQUEST_IMAGE_CAPTURE = 1
     val REQUEST_GALLERY = 2
 
@@ -118,17 +120,26 @@ class RegisterDataFragment : DialogFragment(), KodeinAware {
         navController = findNavController()
 
         signUpButton.setOnClickListener(View.OnClickListener {
-            try {
-                viewModel.signUpUser().observe(this, Observer {
-                    it?.let{
-                        if (it){
-                            navController.navigate(R.id.action_registerDataFragment_to_signInFragment,null,
-                                NavOptions.Builder().setPopUpTo(R.id.signInFragment,true).build())
+            if (!uploading) {
+                try {
+                    viewModel.signUpUser().observe(this, Observer {
+                        it?.let {
+                            if (it) {
+                                navController.navigate(
+                                    R.id.action_registerDataFragment_to_signInFragment, null,
+                                    NavOptions.Builder().setPopUpTo(
+                                        R.id.signInFragment,
+                                        true
+                                    ).build()
+                                )
+                            }
                         }
-                    }
-                })
-            } catch (e:IncompleteDataException){
-                Toast.makeText(activity,e.message,Toast.LENGTH_SHORT).show()
+                    })
+                } catch (e: IncompleteDataException) {
+                    Toast.makeText(activity, e.message, Toast.LENGTH_SHORT).show()
+                }
+            } else {
+                Toast.makeText(activity,"La imagen de perfil se esta cargando, espere",Toast.LENGTH_LONG).show()
             }
         })
 
@@ -238,11 +249,13 @@ class RegisterDataFragment : DialogFragment(), KodeinAware {
         val imageRef = ref.child("images/${viewModel.uid}/${file.lastPathSegment}")
 
         val uploadTask = imageRef.putFile(file)
-
+        uploading = true
         uploadTask.addOnFailureListener{
             Toast.makeText(activity,"No pudo cargarse la imagen de perfil",Toast.LENGTH_SHORT).show()
+            uploading = false
         }.addOnSuccessListener {
             imageRef.downloadUrl.addOnSuccessListener {
+                uploading = false
                 viewModel.photo = it.toString()
                 Picasso.get().load(viewModel.photo).into(imageViewPhoto)
             }

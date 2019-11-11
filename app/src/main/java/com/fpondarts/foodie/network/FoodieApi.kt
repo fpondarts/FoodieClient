@@ -1,9 +1,7 @@
 package com.fpondarts.foodie.network
 
 import com.fpondarts.foodie.data.db.entity.*
-import com.fpondarts.foodie.network.request.DeliveryRegisterRequest
-import com.fpondarts.foodie.network.request.OrderRequest
-import com.fpondarts.foodie.network.request.UserRegisterRequest
+import com.fpondarts.foodie.network.request.*
 import com.fpondarts.foodie.network.response.*
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -64,6 +62,12 @@ interface FoodieApi {
 
     @POST("user")
     suspend fun registerDelivery(@Body body:DeliveryRegisterRequest):Response<SuccessResponse>
+
+    @POST("user/login")
+    suspend fun tokenLogin(@Body body: TokenLoginRequest):Response<SignInResponse>
+
+    @POST("user/login")
+    suspend fun passwordLogin(@Body body: PasswordLoginRequest):Response<SignInResponse>
 
 
     companion object {

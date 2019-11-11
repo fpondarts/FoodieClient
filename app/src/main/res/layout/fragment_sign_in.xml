@@ -64,6 +64,7 @@
                     android:id="@+id/googleSignInButton"
                     android:layout_width="218dp"
                     android:layout_height="48dp"
+                    android:onClick="@{viewModel::googleSignIn}"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/signUpButton" />
 
@@ -76,7 +77,6 @@
                     android:typeface="normal"></TextView>
                 <Button
                     android:id="@+id/signInButton"
-                    android:onClick="@{viewModel::onSignInButtonClick}"
                     android:layout_width="144dp"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="15dp"

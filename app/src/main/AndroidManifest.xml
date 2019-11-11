@@ -23,7 +23,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ui.auth2.AuthActivity"></activity>
+        <activity
+            android:name=".ui.delivery.DeliveryHomeActivity"
+            android:label="@string/title_activity_delivery_home"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
 
         <provider
             android:name="androidx.core.content.FileProvider"
@@ -43,7 +46,7 @@
             android:name=".ui.HomeActivity"
             android:label="@string/title_activity_home"
             android:theme="@style/AppTheme.NoActionBar"
-            android:windowSoftInputMode="stateHidden"></activity>
+            android:windowSoftInputMode="stateHidden" />
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -56,17 +59,18 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
 
-        <activity android:name=".ui.auth.UserRegisterFirstInput" />
-        <activity android:name=".controller.UserDataActivity" />
-        <activity android:name=".ui.auth.FirebaseAuthUI" />
-        <activity android:name=".ui.auth.SignUpActivity" />
-        <activity android:name=".ui.auth.SignInActivity">
+        <activity android:name=".ui.auth2.AuthActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".ui.auth.UserRegisterFirstInput" />
+        <activity android:name=".controller.UserDataActivity" />
+        <activity android:name=".ui.auth.FirebaseAuthUI" />
+        <activity android:name=".ui.auth.SignUpActivity" />
+        <activity android:name=".ui.auth.SignInActivity"></activity>
     </application>
 
 </manifest>
