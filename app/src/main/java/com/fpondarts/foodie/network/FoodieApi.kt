@@ -1,19 +1,12 @@
 package com.fpondarts.foodie.network
 
-import androidx.lifecycle.LiveData
 import com.fpondarts.foodie.data.db.entity.*
-import com.fpondarts.foodie.model.FoodieUser
-import com.fpondarts.foodie.network.FoodieApi.Companion.API_PREFIX
+import com.fpondarts.foodie.network.request.DeliveryRegisterRequest
 import com.fpondarts.foodie.network.request.OrderRequest
-import com.fpondarts.foodie.network.response.AvailabilityResponse
-import com.fpondarts.foodie.network.response.ConfirmOrderResponse
-import com.fpondarts.foodie.network.response.DeliveryPriceResponse
-import com.fpondarts.foodie.network.response.SignInResponse
-import com.google.gson.annotations.SerializedName
+import com.fpondarts.foodie.network.request.UserRegisterRequest
+import com.fpondarts.foodie.network.response.*
 import okhttp3.OkHttpClient
-import okhttp3.ResponseBody
 import okhttp3.logging.HttpLoggingInterceptor
-import retrofit2.Call
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -66,7 +59,11 @@ interface FoodieApi {
                                  @Query("offset")offset:Int,
                                  @Query("limit")limit:Int):Response<List<Order>>
 
+    @POST("user")
+    suspend fun registerUser(@Body body: UserRegisterRequest):Response<SuccessResponse>
 
+    @POST("user")
+    suspend fun registerDelivery(@Body body:DeliveryRegisterRequest):Response<SuccessResponse>
 
 
     companion object {
@@ -85,14 +82,14 @@ interface FoodieApi {
         operator fun invoke() : FoodieApi {
             return Retrofit
                 .Builder()
-                .baseUrl("https://virtserver.swaggerhub.com/")
+                .baseUrl("https://taller2-foodie.herokuapp.com/")
                 .client(httpClient.build())
                 .addConverterFactory(GsonConverterFactory.create())
                 .build()
                 .create(FoodieApi::class.java)
         }
 
-        const val API_PREFIX = "FoodieAPI/FoodieAPI/1.0.0-oas3/"
+        const val API_PREFIX = ""
         const val API_KEY_HEADER = "FOODIE-API-KEY"
     }
 

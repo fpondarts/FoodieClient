@@ -17,7 +17,7 @@ import com.fpondarts.foodie.R
 import com.fpondarts.foodie.data.db.entity.Shop
 import com.fpondarts.foodie.databinding.FragmentHomeBinding
 import com.fpondarts.foodie.ui.auth.AuthListener
-import com.fpondarts.foodie.ui.auth.FoodieViewModelFactory
+import com.fpondarts.foodie.ui.FoodieViewModelFactory
 import kotlinx.android.synthetic.main.fragment_home.*
 import org.kodein.di.Kodein
 import org.kodein.di.KodeinAware

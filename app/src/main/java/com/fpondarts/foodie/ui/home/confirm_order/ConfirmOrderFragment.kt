@@ -13,8 +13,7 @@ import androidx.navigation.Navigation
 import com.fpondarts.foodie.R
 import com.fpondarts.foodie.databinding.ConfirmOrderFragmentBinding
 import com.fpondarts.foodie.ui.auth.AuthListener
-import com.fpondarts.foodie.ui.auth.FoodieViewModelFactory
-import com.fpondarts.foodie.ui.home.delivery_map.DeliveryMapFragment
+import com.fpondarts.foodie.ui.FoodieViewModelFactory
 import kotlinx.android.synthetic.main.confirm_order_fragment.*
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.kodein

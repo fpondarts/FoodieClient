@@ -11,7 +11,7 @@ import androidx.lifecycle.Observer
 
 import com.fpondarts.foodie.R
 import com.fpondarts.foodie.databinding.FragmentOrderRatingBinding
-import com.fpondarts.foodie.ui.auth.FoodieViewModelFactory
+import com.fpondarts.foodie.ui.FoodieViewModelFactory
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.kodein
 import org.kodein.di.generic.instance

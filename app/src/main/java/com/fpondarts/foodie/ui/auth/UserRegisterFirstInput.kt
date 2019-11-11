@@ -1,34 +1,33 @@
-package com.fpondarts.foodie.controller
+package com.fpondarts.foodie.ui.auth
 
 import androidx.appcompat.app.AppCompatActivity
 
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.view.View
-import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.Spinner
 import android.widget.TextView
-import android.widget.Toast
 
 import com.fpondarts.foodie.R
 import com.fpondarts.foodie.model.FoodieUser
+import com.fpondarts.foodie.network.FoodieApi
+import com.fpondarts.foodie.network.request.UserRegisterRequest
 import com.fpondarts.foodie.services.RetrofitClientInstance
 import com.fpondarts.foodie.services.ServerAPI
-import com.fpondarts.foodie.ui.auth.SignInActivity
+import com.fpondarts.foodie.util.Coroutines
+import com.squareup.picasso.Picasso
+import org.kodein.di.KodeinAware
+import org.kodein.di.android.kodein
+import org.kodein.di.generic.instance
 
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-
-class UserRegisterFirstInput : AppCompatActivity(), AdapterView.OnItemSelectedListener {
+class UserRegisterFirstInput : AppCompatActivity(), KodeinAware{
 
     private var mTvWelcome: TextView? = null
-    private val mEtPhone: EditText? = null
+    private var mEtPhone: EditText? = null
     private val mEtCredCard: EditText? = null
     private val mEtCvv: EditText? = null
     private var mImPhoto: ImageView? = null
@@ -38,14 +37,27 @@ class UserRegisterFirstInput : AppCompatActivity(), AdapterView.OnItemSelectedLi
     private var mCancel: Button? = null
     private var mUser: FoodieUser? = null
 
+    private var name:String? = null
+    private var email:String? = null
+    private var photoUri:String? = null
+    private var password:String? = null
+    private var uid:String? = null
+
+
+    override val kodein by kodein()
+
+    private val api:FoodieApi by instance()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_user_register_first_input)
         val intent = intent
-        val name = intent.getStringExtra("name")
-        val email = intent.getStringExtra("email")
-        val photoUri = intent.getStringExtra("photo")
+        name = intent.getStringExtra("name")
+        email = intent.getStringExtra("email")
+        photoUri = intent.getStringExtra("photo")
+        password = intent.getStringExtra("password")
+        uid = intent.getStringExtra("uid")
+
 
         mTvWelcome = findViewById<View>(R.id.textViewWelcome) as TextView
         mTvWelcome!!.text = "Hola, " + name!!.split(" ".toRegex()).dropLastWhile({ it.isEmpty() }).toTypedArray()[0]
@@ -61,58 +73,36 @@ class UserRegisterFirstInput : AppCompatActivity(), AdapterView.OnItemSelectedLi
 
 
         mSpRoles = findViewById<View>(R.id.spinnerRoles) as Spinner
-
-        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, ROLES)
+        mEtPhone = findViewById<View>(R.id.etPhone) as EditText
+        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, ROLES
+        )
 
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         mSpRoles!!.adapter = adapter
         mSpRoles!!.setSelection(0)
         mSignUp = findViewById<View>(R.id.buttonFinishSignUp) as Button
         mSignUp!!.setOnClickListener {
-            val call = service.signUpUser(FoodieUser(name, email))
 
-            call.enqueue(object : Callback<FoodieUser> {
-                override fun onResponse(call: Call<FoodieUser>, response: Response<FoodieUser>) {
 
-                    if (response.code() == 200) {
-                        val intent = Intent(this@UserRegisterFirstInput, UserDataActivity::class.java)
-                        val user = response.body()
-                        intent.putExtra("fullName", user!!.fullName)
-                        intent.putExtra("email", user.email)
-                        startActivity(intent)
-                        finish()
-                    } else {
-                        Toast.makeText(this@UserRegisterFirstInput, "No se ha podido registrar", Toast.LENGTH_LONG).show()
-                    }
-                }
-
-                override fun onFailure(call: Call<FoodieUser>, t: Throwable) {
-                    Toast.makeText(this@UserRegisterFirstInput, "Problemas de conexion con el servidor", Toast.LENGTH_LONG).show()
-                }
-            })
         }
 
 
         mImPhoto = findViewById<View>(R.id.imageViewPhoto) as ImageView
         if (photoUri != null) {
-            mImPhoto!!.setImageURI(Uri.parse(photoUri))
+            Picasso.get().load(photoUri).into(mImPhoto)
         }
     }
 
-    override fun onItemSelected(parent: AdapterView<*>, view: View,
-                                pos: Int, id: Long) {
+    override fun onBackPressed() {
+        super.onBackPressed()
 
 
     }
 
-    override fun onNothingSelected(parent: AdapterView<*>) {
-        // Another interface callback
-    }
 
     companion object {
 
         internal var service = RetrofitClientInstance.retrofitInstance.create(ServerAPI::class.java!!)
-
 
         private val ROLES = arrayOf("User", "Delivery")
     }

@@ -5,6 +5,8 @@ import androidx.appcompat.app.AppCompatActivity
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
+import android.widget.EditText
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
@@ -12,9 +14,12 @@ import androidx.lifecycle.ViewModelProviders
 
 import com.firebase.ui.auth.AuthUI
 import com.fpondarts.foodie.R
-import com.fpondarts.foodie.controller.UserRegisterFirstInput
 import com.fpondarts.foodie.databinding.ActivitySignUpBinding
+import com.fpondarts.foodie.ui.FoodieViewModelFactory
 import com.google.android.gms.common.SignInButton
+import com.google.firebase.auth.EmailAuthProvider
+import com.google.firebase.auth.FirebaseAuth
+import kotlinx.android.synthetic.main.activity_sign_up.*
 import org.kodein.di.KodeinAware
 
 import java.util.Arrays
@@ -45,13 +50,15 @@ class SignUpActivity : AppCompatActivity(),AuthListener, KodeinAware{
             it.setOnClickListener { googleSignIn() }
         }
 
+
+
         val changeActivityObserver = Observer<Int>{
             if (it==-1){
                 val intent = Intent(this,SignInActivity::class.java)
                 startActivity(intent)
             } else {
                 if (it==1){
-                    val intent = Intent(this,UserRegisterFirstInput::class.java)
+                    val intent = Intent(this, UserRegisterFirstInput::class.java)
                     intent.putExtra("name", viewModel.fullName)
                     intent.putExtra("email", viewModel.email)
                     intent.putExtra("password", viewModel.password)
@@ -62,9 +69,17 @@ class SignUpActivity : AppCompatActivity(),AuthListener, KodeinAware{
             }
         }
 
+        signUpButton.setOnClickListener(View.OnClickListener {
+            val fullName = findViewById<EditText>(R.id.etName).text.toString()
+            val email = findViewById<EditText>(R.id.etEmail).text.toString()
+            val password = findViewById<EditText>(R.id.etPassword).text.toString()
+            viewModel.onSignUpButtonClick(it,fullName,email,password)
+        })
+
         viewModel.changeActivity.observe(this,changeActivityObserver)
 
     }
+
 
     public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)

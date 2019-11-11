@@ -7,7 +7,7 @@
     <data>
         <variable
             name="viewModel"
-            type="com.fpondarts.foodie.ui.auth.SignUpViewModel" />
+            type="com.fpondarts.foodie.ui.auth2.SignUpViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -18,7 +18,7 @@
 
         <EditText
             android:id="@+id/etName"
-            android:text="@{viewModel.fullName}"
+            android:text="@{viewModel.name}"
             android:layout_width="218dp"
             android:layout_height="48dp"
             android:layout_marginStart="76dp"

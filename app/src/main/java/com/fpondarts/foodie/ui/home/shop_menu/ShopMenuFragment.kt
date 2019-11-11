@@ -15,7 +15,7 @@ import com.fpondarts.foodie.R
 import com.fpondarts.foodie.data.db.entity.MenuItem
 import com.fpondarts.foodie.databinding.FragmentShopMenuBinding
 import com.fpondarts.foodie.ui.auth.AuthListener
-import com.fpondarts.foodie.ui.auth.FoodieViewModelFactory
+import com.fpondarts.foodie.ui.FoodieViewModelFactory
 import com.fpondarts.foodie.ui.home.menu_item_sheet.MenuItemBottomSheet
 import com.fpondarts.foodie.ui.home.OnMenuItemClickListener
 import com.fpondarts.foodie.ui.home.current_order.CurrentOrderFragment

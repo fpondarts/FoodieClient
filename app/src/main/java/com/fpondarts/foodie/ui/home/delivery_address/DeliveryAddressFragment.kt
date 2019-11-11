@@ -12,7 +12,7 @@ import androidx.lifecycle.Observer
 import androidx.navigation.Navigation
 
 import com.fpondarts.foodie.R
-import com.fpondarts.foodie.ui.auth.FoodieViewModelFactory
+import com.fpondarts.foodie.ui.FoodieViewModelFactory
 import com.google.android.gms.location.FusedLocationProviderClient
 import kotlinx.android.synthetic.main.delivery_address_fragment.*
 import org.kodein.di.android.x.kodein
@@ -23,7 +23,7 @@ class DeliveryAddressFragment : Fragment(), KodeinAware {
 
     override val kodein by kodein()
 
-    private val factory:FoodieViewModelFactory by instance()
+    private val factory: FoodieViewModelFactory by instance()
 
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
     private lateinit var viewModel: DeliveryAddressViewModel

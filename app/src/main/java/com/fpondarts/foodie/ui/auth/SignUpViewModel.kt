@@ -1,11 +1,14 @@
 package com.fpondarts.foodie.ui.auth
 
 import android.view.View
+import androidx.databinding.Bindable
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.fpondarts.foodie.data.repository.Repository
 import com.fpondarts.foodie.util.Coroutines
 import com.fpondarts.foodie.util.exception.FoodieApiException
+import com.google.android.gms.tasks.Task
+import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 
 class SignUpViewModel(
@@ -35,30 +38,32 @@ class SignUpViewModel(
         return android.util.Patterns.EMAIL_ADDRESS.matcher(email!!).matches()
     }
 
-    fun onSignUpButtonClick(view: View){
-        if (fullName.isNullOrBlank() || email.isNullOrBlank() || password.isNullOrBlank() || !isEmailValid(email)){
+    fun onSignUpButtonClick(view: View,fullName:String,email:String,password:String){
+        if (fullName.isNullOrBlank() || email.isNullOrBlank() || password.isNullOrBlank()){
             authListener?.onFailure("Invalid user data")
+            authListener?.onFailure("fullName: "+fullName)
+            authListener?.onFailure("email: "+email)
+            authListener?.onFailure("password: "+password)
+
             return
         }
 
-        Coroutines.main{
-            try{
-                val availabilityResponse = repository.checkAvailability(email!!)
-                availabilityResponse.isAvailable?.let{
-                    if (!it){
-                        authListener?.onFailure("Ya exixte un usuario con ese correo")
-                    } else {
-                        changeActivity.value = SIGN_UP_INPUT;
-                    }
-                    return@main
+        val auth = FirebaseAuth.getInstance()
+        auth?.createUserWithEmailAndPassword(email!!,password!!)
+            .addOnCompleteListener { task: Task<AuthResult> ->
+                if (task.isSuccessful) {
+                    this.fullName = fullName
+                    this.email = email
+                    this.password = password
+                    uid = task.result!!.user!!.uid
+                    changeActivity.value = SIGN_UP_INPUT
+                } else {
+                    authListener?.onFailure(task.exception!!.message!!)
                 }
-                authListener?.onFailure(availabilityResponse?.message!!)
-            } catch (e:FoodieApiException){
-                authListener?.onFailure(e.message!!)
             }
-        }
 
     }
+
 
     fun onSignInButtonClick(view: View){
         changeActivity.value = SIGN_IN

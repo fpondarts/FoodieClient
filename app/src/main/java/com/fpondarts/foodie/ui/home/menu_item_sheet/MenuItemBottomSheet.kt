@@ -12,7 +12,7 @@ import androidx.lifecycle.ViewModelProviders
 import com.fpondarts.foodie.R
 import com.fpondarts.foodie.databinding.FragmentMenuItemBottomSheetBinding
 import com.fpondarts.foodie.ui.auth.AuthListener
-import com.fpondarts.foodie.ui.auth.FoodieViewModelFactory
+import com.fpondarts.foodie.ui.FoodieViewModelFactory
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import kotlinx.android.synthetic.main.fragment_menu_item_bottom_sheet.*
 import org.kodein.di.KodeinAware
