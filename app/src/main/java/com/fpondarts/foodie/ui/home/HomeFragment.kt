@@ -100,7 +100,7 @@ class HomeFragment : Fragment(), KodeinAware, OnShopClickListener, AuthListener 
     }
 
     override fun onItemClick(shop:Shop){
-        val bundle = bundleOf("shopId" to shop.id)
+        val bundle = bundleOf("shop_id" to shop.id)
         navController!!.navigate(R.id.action_nav_home_to_shopFragment,bundle)
     }
 

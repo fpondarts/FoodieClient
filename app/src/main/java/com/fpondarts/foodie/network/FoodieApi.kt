@@ -26,7 +26,7 @@ interface FoodieApi {
     suspend fun getShop(@Header(API_KEY_HEADER) token:String, @Path("id") id:Long):Response<Shop>
 
     @GET(API_PREFIX+"shops/{id}/menu")
-    suspend fun getMenu(@Header(API_KEY_HEADER) token:String, @Path("id") id:Long):Response<Menu>
+    suspend fun getMenu(@Header(API_KEY_HEADER) token:String, @Path("id") id:Long):Response<List<MenuItem>>
 
     @GET(API_PREFIX+"shops/top")
     suspend fun getTopShops(@Header(API_KEY_HEADER) token: String):Response<List<Shop>>

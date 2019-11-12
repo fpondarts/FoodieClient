@@ -116,19 +116,14 @@ class Repository(
 
     fun getShopMenu(shopId:Long): LiveData<List<MenuItem>>{
         val liveMenu = db.getMenuItemDao().loadMenu(shopId)
-        Log.d("TAG shopId query",shopId.toString())
         if (liveMenu.value.isNullOrEmpty()){
             Coroutines.io {
-                val menu: Menu? = api.getMenu(token!!,shopId).body()
-                if (menu?.items.isNullOrEmpty()){
-                    throw (FoodieApiException("La puta madre"))
+                try {
+                    val products = apiRequest{ api.getMenu(token!!,shopId) }
+                    db.getMenuItemDao().upsert(products)
+                } catch(e:FoodieApiException){
+                    apiError.postValue(e)
                 }
-                menu!!.items.forEach {
-                    Log.d("TAG: shopId",it.shopId.toString())
-                    Log.d("TAG: id", it.id.toString())
-                    Log.d("TAG name",it.name)
-                }
-                db.getMenuItemDao().upsert(menu!!.items)
             }
         }
         return liveMenu

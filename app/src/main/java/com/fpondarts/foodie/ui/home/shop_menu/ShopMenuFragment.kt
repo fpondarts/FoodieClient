@@ -62,7 +62,7 @@ class ShopMenuFragment : Fragment(), KodeinAware, AuthListener,
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        val shopId = arguments!!.getLong("shopId")
+        val shopId = arguments!!.getLong("shop_id")
 
         shop_menu_recycler_view.apply {
             layoutManager = LinearLayoutManager(activity)
@@ -73,12 +73,6 @@ class ShopMenuFragment : Fragment(), KodeinAware, AuthListener,
         })
 
         viewModel.setShop(shopId)
-
-        shopId?.let {
-            Toast.makeText(activity,"Shop Id es "+it.toString(),Toast.LENGTH_LONG).show()
-        } ?: run {
-            Toast.makeText(activity,"Shop Id es null", Toast.LENGTH_LONG).show()
-        }
 
         viewModel.getMenu(shopId).observe(this, Observer {
             it?.let{
