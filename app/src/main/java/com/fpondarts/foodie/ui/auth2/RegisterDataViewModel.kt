@@ -11,13 +11,10 @@ import com.fpondarts.foodie.util.exception.IncompleteDataException
 
 class RegisterDataViewModel(val authRepository: AuthRepository) : ViewModel() {
 
-    @Bindable
     val phone = MutableLiveData<String>()
 
-    @Bindable
     val creditCard = MutableLiveData<String>()
 
-    @Bindable
     val cvv = MutableLiveData<String>()
 
     val registered = MutableLiveData<Boolean?>().apply {

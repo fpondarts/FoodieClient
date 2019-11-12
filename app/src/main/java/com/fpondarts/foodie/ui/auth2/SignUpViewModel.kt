@@ -3,22 +3,25 @@ package com.fpondarts.foodie.ui.auth2
 import androidx.databinding.Bindable
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.fpondarts.foodie.data.repository.AuthRepository
+import com.fpondarts.foodie.util.exception.IncompleteDataException
+import com.google.firebase.auth.FirebaseAuth
 
-class SignUpViewModel : ViewModel() {
+class SignUpViewModel(val repository: AuthRepository) : ViewModel() {
 
-    @Bindable
     val email = MutableLiveData<String>()
 
-    @Bindable
     val name = MutableLiveData<String>()
 
-    @Bindable
     val password = MutableLiveData<String>()
 
     var handler: GoogleAuthHandler? = null
 
-    fun onGoogleSignUp(){
-        handler?.handleAuth()
+    fun emailSignUp(){
+        if (email.value.isNullOrBlank() || password.value.isNullOrBlank() || name.value.isNullOrBlank()){
+            throw IncompleteDataException("Los campos son obligatorios")
+        }
+
     }
 
 

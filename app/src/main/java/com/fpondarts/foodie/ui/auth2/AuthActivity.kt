@@ -3,13 +3,17 @@ package com.fpondarts.foodie.ui.auth2
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
+import androidx.lifecycle.Observer
+import androidx.navigation.findNavController
+import com.fpondarts.foodie.R
 import com.fpondarts.foodie.data.repository.AuthRepository
 import com.fpondarts.foodie.util.ApiExceptionHandler
+import com.google.firebase.auth.FirebaseAuth
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.kodein
 import org.kodein.di.generic.instance
 
-class AuthActivity : AppCompatActivity(), KodeinAware, ApiExceptionHandler {
+class AuthActivity : AppCompatActivity(), KodeinAware{
 
 
 
@@ -19,11 +23,15 @@ class AuthActivity : AppCompatActivity(), KodeinAware, ApiExceptionHandler {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_auth)
 
-        repository.apiErrorHandler = this
-    }
+        val navController = findNavController(R.id.nav_host_fragment)
 
-    override fun handle(message: String) {
-        Toast.makeText(this,message,Toast.LENGTH_SHORT).show()
+        repository.apiErrors.observe(this, Observer {
+            it?.let{
+                Toast.makeText(this,it.message,Toast.LENGTH_SHORT).show()
+            }
+        })
+
     }
 }

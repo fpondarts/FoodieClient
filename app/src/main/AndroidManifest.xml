@@ -66,11 +66,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.auth.UserRegisterFirstInput" />
-        <activity android:name=".controller.UserDataActivity" />
+
         <activity android:name=".ui.auth.FirebaseAuthUI" />
-        <activity android:name=".ui.auth.SignUpActivity" />
-        <activity android:name=".ui.auth.SignInActivity"></activity>
+
     </application>
 
 </manifest>

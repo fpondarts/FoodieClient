@@ -19,6 +19,9 @@ interface FoodieApi {
     @POST
     suspend fun signIn(email: String, password: String?, fbToken: String):Response<SignInResponse>
 
+    @GET(USERS_PREFIX+"/{id}")
+    suspend fun getUserById(@Header(API_KEY_HEADER)token:String,@Path("id")id:Long):Response<User>
+
     @GET(API_PREFIX+"shops/{id}")
     suspend fun getShop(@Header(API_KEY_HEADER) token:String, @Path("id") id:Long):Response<Shop>
 
@@ -57,17 +60,20 @@ interface FoodieApi {
                                  @Query("offset")offset:Int,
                                  @Query("limit")limit:Int):Response<List<Order>>
 
-    @POST("user")
+    @POST(USERS_PREFIX)
     suspend fun registerUser(@Body body: UserRegisterRequest):Response<SuccessResponse>
 
-    @POST("user")
+    @POST(USERS_PREFIX)
     suspend fun registerDelivery(@Body body:DeliveryRegisterRequest):Response<SuccessResponse>
 
-    @POST("user/login")
+    @POST(USERS_PREFIX+"/login")
     suspend fun tokenLogin(@Body body: TokenLoginRequest):Response<SignInResponse>
 
-    @POST("user/login")
+    @POST(USERS_PREFIX+"/login")
     suspend fun passwordLogin(@Body body: PasswordLoginRequest):Response<SignInResponse>
+
+    @GET(SHOPS_PREFIX)
+    suspend fun getShopsPage(@Header(API_KEY_HEADER)token:String,@Query("p")page:Int, @Query("pSize")pageSize:Int):Response<List<Shop>>
 
 
     companion object {
@@ -93,6 +99,8 @@ interface FoodieApi {
                 .create(FoodieApi::class.java)
         }
 
+        const val USERS_PREFIX="users"
+        const val SHOPS_PREFIX="shops"
         const val API_PREFIX = ""
         const val API_KEY_HEADER = "FOODIE-API-KEY"
     }

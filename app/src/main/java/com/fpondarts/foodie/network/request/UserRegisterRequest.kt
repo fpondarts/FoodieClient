@@ -7,7 +7,7 @@ data class UserRegisterRequest(
     val firebase_uid:String,
     val phone_number:String,
     val role:String,
-    val subscripcion:String?,
+    val suscripcion:String?,
     val picture:String?
 ) {
 }

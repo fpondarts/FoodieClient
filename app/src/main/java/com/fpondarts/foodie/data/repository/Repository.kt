@@ -6,7 +6,6 @@ import com.fpondarts.foodie.data.db.FoodieDatabase
 import com.fpondarts.foodie.model.OrderModel
 import com.fpondarts.foodie.network.FoodieApi
 import com.fpondarts.foodie.network.SafeApiRequest
-import com.fpondarts.foodie.network.response.AvailabilityResponse
 import com.fpondarts.foodie.network.response.SignInResponse
 import com.fpondarts.foodie.util.Coroutines
 import com.fpondarts.foodie.util.exception.FoodieApiException
@@ -17,7 +16,6 @@ import com.fpondarts.foodie.model.OrderItem
 import com.fpondarts.foodie.model.OrderState
 import com.fpondarts.foodie.network.request.OrderRequest
 import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
 
 class Repository(
     private val api: FoodieApi,
@@ -29,11 +27,11 @@ class Repository(
     val topRanked = db.getShopDao().getAllOrdered()
 
     val currentUser = MutableLiveData<User>().apply {
-        value = User(0,"Flavio Perez"
-            ,"perezflavio94@gmail.com"
-            ,"1234","1234",null
-            ,true,"myToken")
-    };
+        value = null
+    }
+
+    var token:String? = null
+    var userId:Long? = null
 
     var currentOrder: OrderModel? = null
     val availableDeliveries = db.getDeliveryDao().getByAvailability(true)
@@ -42,15 +40,11 @@ class Repository(
     val UNAVAILABLE = "Unavailable"
     val ERROR = "Error"
 
-
-    fun initializeRealtime(){
-        fbDb = FirebaseDatabase.getInstance().reference
-
+    val apiError = MutableLiveData<FoodieApiException>().apply {
+        value = null
     }
 
-    suspend fun checkAvailability(email:String):AvailabilityResponse{
-        return apiRequest{ api.checkEmailIsAvailable(email) }
-    }
+    val SHOP_PAGE_SIZE = 3;
 
     suspend fun foodieSignInLive(email:String, password: String?, fbToken: String):LiveData<User>{
         Coroutines.main{
@@ -72,12 +66,25 @@ class Repository(
         return db.getShopDao().loadShops()
     }
 
-    fun getTopShops():LiveData<List<Shop>>{
+    fun initUser(token: String, id:Long){
+        this.token = token
+        this.userId = id
+        Coroutines.io{
+            try{
+                currentUser.postValue(apiRequest{ api.getUserById(token,id) })
+            } catch (e:FoodieApiException){
+                apiError.postValue(e)
+                initUser(token,id)
+            }
+        }
+    }
+
+    fun getAllShops():LiveData<List<Shop>>{
         val ans = db.getShopDao().getAllOrdered()
         if (ans.value == null || ans.value!!.isEmpty()){
             Coroutines.io{
                 try {
-                    val top = api.getTopShops(currentUser.value!!.sessionToken!!)
+                    val top = api.getShopsPage(token!!,0,SHOP_PAGE_SIZE)
                     if (top.isSuccessful){
                         db.getShopDao().upsertBatch((top.body()!!))
                     }
@@ -90,8 +97,21 @@ class Repository(
         return ans
     }
 
+    fun getMoreShops(){
+        Coroutines.io{
+            try{
+                val nextPage = db.getShopDao().getCount().value!! / SHOP_PAGE_SIZE
+                val moreShops = apiRequest{api.getShopsPage(token!!,nextPage,SHOP_PAGE_SIZE)}
+                db.getShopDao().upsertBatch(moreShops)
+            } catch (e:FoodieApiException){
+                apiError.postValue(e)
+            }
+
+        }
+    }
+
     fun newOrder(shopId:Long){
-        currentOrder = OrderModel(currentUser.value!!.uId,shopId)
+        currentOrder = OrderModel(currentUser.value!!.user_id,shopId)
     }
 
     fun getShopMenu(shopId:Long): LiveData<List<MenuItem>>{
@@ -99,7 +119,7 @@ class Repository(
         Log.d("TAG shopId query",shopId.toString())
         if (liveMenu.value.isNullOrEmpty()){
             Coroutines.io {
-                val menu: Menu? = api.getMenu(currentUser.value!!.sessionToken!!,shopId).body()
+                val menu: Menu? = api.getMenu(token!!,shopId).body()
                 if (menu?.items.isNullOrEmpty()){
                     throw (FoodieApiException("La puta madre"))
                 }
@@ -129,7 +149,7 @@ class Repository(
     suspend fun saveUser(user: User) = db.getUserDao().upsert(user)
 
     suspend fun askDeliveryPrice(lat:Double,long:Double): Float{
-        val priceResponse = api.getDeliveryPrice(currentUser.value!!.sessionToken!!,currentOrder!!.shopId,lat,long)
+        val priceResponse = api.getDeliveryPrice(token!!,currentOrder!!.shopId,lat,long)
         priceResponse.isSuccessful?.let {
             currentOrder!!.setDeliveryPrice(priceResponse.body()!!.price)
             currentOrder!!.latitude = lat
@@ -140,7 +160,7 @@ class Repository(
 
 
     suspend fun confirmOrder():Boolean {
-        val orderId = apiRequest{ api.confirmOrder(currentUser.value!!.sessionToken!!,
+        val orderId = apiRequest{ api.confirmOrder(token!!,
             OrderRequest(2
             ,currentOrder!!.items.values
             ,currentOrder!!.latitude!!
@@ -154,7 +174,7 @@ class Repository(
     fun getShop(id:Long):LiveData<Shop>{
         val shop = db.getShopDao().loadShop(id)
         shop.value?: Coroutines.io {
-            val fetched = apiRequest { api.getShop(currentUser.value!!.sessionToken!!,id) }
+            val fetched = apiRequest { api.getShop(token!!,id) }
             db.getShopDao().upsert(fetched)
         }
         return shop
@@ -167,7 +187,7 @@ class Repository(
     fun refreshDeliveries(lat:Double,long:Double){
         Coroutines.io{
            try {
-               db.getDeliveryDao().upsert(apiRequest{ api.getDeliveries(currentUser.value!!.sessionToken!!,lat,long) })
+               db.getDeliveryDao().upsert(apiRequest{ api.getDeliveries(token!!,lat,long) })
            } catch (e: FoodieApiException){
 
            }
@@ -184,7 +204,7 @@ class Repository(
         if (order.value == null) {
             Coroutines.io {
                 try {
-                    val order = apiRequest { api.getOrder(currentUser.value!!.sessionToken!!, id) }
+                    val order = apiRequest { api.getOrder(token!!, id) }
                     db.getOrderDao().upsert(order)
                 } catch (e: FoodieApiException) {
 
@@ -199,7 +219,7 @@ class Repository(
         if (delivery.value == null){
             Coroutines.io {
                 try {
-                    val fetched = apiRequest{ api.getDelivery(currentUser.value!!.sessionToken!!,id) }
+                    val fetched = apiRequest{ api.getDelivery(token!!,id) }
                     db.getDeliveryDao().upsert(fetched)
                 } catch (e:FoodieApiException){
 
@@ -214,8 +234,8 @@ class Repository(
         val res = db.getOrderDao().getOrdersByState(state)
         Coroutines.io{
             try {
-                val fetched = apiRequest{ api.getOrdersByState(currentUser.value!!.sessionToken!!
-                    ,currentUser.value!!.uId!!
+                val fetched = apiRequest{ api.getOrdersByState(token!!
+                    ,currentUser.value!!.user_id!!
                     ,state.stringVal,db.getOrderDao().getCount().value!!,10)}
                 db.getOrderDao().upsert(fetched)
             } catch (e: FoodieApiException){
@@ -226,7 +246,7 @@ class Repository(
     }
 
     fun sendMessage(orderId:Long, message:String, to: String){
-        val newMessage = ChatMessage(orderId,currentUser.value!!.fbUid!!, to,message,System.currentTimeMillis()/1000)
+        val newMessage = ChatMessage(orderId,currentUser.value!!.firebase_uid!!, to,message,System.currentTimeMillis()/1000)
         val key = fbDb.child("chats").child(orderId.toString()).child("messages").push().key
         if (key == null){
 

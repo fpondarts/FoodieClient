@@ -18,7 +18,7 @@
 
         <EditText
             android:id="@+id/etName"
-            android:text="@{viewModel.name}"
+            android:text="@={viewModel.name}"
             android:layout_width="218dp"
             android:layout_height="48dp"
             android:layout_marginStart="76dp"
@@ -44,7 +44,6 @@
 
         <Button
             android:id="@+id/toSignInButton"
-            android:onClick="@{viewModel::onSignInButtonClick}"
             android:layout_width="218dp"
             android:layout_height="48dp"
             android:layout_marginStart="76dp"
@@ -55,7 +54,7 @@
 
         <EditText
             android:id="@+id/etPassword"
-            android:text="@{viewModel.password}"
+            android:text="@={viewModel.password}"
             android:layout_width="218dp"
             android:layout_height="48dp"
             android:layout_marginStart="76dp"
@@ -100,7 +99,7 @@
 
         <EditText
             android:id="@+id/etEmail"
-            android:text="@{viewModel.email}"
+            android:text="@={viewModel.email}"
             android:layout_width="218dp"
             android:layout_height="48dp"
             android:layout_marginStart="76dp"

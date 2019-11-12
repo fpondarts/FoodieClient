@@ -49,5 +49,9 @@
             app:destination="@id/signInFragment"
             app:popUpTo="@id/signInFragment"
             app:popUpToInclusive="true"/>
+        <argument
+            android:name="phone"
+            app:argType="string"
+            app:nullable="true" />
     </fragment>
 </navigation>

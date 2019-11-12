@@ -34,7 +34,6 @@ import com.fpondarts.foodie.util.exception.IncompleteDataException
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.storage.FirebaseStorage
 import com.squareup.picasso.Picasso
-import kotlinx.android.synthetic.main.activity_sign_in.*
 import kotlinx.android.synthetic.main.fragment_register_data.*
 
 import org.kodein.di.Kodein
@@ -84,17 +83,11 @@ class RegisterDataFragment : DialogFragment(), KodeinAware {
         val binding: FragmentRegisterDataBinding = DataBindingUtil.inflate(inflater,R.layout.fragment_register_data,container,false)
         binding.viewModel = viewModel
 
-        val adapter = ArrayAdapter<String>(context!!,android.R.layout.simple_spinner_item,ROLES)
 
-        spinnerRoles.adapter = adapter
-        spinnerRoles.setSelection(0)
 
         viewModel.name = arguments!!.getString("name")
         viewModel.email = arguments!!.getString("email")
-        arguments!!.getString("photo")?.let{
-            viewModel.photo = it
-            Picasso.get().load(it).into(imageViewPhoto)
-        }
+
         viewModel.uid = arguments!!.getString("uid")
         arguments!!.getString("password")?.let{
             viewModel.password = it
@@ -111,7 +104,6 @@ class RegisterDataFragment : DialogFragment(), KodeinAware {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -119,22 +111,57 @@ class RegisterDataFragment : DialogFragment(), KodeinAware {
 
         navController = findNavController()
 
-        signUpButton.setOnClickListener(View.OnClickListener {
+
+        val adapter = ArrayAdapter<String>(context!!,android.R.layout.simple_spinner_item,ROLES)
+
+        spinnerRoles.adapter = adapter
+        spinnerRoles.setSelection(0)
+
+        arguments!!.getString("photo")?.let{
+            viewModel.photo = it
+            Picasso.get().load(it).into(imageViewPhoto)
+        }
+
+        buttonCancelSignUp.setOnClickListener(View.OnClickListener {
+            deleteFbUser()
+        })
+
+        arguments?.getString("phone")?.let{
+            viewModel.phone.postValue(it)
+        }
+
+        buttonFinishSignUp.setOnClickListener(View.OnClickListener {
             if (!uploading) {
                 try {
-                    viewModel.signUpUser().observe(this, Observer {
-                        it?.let {
-                            if (it) {
-                                navController.navigate(
-                                    R.id.action_registerDataFragment_to_signInFragment, null,
-                                    NavOptions.Builder().setPopUpTo(
-                                        R.id.signInFragment,
-                                        true
-                                    ).build()
-                                )
+                    if (spinnerRoles.selectedItem.toString() == "User"){
+                        viewModel.signUpUser().observe(this, Observer {
+                            it?.let {
+                                if (it) {
+                                    navController.navigate(
+                                        R.id.action_registerDataFragment_to_signInFragment, null,
+                                        NavOptions.Builder().setPopUpTo(
+                                            R.id.signInFragment,
+                                            true
+                                        ).build()
+                                    )
+                                }
                             }
-                        }
-                    })
+                        })
+                    } else {
+                        viewModel.signUpDelivery().observe(this, Observer {
+                            it?.let {
+                                if (it) {
+                                    navController.navigate(
+                                        R.id.action_registerDataFragment_to_signInFragment, null,
+                                        NavOptions.Builder().setPopUpTo(
+                                            R.id.signInFragment,
+                                            true
+                                        ).build()
+                                    )
+                                }
+                            }
+                        })
+                    }
                 } catch (e: IncompleteDataException) {
                     Toast.makeText(activity, e.message, Toast.LENGTH_SHORT).show()
                 }
@@ -217,6 +244,7 @@ class RegisterDataFragment : DialogFragment(), KodeinAware {
             when (requestCode) {
                 REQUEST_IMAGE_CAPTURE -> uploadPhoto()
                 REQUEST_GALLERY -> {
+                    Toast.makeText(activity,"back from gallery",Toast.LENGTH_SHORT).show()
                     val uri = data?.data
                     localPhotoPath = uri?.path
                     uploadPhoto()
@@ -257,7 +285,7 @@ class RegisterDataFragment : DialogFragment(), KodeinAware {
             imageRef.downloadUrl.addOnSuccessListener {
                 uploading = false
                 viewModel.photo = it.toString()
-                Picasso.get().load(viewModel.photo).into(imageViewPhoto)
+                Picasso.get().load(viewModel.photo).resize(imageViewPhoto.width,imageViewPhoto.height).into(imageViewPhoto)
             }
         }
     }
@@ -275,6 +303,7 @@ class RegisterDataFragment : DialogFragment(), KodeinAware {
                 }
             }
     }
+
 
 
 }

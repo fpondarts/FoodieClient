@@ -13,16 +13,21 @@ import com.google.android.material.navigation.NavigationView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import android.view.Menu
+import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import com.fpondarts.foodie.R
+import com.fpondarts.foodie.data.repository.Repository
 import com.google.android.gms.location.FusedLocationProviderClient
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.kodein
+import org.kodein.di.generic.instance
 
 
 class HomeActivity : AppCompatActivity(), KodeinAware {
 
     override val kodein by kodein()
+
+    val repository : Repository by instance()
 
     private lateinit var fusedLocationProviderClient:FusedLocationProviderClient
 
@@ -39,6 +44,14 @@ class HomeActivity : AppCompatActivity(), KodeinAware {
             Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                 .setAction("Action", null).show()
         }
+
+        val token = intent.getStringExtra("token")
+        val id = intent.getLongExtra("id",-1)
+
+
+
+        repository.initUser(token,id)
+
         val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
         val navView: NavigationView = findViewById(R.id.nav_view)
         val navController = findNavController(R.id.nav_host_fragment)

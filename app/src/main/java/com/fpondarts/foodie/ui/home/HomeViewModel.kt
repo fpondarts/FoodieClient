@@ -28,14 +28,18 @@ class HomeViewModel (
         }
     }
 
-    fun getTopShops():LiveData<List<Shop>>{
+    fun getAllShops():LiveData<List<Shop>>{
         var live:LiveData<List<Shop>>? = null
         try {
-            live = repository.getTopShops()
+            live = repository.getAllShops()
         } catch (e:FoodieApiException){
             authListener!!.onFailure("APIFAIL")
         }
         return live!!
+    }
+
+    fun getMoreShops(){
+        repository.getMoreShops()
     }
 
 }
