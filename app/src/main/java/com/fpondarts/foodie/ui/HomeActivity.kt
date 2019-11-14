@@ -46,7 +46,7 @@ class HomeActivity : AppCompatActivity(), KodeinAware {
         }
 
         val token = intent.getStringExtra("token")
-        val id = intent.getLongExtra("id",-1)
+        val id = intent.getLongExtra("product_id",-1)
 
 
 

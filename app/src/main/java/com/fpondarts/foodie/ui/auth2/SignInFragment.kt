@@ -97,7 +97,7 @@ class SignInFragment : Fragment(), KodeinAware, GoogleAuthHandler {
                                                 val intent =
                                                     Intent(activity, HomeActivity::class.java)
                                                 intent.putExtra("token", it.token)
-                                                intent.putExtra("id",it.user_id)
+                                                intent.putExtra("product_id",it.user_id)
                                                 startActivity(intent)
                                                 activity!!.finish()
                                             } else if (it.role == "delivery") {

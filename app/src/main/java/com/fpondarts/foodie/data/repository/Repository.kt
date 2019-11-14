@@ -12,19 +12,20 @@ import com.fpondarts.foodie.util.exception.FoodieApiException
 import com.google.android.gms.common.api.ApiException
 import android.util.Log
 import com.fpondarts.foodie.data.db.entity.*
+import com.fpondarts.foodie.model.Coordinates
 import com.fpondarts.foodie.model.OrderItem
 import com.fpondarts.foodie.model.OrderState
+import com.fpondarts.foodie.network.DirectionsApi
 import com.fpondarts.foodie.network.request.OrderRequest
 import com.google.firebase.database.DatabaseReference
 
 class Repository(
     private val api: FoodieApi,
+    private val directionsApi: DirectionsApi,
     private val db : FoodieDatabase
 ):SafeApiRequest() {
 
     lateinit var fbDb : DatabaseReference
-
-    val topRanked = db.getShopDao().getAllOrdered()
 
     val currentUser = MutableLiveData<User>().apply {
         value = null
@@ -36,9 +37,6 @@ class Repository(
     var currentOrder: OrderModel? = null
     val availableDeliveries = db.getDeliveryDao().getByAvailability(true)
 
-    val AVAILABLE = "Available"
-    val UNAVAILABLE = "Unavailable"
-    val ERROR = "Error"
 
     val apiError = MutableLiveData<FoodieApiException>().apply {
         value = null
@@ -60,10 +58,6 @@ class Repository(
 
     suspend fun foodieSignIn(email: String, password:String?, fbToken:String):SignInResponse{
         return apiRequest { api.signIn(email,password, fbToken) }
-    }
-
-    suspend fun getShops():LiveData<List<Shop>>{
-        return db.getShopDao().loadShops()
     }
 
     fun initUser(token: String, id:Long){
@@ -137,11 +131,9 @@ class Repository(
     }
 
 
-    fun addItemToOrder(item: OrderItem) {
-        currentOrder!!.addItem(item)
+    fun addItemToOrder(item: OrderItem,itemPrice:Float) {
+        currentOrder!!.addItem(item,itemPrice)
     }
-
-    suspend fun saveUser(user: User) = db.getUserDao().upsert(user)
 
     suspend fun askDeliveryPrice(lat:Double,long:Double): Float{
         val priceResponse = api.getDeliveryPrice(token!!,currentOrder!!.shopId,lat,long)
@@ -158,10 +150,11 @@ class Repository(
         val orderId = apiRequest{ api.confirmOrder(token!!,
             OrderRequest(2
             ,currentOrder!!.items.values
-            ,currentOrder!!.latitude!!
-            ,currentOrder!!.longitude!!
+            ,Coordinates(currentOrder!!.latitude!!,currentOrder!!.longitude!!)
             ,currentOrder!!.payWitPoints
-            ,currentOrder!!.favourPoints)) }.orderId
+            ,currentOrder!!.favourPoints
+            ,currentOrder!!.price as Float
+            ,userId!!)) }.orderId
         currentOrder!!.id = orderId
         return true
     }

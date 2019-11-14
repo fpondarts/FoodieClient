@@ -2,6 +2,7 @@ package com.fpondarts.foodie.model
 
 class OrderModel(val userId:Long, val shopId:Long) {
     val items = HashMap<Long,OrderItem>()
+    val prices = HashMap<Long,Float>()
     var price = 0.0
     var id:Long?=null
     var latitude: Double? = null
@@ -11,19 +12,22 @@ class OrderModel(val userId:Long, val shopId:Long) {
     private var deliveryPrice:Float?=null
 
 
-    fun addItem(item:OrderItem){
-        if (items.containsKey(item.id)){
-            items[item.id]!!.units+=item.units
+    fun addItem(item:OrderItem,itemPrice:Float){
+        if (items.containsKey(item.product_id)){
+            items[item.product_id]!!.units+=item.units
+            prices.replace(item.product_id,itemPrice)
         } else {
-            items[item.id] = item
+            items[item.product_id] = item
+            prices.put(item.product_id,itemPrice)
         }
+
         updatePrice()
     }
 
     fun updatePrice() {
         price = 0.0
         for ((id,item) in items){
-            price += item.price * item.units
+            price += prices.get(id)!! * item.units
         }
     }
 

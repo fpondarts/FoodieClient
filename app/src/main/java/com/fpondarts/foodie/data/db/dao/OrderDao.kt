@@ -9,7 +9,7 @@ import com.fpondarts.foodie.model.OrderState
 @Dao
 interface OrderDao {
 
-    @Query("Select * from `order` where id=:id")
+    @Query("Select * from `order` where product_id=:product_id")
     fun getOrder(id:Long): LiveData<Order>
 
     @Query("Select * from `order` where state = :state")
@@ -21,7 +21,7 @@ interface OrderDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun upsert(orders:Collection<Order>)
 
-    @Query("Select COUNT(id) from `order`")
+    @Query("Select COUNT(product_id) from `order`")
     fun getCount():LiveData<Int>
 
 

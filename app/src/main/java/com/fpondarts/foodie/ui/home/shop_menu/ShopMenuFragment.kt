@@ -89,7 +89,7 @@ class ShopMenuFragment : Fragment(), KodeinAware, AuthListener,
     override fun onItemClick(item: MenuItem) {
         val dialog = MenuItemBottomSheet().apply{
             arguments = Bundle().apply {
-                putLong("id",item.id)
+                putLong("product_id",item.id)
                 putFloat("price",item.price)
                 putString("name",item.name)
             }

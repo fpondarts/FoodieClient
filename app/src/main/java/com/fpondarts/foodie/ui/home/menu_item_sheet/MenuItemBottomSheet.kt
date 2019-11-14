@@ -57,7 +57,7 @@ class MenuItemBottomSheet : BottomSheetDialogFragment(), KodeinAware, AuthListen
         })
 
         arguments?.let{
-            mViewModel!!.itemId = it.getLong("id")
+            mViewModel!!.itemId = it.getLong("product_id")
             mViewModel!!.itemPrice = it.getFloat("price")
             mViewModel!!.name = it.getString("name")
         } ?: kotlin.run {

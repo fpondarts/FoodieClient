@@ -18,7 +18,7 @@ class MIBottomSheetViewModel(val repository:Repository): ViewModel(){
 
     fun onAddClick(view: View){
         try{
-            repository.addItemToOrder(OrderItem(itemId!!,name!!,number,itemPrice!!))
+            repository.addItemToOrder(OrderItem(itemId!!,number),itemPrice!!)
             listener!!.onSuccess()
         } catch( e: NullPointerException){
             listener?.onFailure("No se pudo agregar al pedido")

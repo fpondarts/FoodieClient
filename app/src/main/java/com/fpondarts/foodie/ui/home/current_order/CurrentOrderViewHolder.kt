@@ -11,22 +11,20 @@ import com.fpondarts.foodie.model.OrderItem
 class CurrentOrderViewHolder(inflater: LayoutInflater, parent: ViewGroup):
     RecyclerView.ViewHolder(inflater.inflate(R.layout.item_order_item,parent,false))
 {
-    var name:TextView? = null
     var units:TextView? = null
     var price:TextView? = null
 
 
     init {
-        name = itemView.findViewById(R.id.order_item_name)
         price = itemView.findViewById(R.id.order_item_unit_price)
         units = itemView.findViewById(R.id.order_item_units)
     }
 
     fun bind(item:OrderItem, listener: OnOrderItemClickListener){
 
-        name?.text = item.name
         units?.text = item.units.toString()
-        price?.text = "x $" + item.price.toString()
-        itemView.findViewById<Button>(R.id.button_remove_item).setOnClickListener{ listener.onItemClick(item) }
+        itemView.findViewById<Button>(R.id.button_remove_item).setOnClickListener{
+            listener.onItemClick(item)
+        }
     }
 }

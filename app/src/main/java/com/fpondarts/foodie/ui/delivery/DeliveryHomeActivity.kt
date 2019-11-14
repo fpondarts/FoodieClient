@@ -1,5 +1,8 @@
 package com.fpondarts.foodie.ui.delivery
 
+import android.Manifest
+import android.app.PendingIntent
+import android.content.Intent
 import android.os.Bundle
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
@@ -13,11 +16,29 @@ import com.google.android.material.navigation.NavigationView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import android.view.Menu
+import android.widget.Toast
 import com.fpondarts.foodie.R
+import com.fpondarts.foodie.services.MyLocationService
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationRequest
+import com.google.android.gms.location.LocationServices
+import com.karumi.dexter.Dexter
+import com.karumi.dexter.PermissionToken
+import com.karumi.dexter.listener.PermissionDeniedResponse
+import com.karumi.dexter.listener.PermissionGrantedResponse
+import com.karumi.dexter.listener.PermissionRequest
+import com.karumi.dexter.listener.single.PermissionListener
+import java.net.CacheRequest
 
 class DeliveryHomeActivity : AppCompatActivity() {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
+
+    private lateinit var locationRequest: LocationRequest
+
+    private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,6 +64,48 @@ class DeliveryHomeActivity : AppCompatActivity() {
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
+
+
+        Dexter.withActivity(this)
+            .withPermission(Manifest.permission.ACCESS_FINE_LOCATION)
+            .withListener(object: PermissionListener{
+                override fun onPermissionGranted(response: PermissionGrantedResponse?) {
+                    updateLocation()
+                }
+
+                override fun onPermissionRationaleShouldBeShown(
+                    permission: PermissionRequest?,
+                    token: PermissionToken?
+                ) {
+
+                }
+
+                override fun onPermissionDenied(response: PermissionDeniedResponse?) {
+                    Toast.makeText(this@DeliveryHomeActivity,"This permission should be accepted",Toast.LENGTH_LONG).show()
+                }
+
+            }).check()
+
+    }
+
+    private fun updateLocation() {
+        buildLocationRequest()
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
+        fusedLocationProviderClient.requestLocationUpdates(locationRequest,getPendingIntent())
+    }
+
+    private fun getPendingIntent(): PendingIntent? {
+        val intent = Intent(this@DeliveryHomeActivity,MyLocationService::class.java)
+        intent.setAction(MyLocationService.ACTION_PROCESS_UPDATE)
+        return PendingIntent.getBroadcast(this@DeliveryHomeActivity,0,intent,PendingIntent.FLAG_UPDATE_CURRENT)
+    }
+
+    private fun buildLocationRequest() {
+        locationRequest = LocationRequest()
+        locationRequest.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
+        locationRequest.interval = 5000
+        locationRequest.fastestInterval = 3000
+        locationRequest.smallestDisplacement=10f
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

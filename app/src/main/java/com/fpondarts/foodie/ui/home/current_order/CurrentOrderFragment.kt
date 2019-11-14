@@ -26,7 +26,7 @@ class CurrentOrderFragment : BottomSheetDialogFragment(), KodeinAware,
 
 
     override fun onItemClick(item: OrderItem) {
-        viewModel?.removeFromOrder(item.id)
+        viewModel?.removeFromOrder(item.product_id)
         current_order_recycler_view.adapter!!.notifyDataSetChanged()
     }
 

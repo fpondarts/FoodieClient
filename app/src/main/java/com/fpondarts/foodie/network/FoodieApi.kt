@@ -19,21 +19,21 @@ interface FoodieApi {
     @POST
     suspend fun signIn(email: String, password: String?, fbToken: String):Response<SignInResponse>
 
-    @GET(USERS_PREFIX+"/{id}")
-    suspend fun getUserById(@Header(API_KEY_HEADER)token:String,@Path("id")id:Long):Response<User>
+    @GET(USERS_PREFIX+"/{product_id}")
+    suspend fun getUserById(@Header(API_KEY_HEADER)token:String,@Path("product_id")id:Long):Response<User>
 
-    @GET(API_PREFIX+"shops/{id}")
-    suspend fun getShop(@Header(API_KEY_HEADER) token:String, @Path("id") id:Long):Response<Shop>
+    @GET(API_PREFIX+"shops/{product_id}")
+    suspend fun getShop(@Header(API_KEY_HEADER) token:String, @Path("product_id") id:Long):Response<Shop>
 
-    @GET(API_PREFIX+"shops/{id}/menu")
-    suspend fun getMenu(@Header(API_KEY_HEADER) token:String, @Path("id") id:Long):Response<List<MenuItem>>
+    @GET(API_PREFIX+"shops/{product_id}/menu")
+    suspend fun getMenu(@Header(API_KEY_HEADER) token:String, @Path("product_id") id:Long):Response<List<MenuItem>>
 
     @GET(API_PREFIX+"shops/top")
     suspend fun getTopShops(@Header(API_KEY_HEADER) token: String):Response<List<Shop>>
 
-    @GET(API_PREFIX+"shops/{id}/deliveryPrice")
+    @GET(API_PREFIX+"shops/{product_id}/deliveryPrice")
     suspend fun getDeliveryPrice(@Header(API_KEY_HEADER) token:String,
-                                 @Path("id")id:Long,
+                                 @Path("product_id")id:Long,
                                  @Query("latitude")lat:Double, @Query("longitude")long:Double):Response<DeliveryPriceResponse>
 
 
@@ -50,7 +50,7 @@ interface FoodieApi {
     @GET(API_PREFIX+"orders/{orderId}")
     suspend fun getOrder(@Header(API_KEY_HEADER)token:String, @Body orderId:Long):Response<Order>
 
-    @GET(API_PREFIX+"deliveries/{id}")
+    @GET(API_PREFIX+"deliveries/{product_id}")
     suspend fun getDelivery(@Header(API_KEY_HEADER)token:String, @Body id:Long):Response<Delivery>
 
     @GET(API_PREFIX+"orders")
@@ -74,6 +74,21 @@ interface FoodieApi {
 
     @GET(SHOPS_PREFIX)
     suspend fun getShopsPage(@Header(API_KEY_HEADER)token:String,@Query("p")page:Int, @Query("pSize")pageSize:Int):Response<List<Shop>>
+
+
+    // Orders
+    @GET("orders/{id}/items")
+    suspend fun getOrderItems(@Header(API_KEY_HEADER) token: String,@Path("id") order_id:Long):Response<List<OrderItem>>
+
+
+    // Offers
+    @GET("delivery/{id}/offers")
+    suspend fun getCurrentOffers(@Header(API_KEY_HEADER)token: String,@Path("id")id:Long):Response<List<Offer>>
+
+    @PUT("offers/{id}")
+    suspend fun changeOfferState(@Header(API_KEY_HEADER)token: String,@Path("id")id:Long,@Body state:StateChangeRequest):Response<SuccessResponse>
+
+
 
 
     companion object {
@@ -101,6 +116,7 @@ interface FoodieApi {
 
         const val USERS_PREFIX="users"
         const val SHOPS_PREFIX="shops"
+        const val OFFERS_PREFIX="offers"
         const val API_PREFIX = ""
         const val API_KEY_HEADER = "FOODIE-API-KEY"
     }

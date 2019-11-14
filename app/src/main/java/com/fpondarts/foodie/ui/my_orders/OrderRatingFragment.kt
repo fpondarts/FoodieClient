@@ -49,7 +49,7 @@ class OrderRatingFragment : Fragment(), KodeinAware {
 
         val orderId = arguments!!.getLong("orderId")
         val shopId = arguments!!.getLong("shop_id")
-        val deliveryId = arguments!!.getLong("deliveryId")
+        val deliveryId = arguments!!.getLong("delivery_id")
 
         viewModel.getOrder(orderId).observe(this, Observer {
             it?.let{

@@ -22,4 +22,6 @@ class CurrentOrderAdapter(private val list : Collection<OrderItem>, val listener
         val item: OrderItem = list.elementAt(position)
         holder.bind(item,listener)
     }
+
+
 }

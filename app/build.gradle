@@ -25,6 +25,10 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
+        buildTypes.each {
+            it.buildConfigField 'String', 'google_api_key', google_api_key
+        }
+
     }
     dataBinding {
         enabled = true
@@ -114,6 +118,12 @@ dependencies {
     implementation 'com.squareup.picasso:picasso:2.71828'
 
     implementation 'androidx.lifecycle:lifecycle-extensions:2.1.0-alpha01'
+
+
+    //Location
+    implementation 'com.google.android.gms:play-services-location:16.0.0'
+    implementation 'com.karumi:dexter:5.0.0'
+
 }
 
 
