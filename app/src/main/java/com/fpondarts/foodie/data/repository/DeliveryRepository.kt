@@ -92,27 +92,27 @@ class DeliveryRepository(
         return offers
     }
 
-    fun acceptOffer(offer_id:Long):LiveData<SuccessResponse>{
+    fun acceptOffer(offer_id:Long):LiveData<Boolean>{
 
-        val successResponse = MutableLiveData<SuccessResponse>().apply{
+        val successResponse = MutableLiveData<Boolean>().apply{
             value = null
         }
 
         Coroutines.io {
             try{
                 val apiResponse = apiRequest {api.changeOfferState(token!!,offer_id, StateChangeRequest("accepted")) }
-                successResponse.postValue(apiResponse)
+                successResponse.postValue(true)
             } catch (e:FoodieApiException){
                 apiError.postValue(e)
-                successResponse.postValue(SuccessResponse("No se pudo modificar la oferta"))
+                successResponse.postValue(false)
             }
         }
 
         return successResponse
     }
 
-    fun rejectOffer(offer_id:Long):LiveData<SuccessResponse>{
-        val successResponse = MutableLiveData<SuccessResponse>().apply{
+    fun rejectOffer(offer_id:Long):LiveData<Boolean>{
+        val successResponse = MutableLiveData<Boolean>().apply{
             value = null
         }
         Coroutines.io{
@@ -120,10 +120,10 @@ class DeliveryRepository(
                 val apiResponse = apiRequest{api.changeOfferState(token!!,offer_id,
                     StateChangeRequest("rejected")
                 )}
-                successResponse.postValue(apiResponse)
+                successResponse.postValue(true)
             } catch (e:FoodieApiException){
                 apiError.postValue(e)
-                successResponse.postValue(SuccessResponse("No se pudo modificar la oferta"))
+                successResponse.postValue(false)
             }
         }
         return successResponse
@@ -173,6 +173,21 @@ class DeliveryRepository(
             }
         }
         return menu
+    }
+
+    fun getMenuItem(product_id:Long):LiveData<MenuItem>{
+        val item = db.getMenuItemDao().loadItem(product_id)
+        if (item.value == null){
+            Coroutines.io{
+                try{
+                    val apiResponse = apiRequest { api.getProduct(token!!,product_id) }
+                    db.getMenuItemDao().upsert(apiResponse)
+                } catch (e :FoodieApiException){
+                    apiError.postValue(e)
+                }
+            }
+        }
+        return item
     }
 
 

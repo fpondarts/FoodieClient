@@ -61,12 +61,6 @@ class RegisterDataFragment : DialogFragment(), KodeinAware {
 
     private val ROLES = arrayOf("User", "Delivery")
 
-    private var name:String? = null
-    private var email:String? = null
-    private var photoUri:String? = null
-    private var password:String? = null
-    private var uid:String? = null
-
     private var uploading = false
 
     val REQUEST_IMAGE_CAPTURE = 1

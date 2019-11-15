@@ -43,9 +43,6 @@ interface FoodieApi {
     @GET(API_PREFIX+"deliveries")
     suspend fun getDeliveries(@Header(API_KEY_HEADER)token: String, @Query("latitude") lat:Double, @Query("longitude") long:Double):Response<List<Delivery>>
 
-    @POST(API_PREFIX+"offer")
-    suspend fun postOffer(@Header(API_KEY_HEADER)token:String, @Body deliveryId:Long, @Body orderId: Long):Response<Offer>
-
 
     @GET(API_PREFIX+"orders/{orderId}")
     suspend fun getOrder(@Header(API_KEY_HEADER)token:String, @Body orderId:Long):Response<Order>
@@ -75,6 +72,10 @@ interface FoodieApi {
     @GET(SHOPS_PREFIX)
     suspend fun getShopsPage(@Header(API_KEY_HEADER)token:String,@Query("p")page:Int, @Query("pSize")pageSize:Int):Response<List<Shop>>
 
+
+    // PRODUCTS
+    @GET("products/{id}")
+    suspend fun getProduct(@Header(API_KEY_HEADER)token: String,@Path("id")id:Long):Response<MenuItem>
 
     // Orders
     @GET("orders/{id}/items")

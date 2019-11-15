@@ -22,5 +22,6 @@ class OfferAdapter (private val list: Collection<OfferItem>, val listener: OnOff
 
     override fun onBindViewHolder(holder: OfferItemViewHolder, position: Int) {
         val item: OfferItem = list.elementAt(position)
+        holder.bind(item, listener)
     }
 }
