@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.fpondarts.foodie.model.OrderPricedItem
 
-class OrderAdapter(private val list: Collection<OrderPricedItem>, val listener: OnOfferItemClickListener):
+class OrderAdapter(private val list: Collection<OrderPricedItem>):
     RecyclerView.Adapter<OrderItemViewHolder>(){
 
     override fun onBindViewHolder(holder: OrderItemViewHolder, position: Int) {

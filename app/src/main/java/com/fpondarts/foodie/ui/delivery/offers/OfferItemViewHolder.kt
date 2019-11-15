@@ -12,27 +12,25 @@ import com.fpondarts.foodie.model.OfferItem
 class OfferItemViewHolder(inflater: LayoutInflater, parent:ViewGroup):
     RecyclerView.ViewHolder(inflater.inflate(R.layout.item_offer,parent,false)) {
 
-    val time = itemView.findViewById<TextView>(R.id.tiempo_restante)
+    private val time = itemView.findViewById<TextView>(R.id.tiempo_restante)
 
-    val earnings: TextView = itemView.findViewById(R.id.tv_earnings)
+    private val earnings: TextView = itemView.findViewById(R.id.tv_earnings)
 
 
     fun bind(item:OfferItem,listener: OnOfferItemClickListener){
         time.text = item.remainingSeconds.toString()
         earnings.text = item.earnings.toString()
         itemView.findViewById<Button>(R.id.button_accept).setOnClickListener(View.OnClickListener {
-            listener.onAcceptClick()
+            listener.onAcceptClick(item.offer_id,item.order_id)
         })
 
         itemView.findViewById<Button>(R.id.button_reject).setOnClickListener(View.OnClickListener {
-            listener.onRejectClick()
+            listener.onRejectClick(item.offer_id,item.order_id)
         })
 
         itemView.findViewById<Button>(R.id.button_detail).setOnClickListener(View.OnClickListener {
-            listener.onViewClick()
+            listener.onViewClick(item.offer_id,item.order_id)
         })
     }
-
-
 
 }

@@ -190,6 +190,21 @@ class DeliveryRepository(
         return item
     }
 
+    fun finishDelivery(order_id:Long):LiveData<Boolean>{
+        val liveData = MutableLiveData<Boolean>().apply {
+            value = null
+        }
+        Coroutines.io{
+            try {
+                val apiResponse = apiRequest { api.finishOrder(token!!,order_id,StateChangeRequest("finished")) }
+                liveData.postValue(true)
+            } catch (e:FoodieApiException){
+                apiError.postValue(e)
+                liveData.postValue(false)
+            }
+        }
+    }
+
 
 
 }

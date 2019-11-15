@@ -19,6 +19,7 @@ import com.fpondarts.foodie.data.repository.DeliveryRepository
 import com.fpondarts.foodie.model.OrderItem
 import com.fpondarts.foodie.model.OrderPricedItem
 import kotlinx.android.synthetic.main.content_order.*
+import kotlinx.android.synthetic.main.fragment_sign_in.*
 import kotlinx.android.synthetic.main.fragment_single_offer.*
 import kotlinx.android.synthetic.main.fragment_single_offer.button_accept
 import kotlinx.android.synthetic.main.item_offer.*
@@ -75,7 +76,11 @@ class SingleOfferFragment : Fragment(),KodeinAware{
 
         button_reject.setOnClickListener(View.OnClickListener {
             repository.rejectOffer(offer_id!!).observe(this,Observer{
-
+                it?.let {
+                    if (it){
+                        Toast.makeText(activity,"Oferta rechazada",Toast.LENGTH_SHORT).show()
+                    }
+                }
             })
         })
 
@@ -107,7 +112,7 @@ class SingleOfferFragment : Fragment(),KodeinAware{
                             recyclerList.add(OrderPricedItem(menuItem!!.name,item.units,menuItem!!.price))
                         }
 
-                        items_recycler_view.adapter = OrderAdapter()
+                        items_recycler_view.adapter = OrderAdapter(recyclerList)
                     }
                 })
             }

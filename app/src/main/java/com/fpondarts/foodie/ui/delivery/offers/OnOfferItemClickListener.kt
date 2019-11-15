@@ -2,9 +2,9 @@ package com.fpondarts.foodie.ui.delivery.offers
 
 interface OnOfferItemClickListener {
 
-    fun onAcceptClick()
+    fun onAcceptClick(offer_id:Long,order_id:Long)
 
-    fun onRejectClick()
+    fun onRejectClick(offer_id:Long,order_id:Long)
 
-    fun onViewClick()
+    fun onViewClick(offer_id:Long,order_id:Long)
 }
