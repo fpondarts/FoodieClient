@@ -2,6 +2,7 @@ package com.fpondarts.foodie.ui.home.delivery_map
 
 import androidx.lifecycle.ViewModelProviders
 import android.os.Bundle
+import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,12 +21,12 @@ import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.kodein
 import org.kodein.di.generic.instance
 import android.widget.Toast
+import com.fpondarts.foodie.model.Coordinates
 
 
 class DeliveryMapFragment : Fragment()
     , OnMapReadyCallback
-    , GoogleMap.OnCameraIdleListener,
-    KodeinAware{
+    , KodeinAware{
 
     override val kodein by kodein()
 
@@ -38,6 +39,9 @@ class DeliveryMapFragment : Fragment()
 
     private lateinit var mMap:GoogleMap
     private lateinit var viewModel: DeliveryMapViewModel
+
+    private var order_id:Long = 0
+    private lateinit var coordinates:Coordinates
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -54,12 +58,14 @@ class DeliveryMapFragment : Fragment()
         val map = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
         map.getMapAsync(this)
 
-        viewModel.availableDeliveries.observe(this, Observer {
+        order_id = arguments!!.getLong("order_id")
+
+        viewModel.repository.availableDeliveries.observe(this, Observer {
             mMap?.apply {
                 this.clear()
                 it.forEach {
                     val marker = mMap.addMarker(MarkerOptions().draggable(false).position(LatLng(it.latitude,it.longitude)))
-                    marker.tag = it.id
+                    marker.tag = it.user_id
                 }
             }
         })
@@ -76,6 +82,7 @@ class DeliveryMapFragment : Fragment()
 
         viewModel.getCurrentShop().observe(this, Observer {
             it?.let {
+                coordinates = Coordinates(it.latitude,it.longitude)
                 Toast.makeText(activity,it.latitude.toString() +"-"+it.longitude.toString(),Toast.LENGTH_LONG).show()
                 mMap.addMarker(MarkerOptions().position(LatLng(it.latitude,it.longitude)).title(it.name)
                     .icon(BitmapDescriptorFactory.defaultMarker(120.00.toFloat())
@@ -83,9 +90,25 @@ class DeliveryMapFragment : Fragment()
 
             }
         })
+
+        useHandler()
     }
 
-    override fun onCameraIdle() {
-        viewModel.updateMarkers(mMap.cameraPosition.target.latitude,mMap.cameraPosition.target.longitude)
+    var mHandler: Handler? = null
+
+    fun useHandler() {
+        mHandler = Handler()
+        mHandler!!.postDelayed(mRunnable, 5000)
     }
+
+    private val mRunnable = object : Runnable {
+
+        override fun run() {
+
+            viewModel.repository.refreshDeliveries(coordinates.latitude,coordinates.longitude)
+
+            mHandler!!.postDelayed(this, 5000)
+        }
+    }
+
 }

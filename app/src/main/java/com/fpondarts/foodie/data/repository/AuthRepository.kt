@@ -18,8 +18,6 @@ import java.lang.Exception
 
 class AuthRepository(private val api:FoodieApi):SafeApiRequest() {
 
-    var apiErrorHandler: ApiExceptionHandler? = null
-
     var apiErrors = MutableLiveData<FoodieApiException>()
 
     fun registerUser(name:String,email:String,password:String?,fbUid:String,photoUri:String?,phone:String): LiveData<Boolean?> {
@@ -29,12 +27,12 @@ class AuthRepository(private val api:FoodieApi):SafeApiRequest() {
         }
 
         Coroutines.io{
-            val requestBody = UserRegisterRequest(name,email,password,fbUid,phone,"usuario","flat",photoUri)
-            val response = api.registerUser(requestBody)
-            if (response.isSuccessful){
+            try{
+                val requestBody = UserRegisterRequest(name,email,password,fbUid,phone,"usuario","flat",photoUri)
+                val response = apiRequest {  api.registerUser(requestBody) }
                 registered.postValue(true)
-            } else {
-                apiErrorHandler?.handle(response.message())
+            } catch (e:FoodieApiException){
+                apiErrors.postValue(e)
                 registered.postValue(false)
             }
         }
@@ -71,6 +69,7 @@ class AuthRepository(private val api:FoodieApi):SafeApiRequest() {
                 response.postValue(foodieResponse)
             } catch (e:FoodieApiException){
                 apiErrors.postValue(e)
+
             }
         }
         return response

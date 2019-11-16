@@ -46,6 +46,10 @@ class OrderModel(val userId:Long, val shopId:Long) {
         return deliveryPrice
     }
 
+    fun isEmpty():Boolean{
+        return (items.isEmpty() || price == 0.0)
+    }
+
 
 }
 

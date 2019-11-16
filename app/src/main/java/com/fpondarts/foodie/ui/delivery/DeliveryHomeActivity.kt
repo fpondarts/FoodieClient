@@ -96,7 +96,7 @@ class DeliveryHomeActivity : AppCompatActivity() {
 
     private fun getPendingIntent(): PendingIntent? {
         val intent = Intent(this@DeliveryHomeActivity,MyLocationService::class.java)
-        intent.setAction(MyLocationService.ACTION_PROCESS_UPDATE)
+        intent.setAction(MyLocationService.ACTION_PROCESS_UPDATE_DELIVERY)
         return PendingIntent.getBroadcast(this@DeliveryHomeActivity,0,intent,PendingIntent.FLAG_UPDATE_CURRENT)
     }
 

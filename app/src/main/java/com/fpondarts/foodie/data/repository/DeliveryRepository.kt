@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import com.fpondarts.foodie.data.db.FoodieDatabase
 import com.fpondarts.foodie.data.db.entity.*
 import com.fpondarts.foodie.data.parser.RoutesParser
+import com.fpondarts.foodie.model.Coordinates
 import com.fpondarts.foodie.network.DirectionsApi
 import com.fpondarts.foodie.network.FoodieApi
 import com.fpondarts.foodie.network.SafeApiRequest
@@ -22,7 +23,7 @@ class DeliveryRepository(
     private val api:FoodieApi,
     private val directionsApi: DirectionsApi,
     private val db:FoodieDatabase
-): SafeApiRequest() {
+): SafeApiRequest() , PositionUpdater{
 
     val apiError = MutableLiveData<FoodieApiException>().apply {
         value = null
@@ -203,8 +204,28 @@ class DeliveryRepository(
                 liveData.postValue(false)
             }
         }
+        return liveData
     }
 
+    override fun updatePosition (latitude:Double,longitude:Double):LiveData<Boolean>{
+        val liveData = MutableLiveData<Boolean>().apply {
+            value = null
+        }
+        Coroutines.io {
+            try {
 
+                val apiResponse = apiRequest {
+                    api.updateCoordinates(token!!,userId!!,
+                        Coordinates(latitude ,longitude)
+                    )
+                }
+                liveData.postValue(true)
+            } catch (e:FoodieApiException){
+                apiError.postValue(e)
+                liveData.postValue(false)
+            }
+        }
+        return liveData
+    }
 
 }

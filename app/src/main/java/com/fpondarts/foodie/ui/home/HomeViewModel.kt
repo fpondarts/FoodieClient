@@ -13,20 +13,10 @@ class HomeViewModel (
     private val repository: Repository
 ): ViewModel() {
 
-    val shops = ArrayList<Shop>()
     val searchText : String? = null
     var authListener: AuthListener? = null
 
 
-    fun onSearchClick(view: View?){
-        Coroutines.main{
-            try{
-                repository.getShops()
-            } catch(e:FoodieApiException) {
-
-            }
-        }
-    }
 
     fun getAllShops():LiveData<List<Shop>>{
         var live:LiveData<List<Shop>>? = null

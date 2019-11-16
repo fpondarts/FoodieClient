@@ -62,7 +62,11 @@
     <fragment
         android:id="@+id/deliveryMapFragment"
         android:name="com.fpondarts.foodie.ui.home.delivery_map.DeliveryMapFragment"
-        android:label="DeliveryMapFragment" />
+        android:label="DeliveryMapFragment" >
+        <argument
+            android:name="order_id"
+            app:argType="long" />
+    </fragment>
     <navigation
         android:id="@+id/navigation"
         app:startDestination="@id/myOrdersFragment" >

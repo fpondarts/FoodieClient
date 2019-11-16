@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
@@ -61,8 +62,13 @@ class CurrentOrderFragment : BottomSheetDialogFragment(), KodeinAware,
 
 
         button_fin_pedido.setOnClickListener(View.OnClickListener {
-            Navigation.findNavController(parentFragment!!.view!!).navigate(R.id.deliveryAddressFragment)
-            dismiss()
+            if (viewModel!!.repository.currentOrder!!.isEmpty()){
+                Toast.makeText(activity,"El pedido esta vacío",Toast.LENGTH_LONG).show()
+            } else {
+                Navigation.findNavController(parentFragment!!.view!!).navigate(R.id.deliveryAddressFragment)
+                dismiss()
+            }
+
         })
 
         current_order_recycler_view.apply {

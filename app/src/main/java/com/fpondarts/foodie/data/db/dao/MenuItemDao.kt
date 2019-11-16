@@ -12,12 +12,12 @@ import com.fpondarts.foodie.data.db.entity.MenuItem
 interface MenuItemDao {
 
     @Query("Select * from menuitem where shop_id = :shop_id")
-    fun loadMenu(shopId:Long): LiveData<List<MenuItem>>
+    fun loadMenu(shop_id:Long): LiveData<List<MenuItem>>
 
     @Query("Select * from menuitem")
     fun loadAll(): LiveData<List<MenuItem>>
 
-    @Query("Select * from MenuItem where product_id = :product_id")
+    @Query("Select * from MenuItem where id = :id")
     fun loadItem(id:Long): LiveData<MenuItem>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)

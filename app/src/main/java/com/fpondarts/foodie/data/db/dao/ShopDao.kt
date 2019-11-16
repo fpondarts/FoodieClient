@@ -10,7 +10,7 @@ import com.fpondarts.foodie.data.db.entity.Shop
 @Dao
 interface ShopDao {
 
-    @Query("Select * from shop where product_id = :shop_id")
+    @Query("Select * from shop where id = :shopId")
     fun loadShop(shopId:Long):LiveData<Shop>
 
     @Query("Select * from shop Limit 10")
@@ -25,7 +25,7 @@ interface ShopDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun upsertBatch(shop:List<Shop>)
 
-    @Query("Select COUNT(product_id) from shop")
-    fun getCount():LiveData<Int>
+    @Query("Select COUNT(id) from shop")
+    fun getCount():Int
 
 }

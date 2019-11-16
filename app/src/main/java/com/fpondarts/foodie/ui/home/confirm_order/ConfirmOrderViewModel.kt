@@ -2,6 +2,8 @@ package com.fpondarts.foodie.ui.home.confirm_order
 
 import android.view.View
 import android.widget.EditText
+import android.widget.Toast
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.fpondarts.foodie.R
@@ -13,7 +15,7 @@ import com.fpondarts.foodie.util.exception.FoodieApiException
 class ConfirmOrderViewModel(val repository: Repository) : ViewModel() {
 
     var points: EditText? = null
-    val pointsStr = String()
+    var pointsStr = String()
     var totalPrice = repository.currentOrder?.price!! + repository.currentOrder?.getDeliveryPrice()!!
     val priceStr = "$" + repository.currentOrder?.price.toString()
     val deliveryPriceStr="$" + repository.currentOrder?.getDeliveryPrice()?.toString()
@@ -39,23 +41,16 @@ class ConfirmOrderViewModel(val repository: Repository) : ViewModel() {
         totalPriceStr.postValue("$" + totalPrice.toBigDecimal().toString())
     }
 
-    fun onConfirmOrder(view:View){
+    fun confirmOrder():LiveData<Boolean>{
         if (checkedButton == R.id.rb_favor) {
-            if ((pointsStr.toInt() == 0) || (pointsStr.toInt() > repository.getUserPoints())){
-                //TODO manejar error de
+            if (pointsStr.toInt() == 0){
+                listener?.onFailure("Debes ofrecer al menos 1 punto de favor")
+            }
+            if(pointsStr.toInt() > repository.getUserPoints()){
+                listener?.onFailure("No tienes puntos suficientes")
             }
         }
-        Coroutines.io {
-            try{
-                confirmed.postValue(repository.confirmOrder())
-            } catch(e:FoodieApiException) {
-
-            }
-        }
-
-    }
-
-    fun onCancel(view:View){
+        return repository.confirmOrder()
 
     }
 

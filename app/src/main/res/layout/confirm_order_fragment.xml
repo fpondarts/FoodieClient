@@ -22,7 +22,8 @@
             android:layout_marginLeft="32dp"
             android:layout_marginTop="32dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="@id/delivery_price_card">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
@@ -51,14 +52,16 @@
                     app:layout_constraintStart_toEndOf="@id/price_no_delivery"
                     app:layout_constraintTop_toTopOf="parent" />
 
+
+
             </androidx.constraintlayout.widget.ConstraintLayout>
 
         </com.google.android.material.card.MaterialCardView>
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/delivery_price_card"
-            android:layout_width="266dp"
-            android:layout_height="120dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
             android:layout_marginLeft="32dp"
             android:layout_marginTop="16dp"
@@ -104,18 +107,6 @@
                         android:onClick="@{viewModel::onRadioButtonClicked}"
                         android:text="Puntos de favor" />
                 </RadioGroup>
-
-                <EditText
-                    android:id="@+id/et_points"
-                    android:layout_width="181dp"
-                    android:layout_height="39dp"
-                    android:layout_marginTop="16dp"
-                    android:accessibilityPaneTitle="Puntos a ofrecer"
-                    android:hint="Puntos a ofrecer"
-                    android:inputType="number"
-                    android:text="@{viewModel.pointsStr}"
-                    app:layout_constraintStart_toStartOf="@id/delivery_radiogroup"
-                    app:layout_constraintTop_toBottomOf="@id/delivery_radiogroup" />
 
 
             </androidx.constraintlayout.widget.ConstraintLayout>
@@ -166,27 +157,76 @@
 
         </com.google.android.material.card.MaterialCardView>
 
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="52dp"
-            android:layout_marginLeft="52dp"
-            android:layout_marginTop="124dp"
-            android:onClick="@{viewModel::onCancel}"
-            android:text="Cancelar"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/total_price_card" />
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/price_comment_card"
+            android:layout_width="270dp"
+            android:layout_height="59dp"
+            android:layout_marginTop="24dp"
+            app:layout_constraintStart_toStartOf="@+id/total_price_card"
+            app:layout_constraintTop_toBottomOf="@id/total_price_card"
+            app:cardBackgroundColor="@color/colorPrimaryLight">
 
-        <Button
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="El precio de envío puede
+                                    variar de acuerdo al delivery"
+                    android:textSize="16dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginLeft="16dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"/>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/button_confirm_order"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="192dp"
-            android:layout_marginLeft="192dp"
-            android:layout_marginTop="124dp"
-            android:onClick="@{viewModel::onConfirmOrder}"
-            android:text="Confirmar"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/total_price_card" />
+            app:layout_constraintStart_toStartOf="@id/price_comment_card"
+            app:layout_constraintTop_toBottomOf="@id/price_comment_card"
+            android:layout_marginTop="16dp"
+            android:clickable="true"
+            >
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/confirm_icon"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginBottom="8dp"
+                    android:src="@drawable/ic_menu_send"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginRight="8dp"
+                    android:text="Confirmar pedido"
+                    android:textSize="24dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/confirm_icon"
+                    app:layout_constraintTop_toTopOf="@id/confirm_icon" />
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        </com.google.android.material.card.MaterialCardView>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

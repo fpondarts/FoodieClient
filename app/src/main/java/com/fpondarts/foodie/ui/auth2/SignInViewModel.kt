@@ -12,9 +12,12 @@ import com.fpondarts.foodie.util.exception.IncompleteDataException
 
 class SignInViewModel (val repository: AuthRepository) : ViewModel() {
 
-    val userName = MutableLiveData<String>()
+    val userName = MutableLiveData<String>().apply{
+        value = "normal@gmail.com"}
 
-    val password = MutableLiveData<String>()
+    val password = MutableLiveData<String>().apply {
+        value = "taller2"
+    }
 
 
     fun signIn(): LiveData<SignInResponse?> {

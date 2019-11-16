@@ -8,6 +8,7 @@ import com.fpondarts.foodie.model.OfferState
 
 @Entity
 data class Offer(
+    @PrimaryKey
     val id:Long,
     val orderId:Long,
     val delivery_id:Long,

@@ -6,15 +6,20 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.core.os.bundleOf
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
+import androidx.navigation.NavOptions
 import androidx.navigation.Navigation
+import androidx.navigation.fragment.findNavController
 
 import com.fpondarts.foodie.R
 import com.fpondarts.foodie.databinding.ConfirmOrderFragmentBinding
 import com.fpondarts.foodie.ui.auth.AuthListener
 import com.fpondarts.foodie.ui.FoodieViewModelFactory
 import kotlinx.android.synthetic.main.confirm_order_fragment.*
+import kotlinx.android.synthetic.main.confirm_order_fragment.view.*
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.kodein
 import org.kodein.di.generic.instance
@@ -34,8 +39,7 @@ class ConfirmOrderFragment : Fragment(), AuthListener, KodeinAware {
     }
 
     override fun onFailure(message: String) {
-
-
+        Toast.makeText(activity,message,Toast.LENGTH_LONG).show()
     }
 
     companion object {
@@ -63,19 +67,36 @@ class ConfirmOrderFragment : Fragment(), AuthListener, KodeinAware {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        et_points.isEnabled = false
-        viewModel!!.points = et_points
 
         viewModel!!.totalPriceStr.observe(this, Observer {
             total_price.text = it!!
         })
 
-        viewModel!!.confirmed.observe(this, Observer {
-            if (it) {
-                Navigation.findNavController(parentFragment!!.view!!).navigate(R.id.deliveryMapFragment)
-            }
-        })
+        button_confirm_order.setOnClickListener(View.OnClickListener {
+            viewModel!!.confirmOrder().observe(this, Observer {
+                it?.let {
+                    if (rb_money_price.isSelected) {
+                        if (it) {
+                            val bundle = bundleOf("order_id" to viewModel!!.repository.currentOrder!!)
+                            findNavController().navigate(R.id.action_confirmOrderFragment_to_deliveryMapFragment,bundle,
+                                NavOptions.Builder().setPopUpTo(
+                                    R.id.nav_home,
+                                    true
+                                ).build())
+                        } else {
+                            Toast.makeText(
+                                activity,
+                                "No pudo confirmarse la orden",
+                                Toast.LENGTH_LONG
+                            ).show()
+                        }
 
+                    } else {
+                        Toast.makeText(activity,"Opcion Puntos de Favor aún no disponible",Toast.LENGTH_LONG).show()
+                    }
+                }
+            })
+        })
 
     }
 

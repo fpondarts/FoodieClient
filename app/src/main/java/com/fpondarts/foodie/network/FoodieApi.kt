@@ -1,6 +1,7 @@
 package com.fpondarts.foodie.network
 
 import com.fpondarts.foodie.data.db.entity.*
+import com.fpondarts.foodie.model.Coordinates
 import com.fpondarts.foodie.network.request.*
 import com.fpondarts.foodie.network.response.*
 import okhttp3.OkHttpClient
@@ -37,8 +38,6 @@ interface FoodieApi {
                                  @Query("latitude")lat:Double, @Query("longitude")long:Double):Response<DeliveryPriceResponse>
 
 
-    @POST(API_PREFIX+"orders")
-    suspend fun confirmOrder(@Header(API_KEY_HEADER)token:String, @Body order:OrderRequest):Response<ConfirmOrderResponse>
 
     @GET(API_PREFIX+"deliveries")
     suspend fun getDeliveries(@Header(API_KEY_HEADER)token: String, @Query("latitude") lat:Double, @Query("longitude") long:Double):Response<List<Delivery>>
@@ -72,6 +71,10 @@ interface FoodieApi {
     @GET(SHOPS_PREFIX)
     suspend fun getShopsPage(@Header(API_KEY_HEADER)token:String,@Query("p")page:Int, @Query("pSize")pageSize:Int):Response<List<Shop>>
 
+    //Users
+    @PATCH(USERS_PREFIX+"/{id}/position")
+    suspend fun updateCoordinates(@Header(API_KEY_HEADER)token: String, @Path("id") userId:Long, @Body coordinates:Coordinates):Response<SuccessResponse>
+
 
     // PRODUCTS
     @GET("products/{id}")
@@ -82,7 +85,11 @@ interface FoodieApi {
     suspend fun getOrderItems(@Header(API_KEY_HEADER) token: String,@Path("id") order_id:Long):Response<List<OrderItem>>
 
     @PATCH("orders/{id}")
-    suspend fun getOrderItems(@Header(API_KEY_HEADER) token: String,@Path("id")order_id:Long,@Body state: StateChangeRequest):Response<SuccessResponse>
+    suspend fun finishOrder(@Header(API_KEY_HEADER) token: String,@Path("id")order_id:Long,@Body state: StateChangeRequest):Response<SuccessResponse>
+
+    @POST(API_PREFIX+"orders")
+    suspend fun confirmOrder(@Header(API_KEY_HEADER)token:String, @Body order:OrderRequest):Response<ConfirmOrderResponse>
+
 
     // Offers
     @GET("delivery/{id}/offers")

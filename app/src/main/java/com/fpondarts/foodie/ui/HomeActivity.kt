@@ -1,5 +1,8 @@
 package com.fpondarts.foodie.ui
 
+import android.Manifest
+import android.app.PendingIntent
+import android.content.Intent
 import android.os.Bundle
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
@@ -17,7 +20,16 @@ import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import com.fpondarts.foodie.R
 import com.fpondarts.foodie.data.repository.Repository
+import com.fpondarts.foodie.services.MyLocationService
 import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationRequest
+import com.google.android.gms.location.LocationServices
+import com.karumi.dexter.Dexter
+import com.karumi.dexter.PermissionToken
+import com.karumi.dexter.listener.PermissionDeniedResponse
+import com.karumi.dexter.listener.PermissionGrantedResponse
+import com.karumi.dexter.listener.PermissionRequest
+import com.karumi.dexter.listener.single.PermissionListener
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.kodein
 import org.kodein.di.generic.instance
@@ -29,7 +41,9 @@ class HomeActivity : AppCompatActivity(), KodeinAware {
 
     val repository : Repository by instance()
 
-    private lateinit var fusedLocationProviderClient:FusedLocationProviderClient
+    private lateinit var locationRequest: LocationRequest
+
+    private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
 
     private lateinit var appBarConfiguration: AppBarConfiguration
 
@@ -68,10 +82,47 @@ class HomeActivity : AppCompatActivity(), KodeinAware {
 
         fusedLocationProviderClient = FusedLocationProviderClient(this)
 
-        val permissions = arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION)
-        ActivityCompat.requestPermissions(this, permissions,0)
+
+        Dexter.withActivity(this)
+            .withPermission(Manifest.permission.ACCESS_FINE_LOCATION)
+            .withListener(object: PermissionListener {
+                override fun onPermissionGranted(response: PermissionGrantedResponse?) {
+                    updateLocation()
+                }
+
+                override fun onPermissionRationaleShouldBeShown(
+                    permission: PermissionRequest?,
+                    token: PermissionToken?
+                ) {
+
+                }
+
+                override fun onPermissionDenied(response: PermissionDeniedResponse?) {
+                    Toast.makeText(this@HomeActivity,"This permission should be accepted",Toast.LENGTH_LONG).show()
+                }
+
+            }).check()
     }
 
+    private fun updateLocation() {
+        buildLocationRequest()
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
+        fusedLocationProviderClient.requestLocationUpdates(locationRequest,getPendingIntent())
+    }
+
+    private fun getPendingIntent(): PendingIntent? {
+        val intent = Intent(this@HomeActivity, MyLocationService::class.java)
+        intent.setAction(MyLocationService.ACTION_PROCESS_UPDATE_USER)
+        return PendingIntent.getBroadcast(this@HomeActivity,0,intent, PendingIntent.FLAG_UPDATE_CURRENT)
+    }
+
+    private fun buildLocationRequest() {
+        locationRequest = LocationRequest()
+        locationRequest.priority = LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY
+        locationRequest.interval = 5000
+        locationRequest.fastestInterval = 3000
+        locationRequest.smallestDisplacement=10f
+    }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
