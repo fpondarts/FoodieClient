@@ -21,8 +21,8 @@ class OrderViewHolder(inflater:LayoutInflater, parent:ViewGroup):
     }
 
     fun bind(order: Order, listener: OnMyOrderClickListener, active:Boolean){
-        mDate!!.text = order.dateTime
-        mPrice!!.text = order.dateTime
-        listener.onActiveOrderClick(active,order.id,order.shopId,order.deliveryId)
+        mDate!!.text = order.created_at
+        mPrice!!.text = order.created_at
+        listener.onActiveOrderClick(active,order.order_id,order.shop_id,order.delivery_id)
     }
 }

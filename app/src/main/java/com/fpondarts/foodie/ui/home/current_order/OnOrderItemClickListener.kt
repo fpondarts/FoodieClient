@@ -4,5 +4,5 @@ import com.fpondarts.foodie.model.OrderItem
 
 interface OnOrderItemClickListener {
 
-    fun onItemClick(item: OrderItem)
+    fun onItemClick(id:Long)
 }

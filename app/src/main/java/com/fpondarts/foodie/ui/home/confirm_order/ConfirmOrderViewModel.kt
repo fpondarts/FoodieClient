@@ -14,44 +14,20 @@ import com.fpondarts.foodie.util.exception.FoodieApiException
 
 class ConfirmOrderViewModel(val repository: Repository) : ViewModel() {
 
-    var points: EditText? = null
-    var pointsStr = String()
     var totalPrice = repository.currentOrder?.price!! + repository.currentOrder?.getDeliveryPrice()!!
-    val priceStr = "$" + repository.currentOrder?.price.toString()
+    val priceStr = "$" + repository.currentOrder?.price!!.toString()
     val deliveryPriceStr="$" + repository.currentOrder?.getDeliveryPrice()?.toString()
     val totalPriceStr = MutableLiveData<String>().apply {
         value = "$" + totalPrice.toString()
     }
 
-    val confirmed = MutableLiveData<Boolean>().apply {
-        value = false
-    }
-
-    var checkedButton = R.id.rb_money_price
 
     var listener: AuthListener? = null
 
-    fun onRadioButtonClicked(view: View){
-        if (view.id == R.id.rb_favor){
-            points!!.isEnabled = true
-            totalPrice = repository.currentOrder!!.price
-        } else {
-            totalPrice = repository.currentOrder!!.price + repository.currentOrder!!.getDeliveryPrice()!!
-        }
-        totalPriceStr.postValue("$" + totalPrice.toBigDecimal().toString())
-    }
+
 
     fun confirmOrder():LiveData<Boolean>{
-        if (checkedButton == R.id.rb_favor) {
-            if (pointsStr.toInt() == 0){
-                listener?.onFailure("Debes ofrecer al menos 1 punto de favor")
-            }
-            if(pointsStr.toInt() > repository.getUserPoints()){
-                listener?.onFailure("No tienes puntos suficientes")
-            }
-        }
         return repository.confirmOrder()
-
     }
 
 }

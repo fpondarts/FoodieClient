@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 
 import com.fpondarts.foodie.R
 import com.fpondarts.foodie.databinding.CurrentOrderFragmentBinding
+import com.fpondarts.foodie.model.NamedOrderItem
 import com.fpondarts.foodie.model.OrderItem
 import com.fpondarts.foodie.ui.FoodieViewModelFactory
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
@@ -26,8 +27,11 @@ class CurrentOrderFragment : BottomSheetDialogFragment(), KodeinAware,
     OnOrderItemClickListener {
 
 
-    override fun onItemClick(item: OrderItem) {
-        viewModel?.removeFromOrder(item.product_id)
+    override fun onItemClick(id:Long) {
+        viewModel?.removeFromOrder(id)
+        adapterList.removeIf {
+            it.id == id
+        }
         current_order_recycler_view.adapter!!.notifyDataSetChanged()
     }
 
@@ -42,7 +46,7 @@ class CurrentOrderFragment : BottomSheetDialogFragment(), KodeinAware,
 
 
 
-
+    private var adapterList = ArrayList<NamedOrderItem>()
     private var viewModel: CurrentOrderViewModel? = null
 
     override fun onCreateView(
@@ -79,8 +83,18 @@ class CurrentOrderFragment : BottomSheetDialogFragment(), KodeinAware,
             value = viewModel!!.getCurrentOrder().items!!.values
         }.observe(this, Observer{
             it?.let{
+
+                adapterList = ArrayList<NamedOrderItem>()
+                val order = viewModel!!.getCurrentOrder()
+                for (item in it){
+                    val name = order.names.get(item.product_id)
+                    val price = order.prices.get(item.product_id)
+                    adapterList.add(NamedOrderItem(item.product_id,item.units,name!!,price))
+
+                }
+
                 current_order_recycler_view.adapter =
-                    CurrentOrderAdapter(it, this)
+                    CurrentOrderAdapter(adapterList, this)
                 current_order_recycler_view.adapter!!.notifyDataSetChanged()
             }
 

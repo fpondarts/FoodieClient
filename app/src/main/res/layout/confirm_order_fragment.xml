@@ -88,7 +88,6 @@
                     android:layout_width="183dp"
                     android:layout_height="63dp"
                     android:layout_marginLeft="100dp"
-                    android:checkedButton="@{viewModel.checkedButton}"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent">
 
@@ -97,14 +96,12 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:focusedByDefault="true"
-                        android:onClick="@{viewModel::onRadioButtonClicked}"
                         android:text="@{viewModel.deliveryPriceStr}" />
 
                     <RadioButton
                         android:id="@+id/rb_favor"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:onClick="@{viewModel::onRadioButtonClicked}"
                         android:text="Puntos de favor" />
                 </RadioGroup>
 
@@ -148,6 +145,7 @@
                     android:layout_marginLeft="56dp"
                     android:layout_marginTop="24dp"
                     android:hint="$xxx.xx"
+                    android:text="@{viewModel.totalPriceStr}"
                     android:textSize="14dp"
                     app:layout_constraintStart_toEndOf="@+id/total_price_title"
                     app:layout_constraintTop_toTopOf="parent" />

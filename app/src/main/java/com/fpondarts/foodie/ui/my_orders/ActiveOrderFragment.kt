@@ -65,7 +65,7 @@ class ActiveOrderFragment : Fragment(), KodeinAware, OnMapReadyCallback {
         viewModel.getOrder(orderId!!).observe(this, Observer {
             it?.let {
 
-                viewModel.getDelivery(it.deliveryId).observe(this, Observer {
+                viewModel.getDelivery(it.delivery_id).observe(this, Observer {
                     it?.let {
                         val del = it
                         deliveryMarker?.let {
@@ -80,7 +80,7 @@ class ActiveOrderFragment : Fragment(), KodeinAware, OnMapReadyCallback {
                     }
                 })
 
-                viewModel.getShop(it.shopId).observe(this, Observer {
+                viewModel.getShop(it.shop_id).observe(this, Observer {
                     it?.let {
                         mMap.addMarker(
                             MarkerOptions()

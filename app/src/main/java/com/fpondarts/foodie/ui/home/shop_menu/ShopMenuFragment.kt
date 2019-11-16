@@ -80,7 +80,7 @@ class ShopMenuFragment : Fragment(), KodeinAware, AuthListener,
                     ShopMenuAdapter(it, this)
                 shop_menu_recycler_view.adapter!!.notifyDataSetChanged()
             } ?: run {
-                Toast.makeText(activity,"Carajo",Toast.LENGTH_SHORT).show()
+
             }
         })
 

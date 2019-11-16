@@ -18,6 +18,7 @@ import com.fpondarts.foodie.model.OrderState
 import com.fpondarts.foodie.network.DirectionsApi
 import com.fpondarts.foodie.network.request.OrderRequest
 import com.google.firebase.database.DatabaseReference
+import java.lang.Exception
 
 class Repository(
     private val api: FoodieApi,
@@ -137,18 +138,30 @@ class Repository(
     }
 
 
-    fun addItemToOrder(item: OrderItem,itemPrice:Float) {
-        currentOrder!!.addItem(item,itemPrice)
+    fun addItemToOrder(item: OrderItem,name:String,itemPrice:Float) {
+        currentOrder!!.addItem(item,name,itemPrice)
     }
 
-    suspend fun askDeliveryPrice(lat:Double,long:Double): Float{
-        val priceResponse = api.getDeliveryPrice(token!!,currentOrder!!.shopId,lat,long)
-        priceResponse.isSuccessful?.let {
-            currentOrder!!.setDeliveryPrice(priceResponse.body()!!.price)
-            currentOrder!!.latitude = lat
-            currentOrder!!.longitude = long
-            return priceResponse.body()!!.price
+    fun askDeliveryPrice(lat:Double,long:Double): LiveData<Float>{
+
+        val liveData = MutableLiveData<Float>().apply {
+            value = null
         }
+
+        Coroutines.io {
+            try {
+                val priceResponse = apiRequest { api.getDeliveryPrice(token!!,currentOrder!!.shopId,lat,long) }
+                currentOrder!!.setDeliveryPrice(priceResponse.price)
+                currentOrder!!.latitude = lat
+                currentOrder!!.longitude = long
+                liveData.postValue(priceResponse.price)
+            } catch (e:FoodieApiException){
+                apiError.postValue(e)
+                liveData.postValue(-1.0.toFloat())
+            }
+        }
+
+        return liveData
     }
 
 
@@ -160,13 +173,13 @@ class Repository(
         Coroutines.io {
             try {
                 val orderId = apiRequest{ api.confirmOrder(token!!,
-                    OrderRequest(2
+                    OrderRequest(currentOrder!!.shopId
                         ,currentOrder!!.items.values
                         ,Coordinates(currentOrder!!.latitude!!,currentOrder!!.longitude!!)
                         ,currentOrder!!.payWitPoints
                         ,currentOrder!!.favourPoints
-                        ,currentOrder!!.price as Float
-                        ,userId!!)) }.orderId
+                        ,currentOrder!!.price.toFloat()
+                        ,userId!!)) }.order_id
                 currentOrder!!.id = orderId
                 liveData.postValue(true)
             } catch (e:FoodieApiException){
@@ -207,15 +220,17 @@ class Repository(
         
     }
 
-    fun getOrder(id:Long): LiveData<com.fpondarts.foodie.data.db.entity.Order>{
+    fun getOrder(id:Long): LiveData<Order>{
         val order = db.getOrderDao().getOrder(id)
-        if (order.value == null) {
+        if (order.value == null || order.value?.state == "created" || order.value?.state=="onWay")  {
             Coroutines.io {
                 try {
                     val order = apiRequest { api.getOrder(token!!, id) }
                     db.getOrderDao().upsert(order)
                 } catch (e: FoodieApiException) {
-
+                    apiError.postValue(e)
+                } catch (e:Exception){
+                    Log.d("Db error",e.message)
                 }
             }
         }
@@ -230,7 +245,7 @@ class Repository(
                     val fetched = apiRequest{ api.getDelivery(token!!,id) }
                     db.getDeliveryDao().upsert(fetched)
                 } catch (e:FoodieApiException){
-
+                    apiError.postValue(e)
                 }
             }
         }
@@ -239,7 +254,8 @@ class Repository(
 
 
     fun getOrdersByState(state: OrderState):LiveData<List<Order>>{
-        val res = db.getOrderDao().getOrdersByState(state)
+        val str = state.stringVal
+        val res = db.getOrderDao().getOrdersByState(str)
         Coroutines.io{
             try {
                 val fetched = apiRequest{ api.getOrdersByState(token!!

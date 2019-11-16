@@ -40,13 +40,6 @@ class DeliveryAddressFragment : Fragment(), KodeinAware {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProviders.of(this,factory).get(DeliveryAddressViewModel::class.java)
 
-        val callback = requireActivity().onBackPressedDispatcher.addCallback(this){
-            viewModel.price.postValue(null)
-        }
-        callback.isEnabled=true
-        choose_location_card.isClickable = true
-        current_location_card.isClickable = true
-
 
         current_location_card.setOnClickListener(View.OnClickListener {
             onCurrentLocationClick()
@@ -59,10 +52,12 @@ class DeliveryAddressFragment : Fragment(), KodeinAware {
 
     fun onCurrentLocationClick(){
         fusedLocationProviderClient.lastLocation.addOnSuccessListener {
-            viewModel.getDeliveryPrice(it.latitude,it.longitude).observe(this, Observer {
+            viewModel.repository.askDeliveryPrice(it.latitude,it.longitude).observe(this, Observer {
             it?.let {
-                Navigation.findNavController(parentFragment!!.view!!).navigate(R.id.confirmOrderFragment)
-                viewModel.price.removeObservers(this)
+                if (it > 0){
+                    Navigation.findNavController(parentFragment!!.view!!).navigate(R.id.confirmOrderFragment)
+                    viewModel.price.removeObservers(this)
+                }
             }
         })
         }.addOnFailureListener{

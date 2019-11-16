@@ -73,11 +73,17 @@ class ConfirmOrderFragment : Fragment(), AuthListener, KodeinAware {
         })
 
         button_confirm_order.setOnClickListener(View.OnClickListener {
-            viewModel!!.confirmOrder().observe(this, Observer {
-                it?.let {
-                    if (rb_money_price.isSelected) {
+
+            if (rb_money_price.isChecked){
+                viewModel!!.confirmOrder().observe(this, Observer {
+                    it?.let {
                         if (it) {
-                            val bundle = bundleOf("order_id" to viewModel!!.repository.currentOrder!!)
+
+                            val user_lat = viewModel!!.repository.currentOrder!!.latitude
+                            val user_lon = viewModel!!.repository.currentOrder!!.longitude
+                            val shop_id = viewModel!!.repository.currentOrder!!.shopId
+                            val bundle = bundleOf("order_id" to viewModel!!.repository.currentOrder!!.id,
+                            "user_lat" to user_lat, "user_lon" to user_lon,"shop_id" to shop_id)
                             findNavController().navigate(R.id.action_confirmOrderFragment_to_deliveryMapFragment,bundle,
                                 NavOptions.Builder().setPopUpTo(
                                     R.id.nav_home,
@@ -90,12 +96,12 @@ class ConfirmOrderFragment : Fragment(), AuthListener, KodeinAware {
                                 Toast.LENGTH_LONG
                             ).show()
                         }
-
-                    } else {
-                        Toast.makeText(activity,"Opcion Puntos de Favor aún no disponible",Toast.LENGTH_LONG).show()
                     }
-                }
-            })
+                })
+            } else {
+                Toast.makeText(activity,"La opcion puntos de favor aun no esta disponible",Toast.LENGTH_LONG).show()
+            }
+
         })
 
     }
