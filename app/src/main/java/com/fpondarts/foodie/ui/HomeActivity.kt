@@ -25,6 +25,7 @@ import androidx.lifecycle.Observer
 import com.fpondarts.foodie.R
 import com.fpondarts.foodie.data.repository.Repository
 import com.fpondarts.foodie.services.MyLocationService
+import com.fpondarts.foodie.ui.auth2.AuthActivity
 import com.google.android.gms.common.api.GoogleApiClient
 import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.location.*
@@ -65,9 +66,14 @@ class HomeActivity : AppCompatActivity(), KodeinAware {
         }
 
         val token = intent.getStringExtra("token")
-        val id = intent.getLongExtra("product_id",-1)
+        val id = intent.getLongExtra("user_id",-1)
 
-
+        if (id.equals(-1)){
+            Toast.makeText(this,"Error en el login",Toast.LENGTH_LONG).show()
+            val newIntent = Intent(this,AuthActivity::class.java)
+            startActivity(newIntent)
+            finish()
+        }
 
         repository.initUser(token,id)
 

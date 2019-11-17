@@ -20,6 +20,10 @@ class AuthRepository(private val api:FoodieApi):SafeApiRequest() {
 
     var apiErrors = MutableLiveData<FoodieApiException>()
 
+    var token: String? = null
+    var userId: Long? = null
+    var role: String? = null
+
     fun registerUser(name:String,email:String,password:String?,fbUid:String,photoUri:String?,phone:String): LiveData<Boolean?> {
 
         val registered = MutableLiveData<Boolean?>().apply {

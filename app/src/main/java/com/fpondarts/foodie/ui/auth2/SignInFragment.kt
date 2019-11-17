@@ -73,9 +73,28 @@ class SignInFragment : Fragment(), KodeinAware, GoogleAuthHandler {
 
         navController = findNavController()
 
+        FirebaseAuth.getInstance().currentUser?.let{
+            viewModel.repository.token?.let{
+                if (viewModel.repository.role == "usuario"){
+                    val intent = Intent(activity,HomeActivity::class.java)
+                    intent.putExtra("token",viewModel.repository.token!!)
+                    intent.putExtra("user_id",viewModel.repository.userId!!)
+                    startActivity(intent)
+                    activity!!.finish()
+                } else if (viewModel.repository.role == "delivery"){
+                    val intent = Intent(activity,DeliveryHomeActivity::class.java)
+                    intent.putExtra("token",viewModel.repository.token!!)
+                    intent.putExtra("user_id",viewModel.repository.userId!!)
+                    startActivity(intent)
+                    activity!!.finish()
+                }
+            }
+        }
+
         toSignUpButton.setOnClickListener(View.OnClickListener {
             navController.navigate(com.fpondarts.foodie.R.id.action_signInFragment_to_signUpFragment)
         })
+
 
         signInButton.setOnClickListener(View.OnClickListener {
                 progress_bar.visibility = View.VISIBLE
@@ -97,7 +116,7 @@ class SignInFragment : Fragment(), KodeinAware, GoogleAuthHandler {
                                                 val intent =
                                                     Intent(activity, HomeActivity::class.java)
                                                 intent.putExtra("token", it.token)
-                                                intent.putExtra("product_id",it.user_id)
+                                                intent.putExtra("user_id",it.user_id)
                                                 startActivity(intent)
                                                 activity!!.finish()
                                             } else if (it.role == "delivery") {
@@ -105,12 +124,13 @@ class SignInFragment : Fragment(), KodeinAware, GoogleAuthHandler {
                                                     activity,
                                                     DeliveryHomeActivity::class.java
                                                 )
+                                                intent.putExtra("user_id",it.user_id)
                                                 intent.putExtra("token", it.token)
                                                 startActivity(intent)
                                                 activity!!.finish()
                                             }
+                                            progress_bar.visibility = View.GONE
                                         }
-                                        progress_bar.visibility = View.GONE
                                     })
                                 } else {
                                     Toast.makeText(
