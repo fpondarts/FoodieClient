@@ -17,7 +17,7 @@
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/priceCard"
             android:layout_width="match_parent"
-            android:layout_height="66dp"
+            android:layout_height="wrap_content"
             android:layout_marginTop="32dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -37,6 +37,15 @@
                     android:textSize="24dp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/comment_on_price"
+                    android:text="No incluye el precio de envío"
+                    app:layout_constraintTop_toBottomOf="@id/price_no_delivery"
+                    app:layout_constraintStart_toStartOf="@id/price_no_delivery"
+                    android:layout_marginTop="8dp"/>
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -72,8 +81,9 @@
                     android:layout_height="47dp"
                     android:layout_marginLeft="8dp"
                     android:layout_marginTop="8dp"
-                    android:text="Forma de pago"
-                    android:textSize="20dp"
+                    android:text="Forma de pago del envío"
+                    android:textSize="14dp"
+                    android:autoSizeTextType="uniform"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
@@ -112,7 +122,8 @@
             android:layout_height="wrap_content"
             app:layout_constraintStart_toStartOf="@id/delivery_price_card"
             app:layout_constraintTop_toBottomOf="@id/delivery_price_card"
-            android:layout_marginTop="32dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginTop="124dp"
             android:clickable="true"
             >
 

@@ -49,8 +49,8 @@ interface FoodieApi {
     @GET(API_PREFIX+"orders/{orderId}")
     suspend fun getOrder(@Header(API_KEY_HEADER)token:String, @Path("orderId") orderId:Long):Response<Order>
 
-    @GET(API_PREFIX+"deliveries/{order_id}")
-    suspend fun getDelivery(@Header(API_KEY_HEADER)token:String, @Body id:Long):Response<Delivery>
+    @GET(API_PREFIX+"deliveries/{id}")
+    suspend fun getDelivery(@Header(API_KEY_HEADER)token:String, @Path("id") id:Long):Response<Delivery>
 
     @GET(API_PREFIX+"orders")
     suspend fun getOrdersByState(@Header(API_KEY_HEADER)token:String,
@@ -95,13 +95,13 @@ interface FoodieApi {
 
 
     // Offers
-    @GET("delivery/{id}/offers")
+    @GET("deliveries/{id}/offers")
     suspend fun getCurrentOffers(@Header(API_KEY_HEADER)token: String,@Path("id")id:Long):Response<List<Offer>>
 
     @PUT("offers/{id}")
     suspend fun changeOfferState(@Header(API_KEY_HEADER)token: String,@Path("id")id:Long,@Body state:StateChangeRequest):Response<SuccessResponse>
 
-    @POST("delivery/{id}/offers")
+    @POST("deliveries/{id}/offers")
     suspend fun postOffer(@Header(API_KEY_HEADER)token: String, @Path("id")id:Long,@Body request: PostOfferRequest):Response<IdResponse>
 
     @GET("offers/{id}")

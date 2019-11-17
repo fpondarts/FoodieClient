@@ -1,5 +1,6 @@
 package com.fpondarts.foodie.ui.home.delivery_map
 
+import android.app.ProgressDialog
 import androidx.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.os.Handler
@@ -34,6 +35,8 @@ import com.google.android.gms.maps.model.*
 
 
 
+
+
 class DeliveryMapFragment : Fragment()
     , OnMapReadyCallback
     , GoogleMap.OnMarkerClickListener
@@ -43,18 +46,30 @@ class DeliveryMapFragment : Fragment()
     override fun onMarkerClick(p0: Marker?): Boolean {
         if (p0!!.title == "Delivery"){
             val delivery_id = p0!!.tag as Long
-            viewModel.repository.getDelivery(delivery_id).observe(
+            Log.d("MapFragment","Click on delivery: ${p0.tag}")
+            val liveDel = viewModel.repository.getDelivery(delivery_id)
+            liveDel.removeObservers(this)
+
+            liveDel.observe(
                 this, Observer {
                     it?.let{
                         val delivery= it
                         viewModel.repository.askDeliveryPrice(user_lat!!,user_lon!!,shop_id!!,it.user_id).observe(
                             this, Observer {
                                 it?.let {
-                                    val dialog = DeliveryDialog(this,currentOfferId,order,delivery,it.price,it.pay)
-                                    dialog.showDialog(activity!!)
+                                    val dialog = DeliveryDialog.newInstance(
+                                        order.payWithPoints
+                                        ,delivery.user_id
+                                        ,order_id
+                                        ,it.price
+                                        ,it.pay
+                                        ,delivery.rating
+                                        ,delivery.picture)
+                                    dialog.show(childFragmentManager,"Ofrece tu pedido")
                                 }
                             }
                         )
+                        liveDel.removeObservers(this)
                     }
                 }
             )
@@ -77,6 +92,8 @@ class DeliveryMapFragment : Fragment()
 
     private lateinit var mMap:GoogleMap
     private lateinit var viewModel: DeliveryMapViewModel
+
+    private var progressDialog : ProgressDialog? = null
 
     private var order_id:Long = 0
 
@@ -113,6 +130,9 @@ class DeliveryMapFragment : Fragment()
         user_lon = arguments!!.getDouble("user_lon")
         shop_id = arguments!!.getLong("shop_id")
 
+        viewModel.repository.currentOfferId.postValue(-1)
+
+
     }
 
     override fun onMapReady(p0: GoogleMap?) {
@@ -121,6 +141,7 @@ class DeliveryMapFragment : Fragment()
         mMap.setMinZoomPreference(5.0.toFloat())
         mMap.setMaxZoomPreference(20.0.toFloat())
 
+        mMap.setOnMarkerClickListener(this)
         viewModel.repository.getShop(shop_id!!).observe(this, Observer {
             it?.let {
                 shop_init = true
@@ -144,7 +165,8 @@ class DeliveryMapFragment : Fragment()
                             Log.d("MapFragment","Se agrega delivery marker en:${it.latitude},${it.longitude}")
                             val marker = mMap.addMarker(MarkerOptions()
                                 .position(LatLng(it.latitude,it.longitude))
-                                .title("Delivery"))
+                                .title("Delivery")
+                                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)))
                             marker.tag = it.user_id
                         }
                     }
@@ -168,25 +190,44 @@ class DeliveryMapFragment : Fragment()
         })
         useHandler()
 
-        currentOfferId.observe(this, Observer {
+        viewModel.repository.currentOfferId.observe(this, Observer {
             it?.let {
                 if (it > 0){
-                    viewModel.repository.getOffer(it).observe(this, Observer {
+                    progressDialog = ProgressDialog.show(context
+                        ,"Oferta realizada"
+                        ,"Esperando respuesta (Max 2 min)"
+                    )
+                    val liveOffer = viewModel.repository.getOffer(it)
+                    liveOffer.observe(this, Observer {
                         it?.let {
                             if (it.state == "offered"){
                                 viewModel.repository.updateObservedOffer(it.id)
                             } else if (it.state == "accepted"){
+                                progressDialog!!.dismiss()
                                 findNavController().navigate(R.id.action_deliveryMapFragment_to_nav_home,
                                     null,
                                     NavOptions.Builder().setPopUpTo(R.id.nav_home,true).build())
+                                viewModel.repository.currentOfferId.postValue(-1)
                             } else {
-
+                                progressDialog!!.dismiss()
+                                Toast.makeText(activity,"Oferta rechazada",Toast.LENGTH_LONG).show()
+                                viewModel.repository.currentOfferId.postValue(-1)
                             }
                         }
                     })
                 }
             }
         })
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+
+        mHandler = null
+    }
+
+    override fun onDetach() {
+        super.onDetach()
     }
 
     var mHandler: Handler? = null
@@ -202,7 +243,7 @@ class DeliveryMapFragment : Fragment()
 
             viewModel.repository.refreshDeliveries(user_lat!!,user_lon!!)
 
-            mHandler!!.postDelayed(this, 5000)
+            mHandler?.postDelayed(this, 5000)
         }
     }
 

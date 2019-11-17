@@ -43,6 +43,10 @@ class Repository(
 
     var currentOrder: OrderModel? = null
 
+    var currentOfferId = MutableLiveData<Long>().apply {
+        value = -1
+    }
+
     var observedOffer : MutableLiveData<Offer>? = null
 
     val apiError = MutableLiveData<FoodieApiException>().apply {
@@ -215,7 +219,9 @@ class Repository(
     fun refreshDeliveries(lat:Double,long:Double){
         Coroutines.io{
            try {
-               val response = apiRequest{ api.getDeliveries(token!!,lat,long) }
+               val lat_rounded = Math.round(lat* 1000.0) / 1000.0
+               val lon_roundded = Math.round(long * 1000.0) / 1000.0
+               val response = apiRequest{ api.getDeliveries(token!!,lat_rounded,lon_roundded) }
                availableDeliveries.postValue(response)
            } catch (e: FoodieApiException){
                apiError.postValue(e)
@@ -342,19 +348,19 @@ class Repository(
 
     fun getOffer(offer_id:Long):LiveData<Offer>{
 
-        observedOffer?.let{}
-        val liveData = MutableLiveData<Offer>().apply {
+        observedOffer = MutableLiveData<Offer>().apply {
             value = null
         }
+
         Coroutines.io {
             try {
                 val apiResponse = apiRequest { api.getOffer(token!!,offer_id) }
-                liveData.postValue(apiResponse)
+                observedOffer!!.postValue(apiResponse)
             } catch (e:FoodieApiException){
                 apiError.postValue(e)
             }
         }
-        return liveData
+        return observedOffer!!
     }
 
 

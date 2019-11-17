@@ -42,6 +42,7 @@ class DeliveryAddressFragment : Fragment(), KodeinAware {
 
 
         current_location_card.setOnClickListener(View.OnClickListener {
+            Toast.makeText(activity,"Click",Toast.LENGTH_SHORT).show()
             onCurrentLocationClick()
         })
 
@@ -52,14 +53,12 @@ class DeliveryAddressFragment : Fragment(), KodeinAware {
 
     fun onCurrentLocationClick(){
         fusedLocationProviderClient.lastLocation.addOnSuccessListener {
-
             it?.let{
                 viewModel.repository.setOrderCoordinates(it.latitude,it.longitude)
                 Navigation.findNavController(parentFragment!!.view!!).navigate(R.id.confirmOrderFragment)
             } ?.run {
-                Toast.makeText(activity,"No se pudo obtener las coordenaddas del dispositivo",Toast.LENGTH_LONG).show()
+                Toast.makeText(activity,"No hay servicio de localizacion",Toast.LENGTH_LONG).show()
             }
-
         }.addOnFailureListener{
             Toast.makeText(activity,it.message,Toast.LENGTH_LONG).show()
         }

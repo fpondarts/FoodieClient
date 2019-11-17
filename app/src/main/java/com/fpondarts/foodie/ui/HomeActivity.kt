@@ -1,8 +1,11 @@
 package com.fpondarts.foodie.ui
 
 import android.Manifest
+import android.app.Activity
 import android.app.PendingIntent
+import android.content.Context
 import android.content.Intent
+import android.content.IntentSender
 import android.os.Bundle
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
@@ -18,12 +21,14 @@ import androidx.appcompat.widget.Toolbar
 import android.view.Menu
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
+import androidx.lifecycle.Observer
 import com.fpondarts.foodie.R
 import com.fpondarts.foodie.data.repository.Repository
 import com.fpondarts.foodie.services.MyLocationService
-import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationRequest
-import com.google.android.gms.location.LocationServices
+import com.google.android.gms.common.api.GoogleApiClient
+import com.google.android.gms.common.api.ResolvableApiException
+import com.google.android.gms.location.*
+import com.google.android.gms.tasks.Task
 import com.karumi.dexter.Dexter
 import com.karumi.dexter.PermissionToken
 import com.karumi.dexter.listener.PermissionDeniedResponse
@@ -83,31 +88,72 @@ class HomeActivity : AppCompatActivity(), KodeinAware {
         fusedLocationProviderClient = FusedLocationProviderClient(this)
 
 
-        Dexter.withActivity(this)
-            .withPermission(Manifest.permission.ACCESS_FINE_LOCATION)
-            .withListener(object: PermissionListener {
-                override fun onPermissionGranted(response: PermissionGrantedResponse?) {
-                    updateLocation()
-                }
 
-                override fun onPermissionRationaleShouldBeShown(
-                    permission: PermissionRequest?,
-                    token: PermissionToken?
-                ) {
 
-                }
+        askLocationPermission()
 
-                override fun onPermissionDenied(response: PermissionDeniedResponse?) {
-                    Toast.makeText(this@HomeActivity,"This permission should be accepted",Toast.LENGTH_LONG).show()
-                }
+        repository.apiError.observe(this, Observer {
+            it?.let {
+                Toast.makeText(this,it.message,Toast.LENGTH_LONG).show()
+            }
+        })
 
-            }).check()
+
     }
 
+    lateinit var settingsRequest : LocationSettingsRequest
+
+    final val REQUEST_CHECK_SETTINGS = 999
+
     private fun updateLocation() {
+
         buildLocationRequest()
+
+        val builder = LocationSettingsRequest.Builder()
+            .addLocationRequest(locationRequest)
+
+
+        val client: SettingsClient = LocationServices.getSettingsClient(this)
+        val task: Task<LocationSettingsResponse> = client.checkLocationSettings(builder.build())
+
+        task.addOnSuccessListener {
+
+            onSettingsOk()
+       }
+
+        task.addOnFailureListener {
+            if (it is ResolvableApiException){
+                // Location settings are not satisfied, but this can be fixed
+                // by showing the user a dialog.
+                try {
+                    // Show the dialog by calling startResolutionForResult(),
+                    // and check the result in onActivityResult().
+                    it.startResolutionForResult(this@HomeActivity,
+                        REQUEST_CHECK_SETTINGS)
+                } catch (sendEx: IntentSender.SendIntentException) {
+                    Toast.makeText(this,sendEx.message,Toast.LENGTH_SHORT).show()
+                }
+            }
+
+        }
+
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == REQUEST_CHECK_SETTINGS){
+            if (resultCode == Activity.RESULT_OK){
+                onSettingsOk()
+            } else {
+                updateLocation()
+            }
+        }
+    }
+
+    private fun onSettingsOk(){
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
         fusedLocationProviderClient.requestLocationUpdates(locationRequest,getPendingIntent())
+
     }
 
     private fun getPendingIntent(): PendingIntent? {
@@ -122,6 +168,7 @@ class HomeActivity : AppCompatActivity(), KodeinAware {
         locationRequest.interval = 5000
         locationRequest.fastestInterval = 3000
         locationRequest.smallestDisplacement=10f
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -134,4 +181,31 @@ class HomeActivity : AppCompatActivity(), KodeinAware {
         val navController = findNavController(R.id.nav_host_fragment)
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
     }
+
+    fun askLocationPermission(){
+
+        Dexter.withActivity(this)
+            .withPermission(Manifest.permission.ACCESS_FINE_LOCATION)
+            .withListener(object: PermissionListener {
+                override fun onPermissionGranted(response: PermissionGrantedResponse?) {
+
+                    updateLocation()
+                }
+
+                override fun onPermissionRationaleShouldBeShown(
+                    permission: PermissionRequest?,
+                    token: PermissionToken?
+                ) {
+
+                }
+
+                override fun onPermissionDenied(response: PermissionDeniedResponse?) {
+                    askLocationPermission()
+                    Toast.makeText(this@HomeActivity,"This permission should be accepted",Toast.LENGTH_LONG).show()
+                }
+
+            }).check()
+
+    }
+
 }

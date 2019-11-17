@@ -5,12 +5,14 @@ import android.app.Activity
 import android.app.Dialog
 import android.media.Image
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import android.widget.*
+import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
@@ -23,71 +25,138 @@ import com.fpondarts.foodie.data.repository.Repository
 import com.squareup.picasso.Picasso
 import org.kodein.di.KodeinAware
 import org.kodein.di.generic.instance
-import org.kodein.di.LazyKodein
-
+import org.kodein.di.android.x.kodein
 /**
  * A simple [Fragment] subclass.
  */
 class DeliveryDialog(
-    val observer:LifecycleOwner,
-    val offer_id: MutableLiveData<Long>,
-    val order:Order,
-    val delivery: Delivery,
-    val price:Double=0.0,
-    val pay:Double=0.0
-): KodeinAware {
 
-    override lateinit var kodein :LazyKodein
+): DialogFragment(), KodeinAware {
 
-    fun showDialog(activity:Activity){
-        val dialog = Dialog(activity)
+    override val kodein by kodein()
 
-        kodein = (activity.applicationContext as FoodieApp).kodein
+    val repository: Repository by instance()
 
-        val repository : Repository by instance()
+    var delivery_pic: String? = null
 
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCancelable(false);
-        dialog.setContentView(R.layout.fragment_delivery_option);
+    var imageView : ImageView? = null
 
-        dialog.findViewById<TextView>(R.id.delivery_name).text = delivery.name
-        dialog.findViewById<RatingBar>(R.id.delivery_rating).rating = delivery.rating.toFloat()
-        Picasso.get().load(delivery.picture).rotate(90.0.toFloat()).into(dialog.findViewById<ImageView>(R.id.delivery_pic))
+    companion object {
 
-        if (order.payWithPoints) {
-            dialog.findViewById<EditText>(R.id.et_favour_points).isEnabled = true
+
+        /**
+         * Create a new instance of CustomDialogFragment, providing "num" as an
+         * argument.
+         */
+        fun newInstance(withPoints:Boolean,
+                        delivery_id:Long,
+                        order_id:Long,
+                        price:Double,
+                        pay:Double,
+                        rating:Double,
+                        pic_url:String?): DeliveryDialog {
+            val f = DeliveryDialog()
+
+            // Supply num input as an argument.
+            val args = Bundle()
+            args.putBoolean("withPoints",withPoints)
+            args.putLong("order_id",order_id)
+            args.putLong("delivery_id",delivery_id)
+            args.putDouble("price",price)
+            args.putDouble("pay",pay)
+            args.putDouble("rating",rating)
+            args.putString("pic",pic_url)
+
+
+            f.arguments = args
+
+            return f
         }
 
-        val cancel_button = dialog.findViewById<Button>(R.id.button_cancel_offer)
+    }
+
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        super.onCreateView(inflater, container, savedInstanceState)
+        val rootView = inflater.inflate(R.layout.fragment_delivery_option,container,false)
+
+
+        var offer_button = rootView.findViewById<Button>(R.id.button_offer)
+        var cancel_button = rootView.findViewById<Button>(R.id.button_cancel_offer)
+
+        var points = rootView.findViewById<EditText>(R.id.et_favour_points)
+
+        val withPoints = arguments!!.getBoolean("withPoints")
+
         cancel_button.setOnClickListener(View.OnClickListener {
-            dialog.dismiss()
+            dismiss()
         })
 
-        val offer_button = dialog.findViewById<Button>(R.id.button_offer)
+        if (withPoints)
+            points.isEnabled = true
+        else
+            points.isEnabled = false
+
+
+        var rating = arguments!!.getDouble("rating")
+        var ratingBar = rootView.findViewById<RatingBar>(R.id.delivery_rating)
+        ratingBar.rating = rating.toFloat()
+
+        val delivery_id = arguments!!.getLong("delivery_id")
+        val order_id = arguments!!.getLong("order_id")
+        val price = arguments!!.getDouble("price")
+        val pay = arguments!!.getDouble("pay")
+
+        val progressBar = rootView.findViewById<ProgressBar>(R.id.waitin_offer)
+
+        val priceText = rootView.findViewById<TextView>(R.id.price_tv)
+
+        if (price == 0.0)
+            priceText.text = "Gratis!"
+        else
+            priceText.text = "$${price.toString().substring(0,5)}"
+
+        progressBar.visibility = View.GONE
+
+        delivery_pic = arguments!!.getString("pic")
 
         offer_button.setOnClickListener(View.OnClickListener {
-            dialog.findViewById<ProgressBar>(R.id.waitin_offer).visibility = View.VISIBLE
+            progressBar.visibility = View.VISIBLE
             cancel_button.isEnabled = false
             it.isEnabled = false
-            repository.postOffer(delivery.user_id,order.order_id,price,pay).observe(
-                observer, Observer {
+            repository.postOffer(delivery_id,order_id,price,pay).observe(
+                this, Observer {
                     it?.let {
-                        if (!it.equals(-1)){
-                            offer_id.postValue(it)
+                        if (it > 0){
+                            repository.currentOfferId.postValue(it)
                             Toast.makeText(activity,"Esperando respuesta del delivery",Toast.LENGTH_LONG).show()
-                            dialog.dismiss()
+                            dismiss()
                         } else {
                             Toast.makeText(activity,"No se pudo realizar la oferta",Toast.LENGTH_LONG).show()
                             offer_button.isEnabled = true
                             cancel_button.isEnabled = true
                         }
-                        dialog.findViewById<ProgressBar>(R.id.waitin_offer).visibility = View.GONE
+                        progressBar.visibility = View.GONE
                     }
                 }
             )
         })
+        return rootView
+    }
 
-        dialog.show()
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        imageView = view.findViewById(R.id.delivery_pic)
+
 
     }
 
