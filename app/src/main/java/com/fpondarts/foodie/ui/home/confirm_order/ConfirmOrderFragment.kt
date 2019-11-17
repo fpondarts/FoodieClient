@@ -68,9 +68,6 @@ class ConfirmOrderFragment : Fragment(), AuthListener, KodeinAware {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        viewModel!!.totalPriceStr.observe(this, Observer {
-            total_price.text = it!!
-        })
 
         button_confirm_order.setOnClickListener(View.OnClickListener {
 

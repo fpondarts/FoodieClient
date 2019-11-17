@@ -16,10 +16,8 @@
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/priceCard"
-            android:layout_width="266dp"
+            android:layout_width="match_parent"
             android:layout_height="66dp"
-            android:layout_marginStart="32dp"
-            android:layout_marginLeft="32dp"
             android:layout_marginTop="32dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -36,22 +34,20 @@
                     android:layout_marginLeft="8dp"
                     android:layout_marginTop="16dp"
                     android:text="Precio de compra"
-                    android:textSize="18sp"
+                    android:textSize="24dp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginLeft="16dp"
+                    android:layout_marginStart="76dp"
                     android:layout_marginTop="20dp"
                     android:hint="$xxx.xx"
                     android:text="@{viewModel.priceStr}"
-                    android:textSize="14dp"
+                    android:textSize="20dp"
                     app:layout_constraintStart_toEndOf="@id/price_no_delivery"
                     app:layout_constraintTop_toTopOf="parent" />
-
 
 
             </androidx.constraintlayout.widget.ConstraintLayout>
@@ -60,11 +56,9 @@
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/delivery_price_card"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="32dp"
-            android:layout_marginLeft="32dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="32dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/priceCard">
 
@@ -78,8 +72,8 @@
                     android:layout_height="47dp"
                     android:layout_marginLeft="8dp"
                     android:layout_marginTop="8dp"
-                    android:text="Precio de Envío"
-                    android:textSize="16sp"
+                    android:text="Forma de pago"
+                    android:textSize="20dp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
@@ -88,6 +82,7 @@
                     android:layout_width="183dp"
                     android:layout_height="63dp"
                     android:layout_marginLeft="100dp"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent">
 
@@ -96,7 +91,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:focusedByDefault="true"
-                        android:text="@{viewModel.deliveryPriceStr}" />
+                        android:text="Efectivo" />
 
                     <RadioButton
                         android:id="@+id/rb_favor"
@@ -112,88 +107,17 @@
 
 
         <com.google.android.material.card.MaterialCardView
-            android:id="@+id/total_price_card"
-            android:layout_width="266dp"
-            android:layout_height="66dp"
-            android:layout_marginStart="36dp"
-            android:layout_marginLeft="36dp"
-            android:layout_marginTop="20dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/delivery_price_card">
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <TextView
-                    android:id="@+id/total_price_title"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginLeft="16dp"
-                    android:layout_marginTop="20dp"
-                    android:text="Precio Total"
-                    android:textSize="18sp"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <TextView
-                    android:id="@+id/total_price"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="56dp"
-                    android:layout_marginLeft="56dp"
-                    android:layout_marginTop="24dp"
-                    android:hint="$xxx.xx"
-                    android:text="@{viewModel.totalPriceStr}"
-                    android:textSize="14dp"
-                    app:layout_constraintStart_toEndOf="@+id/total_price_title"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-        </com.google.android.material.card.MaterialCardView>
-
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/price_comment_card"
-            android:layout_width="270dp"
-            android:layout_height="59dp"
-            android:layout_marginTop="24dp"
-            app:layout_constraintStart_toStartOf="@+id/total_price_card"
-            app:layout_constraintTop_toBottomOf="@id/total_price_card"
-            app:cardBackgroundColor="@color/colorPrimaryLight">
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="El precio de envío puede
-                                    variar de acuerdo al delivery"
-                    android:textSize="16dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginLeft="16dp"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"/>
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-        </com.google.android.material.card.MaterialCardView>
-
-        <com.google.android.material.card.MaterialCardView
             android:id="@+id/button_confirm_order"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintStart_toStartOf="@id/price_comment_card"
-            app:layout_constraintTop_toBottomOf="@id/price_comment_card"
-            android:layout_marginTop="16dp"
+            app:layout_constraintStart_toStartOf="@id/delivery_price_card"
+            app:layout_constraintTop_toBottomOf="@id/delivery_price_card"
+            android:layout_marginTop="32dp"
             android:clickable="true"
             >
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
                 <ImageView
@@ -201,7 +125,7 @@
                     android:layout_width="32dp"
                     android:layout_height="32dp"
                     android:layout_marginLeft="8dp"
-                    android:layout_marginTop="4dp"
+                    android:layout_marginTop="16dp"
                     android:layout_marginBottom="8dp"
                     android:src="@drawable/ic_menu_send"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -211,12 +135,9 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="16dp"
-                    android:layout_marginTop="4dp"
-                    android:layout_marginRight="8dp"
+                    android:layout_marginStart="84dp"
                     android:text="Confirmar pedido"
                     android:textSize="24dp"
-                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@id/confirm_icon"
                     app:layout_constraintTop_toTopOf="@id/confirm_icon" />
 

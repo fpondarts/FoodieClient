@@ -17,7 +17,10 @@ import com.fpondarts.foodie.model.OrderItem
 import com.fpondarts.foodie.model.OrderState
 import com.fpondarts.foodie.network.DirectionsApi
 import com.fpondarts.foodie.network.request.OrderRequest
+import com.fpondarts.foodie.network.request.PostOfferRequest
+import com.fpondarts.foodie.network.response.PricingResponse
 import com.google.firebase.database.DatabaseReference
+import kotlinx.coroutines.delay
 import java.lang.Exception
 
 class Repository(
@@ -40,6 +43,8 @@ class Repository(
 
     var currentOrder: OrderModel? = null
 
+    var observedOffer : MutableLiveData<Offer>? = null
+
     val apiError = MutableLiveData<FoodieApiException>().apply {
         value = null
     }
@@ -48,6 +53,7 @@ class Repository(
     val availableDeliveries = MutableLiveData<List<Delivery>>().apply {
         value = ArrayList<Delivery>()
     }
+
 
     val SHOP_PAGE_SIZE = 3;
 
@@ -142,26 +148,27 @@ class Repository(
         currentOrder!!.addItem(item,name,itemPrice)
     }
 
-    fun askDeliveryPrice(lat:Double,long:Double): LiveData<Float>{
+    fun askDeliveryPrice(lat:Double,long:Double,shop_id:Long,delivery_id:Long): LiveData<PricingResponse>{
 
-        val liveData = MutableLiveData<Float>().apply {
+        val liveData = MutableLiveData<PricingResponse>().apply {
             value = null
         }
 
         Coroutines.io {
             try {
-                val priceResponse = apiRequest { api.getDeliveryPrice(token!!,currentOrder!!.shopId,lat,long) }
-                currentOrder!!.setDeliveryPrice(priceResponse.price)
-                currentOrder!!.latitude = lat
-                currentOrder!!.longitude = long
-                liveData.postValue(priceResponse.price)
+                val priceResponse = apiRequest { api.getDeliveryPrice(token!!,shop_id,lat,long,userId!!,delivery_id) }
+                liveData.postValue(priceResponse)
             } catch (e:FoodieApiException){
                 apiError.postValue(e)
-                liveData.postValue(-1.0.toFloat())
+                liveData.postValue(PricingResponse(-1.0,-1.0))
             }
         }
-
         return liveData
+    }
+
+    fun setOrderCoordinates(lat:Double,lon:Double){
+        currentOrder!!.latitude = lat
+        currentOrder!!.longitude = lon
     }
 
 
@@ -208,16 +215,29 @@ class Repository(
     fun refreshDeliveries(lat:Double,long:Double){
         Coroutines.io{
            try {
-               db.getDeliveryDao().upsert(apiRequest{ api.getDeliveries(token!!,lat,long) })
+               val response = apiRequest{ api.getDeliveries(token!!,lat,long) }
+               availableDeliveries.postValue(response)
            } catch (e: FoodieApiException){
-
+               apiError.postValue(e)
+               availableDeliveries.postValue(ArrayList<Delivery>())
            }
-
         }
     }
 
-    fun postOffer(deliveryId:Long){
-        
+    fun postOffer(deliveryId:Long,order_id:Long,price:Double,pay:Double):LiveData<Long>{
+        val liveData = MutableLiveData<Long>().apply {
+            value = null
+        }
+        Coroutines.io {
+            try {
+                val apiResponse = apiRequest { api.postOffer(token!!,deliveryId,PostOfferRequest(price,pay,order_id,deliveryId)) }
+                liveData.postValue(apiResponse.id)
+            } catch (e:FoodieApiException){
+                apiError.postValue(e)
+                liveData.postValue(-1)
+            }
+        }
+        return liveData
     }
 
     fun getOrder(id:Long): LiveData<Order>{
@@ -320,5 +340,35 @@ class Repository(
          return availableDeliveries
     }
 
+    fun getOffer(offer_id:Long):LiveData<Offer>{
+
+        observedOffer?.let{}
+        val liveData = MutableLiveData<Offer>().apply {
+            value = null
+        }
+        Coroutines.io {
+            try {
+                val apiResponse = apiRequest { api.getOffer(token!!,offer_id) }
+                liveData.postValue(apiResponse)
+            } catch (e:FoodieApiException){
+                apiError.postValue(e)
+            }
+        }
+        return liveData
+    }
+
+
+    fun updateObservedOffer(id:Long){
+        Coroutines.io {
+            try{
+                val apiResponse = apiRequest{ api.getOffer(token!!,id) }
+                observedOffer?.postValue(apiResponse)
+            } catch ( e: FoodieApiException){
+                apiError.postValue(e)
+                delay(500)
+                updateObservedOffer(id)
+            }
+        }
+    }
 
 }

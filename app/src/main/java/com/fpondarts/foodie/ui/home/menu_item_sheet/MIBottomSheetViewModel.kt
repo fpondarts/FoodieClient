@@ -12,7 +12,7 @@ class MIBottomSheetViewModel(val repository:Repository): ViewModel(){
     var itemId:Long?=null
     var itemPrice:Float?=null
     var name:String?=null
-    var number = 0
+    var number = 1
 
     var listener:AuthListener? = null
 

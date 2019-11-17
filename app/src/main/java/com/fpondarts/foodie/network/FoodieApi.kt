@@ -33,14 +33,17 @@ interface FoodieApi {
     suspend fun getTopShops(@Header(API_KEY_HEADER) token: String):Response<List<Shop>>
 
     @GET(API_PREFIX+"shops/{shop_id}/deliveryPrice")
-    suspend fun getDeliveryPrice(@Header(API_KEY_HEADER) token:String,
-                                 @Path("shop_id")id:Long,
-                                 @Query("latitude")lat:Double, @Query("longitude")long:Double):Response<DeliveryPriceResponse>
+    suspend fun getDeliveryPrice(@Header(API_KEY_HEADER) token:String
+                                 ,@Path("shop_id")id:Long
+                                 ,@Query("latitude")lat:Double
+                                 ,@Query("longitude")long:Double
+                                 ,@Query("user_id")user_id:Long
+                                 ,@Query("delivery_id")delivery_id:Long):Response<PricingResponse>
 
 
 
     @GET(API_PREFIX+"deliveries")
-    suspend fun getDeliveries(@Header(API_KEY_HEADER)token: String, @Query("latitude") lat:Double, @Query("longitude") long:Double):Response<List<Delivery>>
+    suspend fun getDeliveries(@Header(API_KEY_HEADER)token: String, @Query("latitude") lat:Double, @Query("longitude") long:Double,@Query("cantidad")cantidad:Int=10):Response<List<Delivery>>
 
 
     @GET(API_PREFIX+"orders/{orderId}")
@@ -81,25 +84,28 @@ interface FoodieApi {
     suspend fun getProduct(@Header(API_KEY_HEADER)token: String,@Path("order_id")id:Long):Response<MenuItem>
 
     // Orders
-    @GET("orders/{order_id}/items")
-    suspend fun getOrderItems(@Header(API_KEY_HEADER) token: String,@Path("order_id") order_id:Long):Response<List<OrderItem>>
+    @GET("orders/{id}/items")
+    suspend fun getOrderItems(@Header(API_KEY_HEADER) token: String,@Path("id") order_id:Long):Response<List<OrderItem>>
 
-    @PATCH("orders/{order_id}")
-    suspend fun finishOrder(@Header(API_KEY_HEADER) token: String,@Path("order_id")order_id:Long,@Body state: StateChangeRequest):Response<SuccessResponse>
+    @PATCH("orders/{id}")
+    suspend fun finishOrder(@Header(API_KEY_HEADER) token: String,@Path("id")order_id:Long,@Body state: StateChangeRequest):Response<SuccessResponse>
 
     @POST(API_PREFIX+"orders")
     suspend fun confirmOrder(@Header(API_KEY_HEADER)token:String, @Body order:OrderRequest):Response<ConfirmOrderResponse>
 
 
     // Offers
-    @GET("delivery/{order_id}/offers")
-    suspend fun getCurrentOffers(@Header(API_KEY_HEADER)token: String,@Path("order_id")id:Long):Response<List<Offer>>
+    @GET("delivery/{id}/offers")
+    suspend fun getCurrentOffers(@Header(API_KEY_HEADER)token: String,@Path("id")id:Long):Response<List<Offer>>
 
-    @PUT("offers/{order_id}")
-    suspend fun changeOfferState(@Header(API_KEY_HEADER)token: String,@Path("order_id")id:Long,@Body state:StateChangeRequest):Response<SuccessResponse>
+    @PUT("offers/{id}")
+    suspend fun changeOfferState(@Header(API_KEY_HEADER)token: String,@Path("id")id:Long,@Body state:StateChangeRequest):Response<SuccessResponse>
 
+    @POST("delivery/{id}/offers")
+    suspend fun postOffer(@Header(API_KEY_HEADER)token: String, @Path("id")id:Long,@Body request: PostOfferRequest):Response<IdResponse>
 
-
+    @GET("offers/{id}")
+    suspend fun getOffer(@Header(API_KEY_HEADER)token:String,@Path("id")id:Long):Response<Offer>
 
     companion object {
 

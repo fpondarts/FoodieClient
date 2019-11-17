@@ -21,6 +21,7 @@ data class Order(
     val deliveryRating:Float?,
     val shopRating:Float?,
     val latitud:Double,
-    val longitud:Double
+    val longitud:Double,
+    val payWithPoints:Boolean
     ) {
 }

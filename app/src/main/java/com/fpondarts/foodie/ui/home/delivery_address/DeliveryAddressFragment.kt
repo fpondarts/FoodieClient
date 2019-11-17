@@ -52,14 +52,14 @@ class DeliveryAddressFragment : Fragment(), KodeinAware {
 
     fun onCurrentLocationClick(){
         fusedLocationProviderClient.lastLocation.addOnSuccessListener {
-            viewModel.repository.askDeliveryPrice(it.latitude,it.longitude).observe(this, Observer {
-            it?.let {
-                if (it > 0){
-                    Navigation.findNavController(parentFragment!!.view!!).navigate(R.id.confirmOrderFragment)
-                    viewModel.price.removeObservers(this)
-                }
+
+            it?.let{
+                viewModel.repository.setOrderCoordinates(it.latitude,it.longitude)
+                Navigation.findNavController(parentFragment!!.view!!).navigate(R.id.confirmOrderFragment)
+            } ?.run {
+                Toast.makeText(activity,"No se pudo obtener las coordenaddas del dispositivo",Toast.LENGTH_LONG).show()
             }
-        })
+
         }.addOnFailureListener{
             Toast.makeText(activity,it.message,Toast.LENGTH_LONG).show()
         }

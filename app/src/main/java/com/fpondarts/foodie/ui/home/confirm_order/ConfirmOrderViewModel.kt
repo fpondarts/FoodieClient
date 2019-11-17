@@ -14,12 +14,8 @@ import com.fpondarts.foodie.util.exception.FoodieApiException
 
 class ConfirmOrderViewModel(val repository: Repository) : ViewModel() {
 
-    var totalPrice = repository.currentOrder?.price!! + repository.currentOrder?.getDeliveryPrice()!!
     val priceStr = "$" + repository.currentOrder?.price!!.toString()
-    val deliveryPriceStr="$" + repository.currentOrder?.getDeliveryPrice()?.toString()
-    val totalPriceStr = MutableLiveData<String>().apply {
-        value = "$" + totalPrice.toString()
-    }
+
 
 
     var listener: AuthListener? = null

@@ -66,6 +66,9 @@
         <argument
             android:name="order_id"
             app:argType="long" />
+        <action
+            android:id="@+id/action_deliveryMapFragment_to_nav_home"
+            app:destination="@id/nav_home" />
     </fragment>
     <navigation
         android:id="@+id/navigation"

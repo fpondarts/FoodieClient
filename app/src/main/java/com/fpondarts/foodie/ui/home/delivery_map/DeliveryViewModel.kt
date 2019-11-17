@@ -15,7 +15,6 @@ class DeliveryViewModel(val repository: Repository): ViewModel() {
 
     fun postOffer(){
         offerState.postValue(OfferState.WAITING)
-        repository.postOffer(deliveryId!!)
     }
 
     fun cancelOrder(){

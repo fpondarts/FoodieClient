@@ -12,7 +12,7 @@ data class Offer(
     val id:Long,
     val orderId:Long,
     val delivery_id:Long,
-    val state: OfferState,
+    val state: String,
     val created_at_seconds:Long?,
     val delivery_price:Float
 )
