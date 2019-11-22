@@ -86,6 +86,7 @@ class DeliveryProfileFragment : DialogFragment(), KodeinAware {
         val rating = rating_card.findViewById<RatingBar>(R.id.rating)
 
 
+        repository.refreshUser()
 
         repository.currentUser.observe(this, Observer {
             it?.let{

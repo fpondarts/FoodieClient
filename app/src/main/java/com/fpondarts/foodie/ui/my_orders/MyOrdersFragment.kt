@@ -88,7 +88,7 @@ class MyOrdersFragment : Fragment(), KodeinAware, OnMyOrderClickListener{
             findNavController().navigate(R.id.activeOrderFragment,bundle)
         } else {
             val bundle = bundleOf("orderId" to orderId, "shop_id" to shopId, "delivery_id" to deliveryId)
-            findNavController().navigate(R.id.orderRatingFragment,bundle)
+            findNavController().navigate(R.id.pastOrderFragment,bundle)
         }
     }
 

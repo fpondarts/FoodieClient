@@ -16,6 +16,7 @@ import com.fpondarts.foodie.data.repository.Repository
 import com.fpondarts.foodie.model.OrderPricedItem
 import com.fpondarts.foodie.ui.delivery.offers.OrderAdapter
 import com.squareup.picasso.Picasso
+import kotlinx.android.synthetic.main.card_prices.view.*
 import kotlinx.android.synthetic.main.card_shop.*
 import kotlinx.android.synthetic.main.card_to_rate.view.*
 import kotlinx.android.synthetic.main.card_user.*
@@ -103,6 +104,8 @@ class PastOrderFragment : Fragment(), KodeinAware {
                         tv_shop_name.text = it.name
                         Picasso.get().load(it.photoUrl).rotate(0.0.toFloat()).into(shopPic)
                         tv_shop_address.text = it.address
+                        shop_rating_card.card_rating_name.text = it.name
+
                     }
                 })
                 repository.getDelivery(it.delivery_id).observe(this, Observer {
@@ -110,16 +113,23 @@ class PastOrderFragment : Fragment(), KodeinAware {
                         tv_user_name.text = it.name
                         tv_email.text = it.email
                         tv_phone.text = it.phone_number
+                        delivery_rating_card.card_rating_name.text = it.name
                         Picasso.get().load(it.picture).rotate(90.0.toFloat()).into(profilePic)
                     }
                 })
                 order.removeObservers(this)
+
+                price_card.order_price.text = "$${it.price}"
             }
+
+            delivery_rating_card.card_rating_title.text = "Calificación del envío"
+            shop_rating_card.card_rating_title.text = "Calificación de la tienda"
+
 
             val rate_delivery = delivery_rating_card.rate_button
             val rate_shop = shop_rating_card.rate_button
 
-            if (it.deliveryRating == null){
+            if (it.delivery_review == null){
 
                 rate_delivery.isEnabled = true
 
@@ -129,10 +139,10 @@ class PastOrderFragment : Fragment(), KodeinAware {
 
             } else {
                 rate_delivery.isEnabled = false
-                delivery_rating_card.card_rating_rating.rating = it.deliveryRating!!.toFloat()
+                delivery_rating_card.card_rating_rating.rating = it.delivery_review!!.toFloat()
             }
 
-            if (it.shopRating == null){
+            if (it.shop_review == null){
 
                 rate_shop.isEnabled = true
 
@@ -142,7 +152,7 @@ class PastOrderFragment : Fragment(), KodeinAware {
 
             } else {
                 rate_shop.isEnabled = false
-                shop_rating_card.card_rating_rating.rating = it.shopRating!!.toFloat()
+                shop_rating_card.card_rating_rating.rating = it.shop_review!!.toFloat()
             }
         })
     }
@@ -165,7 +175,8 @@ class PastOrderFragment : Fragment(), KodeinAware {
                     }
                 }
             })
-
+        } else {
+            progressDialog?.dismiss()
         }
     }
 
@@ -175,7 +186,7 @@ class PastOrderFragment : Fragment(), KodeinAware {
         if ( rating > 0) {
             repository.rateDelivery(orderId!!,rating).observe(this, Observer {
                 it?.let{
-                    if (it.code in 200..299){
+                    if (it.code in 199..299){
                         delivery_rating_card.card_rating_rating.isEnabled = false
                         delivery_rating_card.rate_button.isEnabled = false
                         Toast.makeText(activity,"Tu calificación se ha procesado con exito",Toast.LENGTH_SHORT).show()
@@ -187,6 +198,8 @@ class PastOrderFragment : Fragment(), KodeinAware {
                 }
             })
 
+        } else {
+            progressDialog?.dismiss()
         }
     }
 

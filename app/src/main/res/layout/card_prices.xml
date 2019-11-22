@@ -22,6 +22,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
+            android:id="@+id/delivery_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
@@ -45,7 +46,7 @@
             app:layout_constraintTop_toTopOf="@id/delivery_price_title" />
 
         <TextView
-            android:id="@+id/reviews_tv"
+            android:id="@+id/order_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"

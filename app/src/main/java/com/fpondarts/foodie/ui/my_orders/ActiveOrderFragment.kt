@@ -22,9 +22,11 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import com.squareup.picasso.Picasso
+import kotlinx.android.synthetic.main.card_prices.*
 import kotlinx.android.synthetic.main.card_shop.*
 import kotlinx.android.synthetic.main.card_user.*
 import kotlinx.android.synthetic.main.content_order.*
+import kotlinx.android.synthetic.main.fragment_active_order.*
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.kodein
 import org.kodein.di.generic.instance
@@ -120,6 +122,9 @@ open class ActiveOrderFragment : Fragment(), KodeinAware {
                         Picasso.get().load(it.picture).rotate(90.0.toFloat()).into(profilePic)
                     }
                 })
+
+                order_price.text = "$${(Math.round(it.price!! * 100.00 )/ 100.00).toString()}"
+
                 order.removeObservers(this)
             }
         })

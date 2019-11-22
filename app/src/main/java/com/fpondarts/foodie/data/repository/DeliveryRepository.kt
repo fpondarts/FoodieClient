@@ -44,6 +44,10 @@ class DeliveryRepository(
 
     var current_order:Long = -1
 
+    fun refreshUser(){
+        initUser(this.token!!,this.userId!!)
+    }
+
     fun initUser(token:String, id:Long){
         this.token = token
         userId = id

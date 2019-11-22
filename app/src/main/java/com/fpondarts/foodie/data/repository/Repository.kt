@@ -60,7 +60,10 @@ class Repository(
 
 
     val SHOP_PAGE_SIZE = 3;
-    
+
+    fun refreshUser(){
+        initUser(this.token!!,this.userId!!)
+    }
 
     suspend fun foodieSignIn(email: String, password:String?, fbToken:String):SignInResponse{
         return apiRequest { api.signIn(email,password, fbToken) }

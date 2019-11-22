@@ -92,6 +92,7 @@ class UserProfileFragment : DialogFragment(), KodeinAware {
 
 
 
+        repository.refreshUser()
         repository.currentUser.observe(this, Observer {
             it?.let{
 

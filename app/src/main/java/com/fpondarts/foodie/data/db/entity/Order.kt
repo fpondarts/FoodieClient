@@ -18,10 +18,10 @@ data class Order(
     val shop_id:Long,
     val state: String,
     val delivery_id: Long,
-    val deliveryRating:Float?,
-    val shopRating:Float?,
     val latitud:Double,
     val longitud:Double,
-    val payWithPoints:Boolean
+    val payWithPoints:Boolean,
+    val shop_review:Float?,
+    val delivery_review:Float?
     ) {
 }
