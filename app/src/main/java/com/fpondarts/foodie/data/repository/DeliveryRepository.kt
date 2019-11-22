@@ -156,11 +156,15 @@ class DeliveryRepository(
     }
 
     fun getOrderItems(order_id:Long):LiveData<List<OrderItem>>{
-        val liveData = db.getOrderItemDao().getOrderItems(order_id)
+        var liveData = db.getOrderItemDao().getOrderItems(order_id)
         if (liveData.value.isNullOrEmpty()){
+            liveData = MutableLiveData<List<OrderItem>>().apply {
+                value = null
+            }
             Coroutines.io{
                 try {
                     val apiResponse = apiRequest { api.getOrderItems(token!!,order_id) }
+                    liveData.postValue(apiResponse)
                     db.getOrderItemDao().upsert(apiResponse)
                 } catch (e:FoodieApiException){
                     apiError.postValue(e)

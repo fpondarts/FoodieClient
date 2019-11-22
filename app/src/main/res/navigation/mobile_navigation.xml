@@ -13,9 +13,6 @@
         <action
             android:id="@+id/action_nav_home_to_shopFragment"
             app:destination="@id/shopFragment" />
-        <action
-            android:id="@+id/action_nav_home_to_myOrdersFragment"
-            app:destination="@id/navigation" />
     </fragment>
 
     <fragment
@@ -69,7 +66,7 @@
             app:destination="@id/nav_home" />
     </fragment>
     <navigation
-        android:id="@+id/navigation"
+        android:id="@+id/my_orders_navigation"
         app:startDestination="@id/myOrdersFragment" >
         <fragment
             android:id="@+id/myOrdersFragment"

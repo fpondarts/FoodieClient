@@ -13,6 +13,10 @@
             android:icon="@drawable/ic_menu_slideshow"
             android:title="@string/menu_profile" />
         <item
+            android:id="@+id/my_orders_navigation"
+            android:icon="@drawable/ic_menu_gallery"
+            android:title="Mis pedidos" />
+        <item
             android:id="@+id/nav_log_out"
             android:title="Cerrar sesión" />
     </group>

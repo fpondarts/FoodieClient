@@ -5,8 +5,8 @@
 
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/offersFragment"
-            android:title="Ofertas" />
+            android:id="@+id/delivery_nav_home"
+            android:title="Inicio" />
 
         <item
             android:id="@+id/nav_profile"
@@ -16,7 +16,7 @@
         <item android:id="@+id/nav_sign_out"
             android:title="Cerrar sesion"
             />
-\
+
     </group>
 
     <item android:title="Communicate">

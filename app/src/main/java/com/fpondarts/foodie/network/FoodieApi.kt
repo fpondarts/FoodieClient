@@ -55,9 +55,7 @@ interface FoodieApi {
     @GET(API_PREFIX+"orders")
     suspend fun getOrdersByState(@Header(API_KEY_HEADER)token:String,
                                  @Query("user_id")userId:Long,
-                                 @Query("state")state:String?,
-                                 @Query("offset")offset:Int,
-                                 @Query("limit")limit:Int):Response<List<Order>>
+                                 @Query("state")state:String?):Response<List<Order>>
 
     @POST(USERS_PREFIX)
     suspend fun registerUser(@Body body: UserRegisterRequest):Response<SuccessResponse>
@@ -97,6 +95,14 @@ interface FoodieApi {
 
     @POST(API_PREFIX+"orders")
     suspend fun confirmOrder(@Header(API_KEY_HEADER)token:String, @Body order:OrderRequest):Response<ConfirmOrderResponse>
+
+
+    @POST("orders/{id}/shop_review")
+    suspend fun rateShop(@Header(API_KEY_HEADER)token:String,@Path("id")id:Long,@Body review:ReviewRequest):Response<SuccessResponse>
+
+    @POST("orders/{id}/delivery_review")
+    suspend fun rateDelivery(@Header(API_KEY_HEADER)token:String,@Path("id")id:Long,@Body review:ReviewRequest):Response<SuccessResponse>
+
 
 
     // Offers

@@ -16,10 +16,7 @@ import com.fpondarts.foodie.model.Coordinates
 import com.fpondarts.foodie.model.OrderItem
 import com.fpondarts.foodie.model.OrderState
 import com.fpondarts.foodie.network.DirectionsApi
-import com.fpondarts.foodie.network.request.ChangePasswordRequest
-import com.fpondarts.foodie.network.request.OrderRequest
-import com.fpondarts.foodie.network.request.PostOfferRequest
-import com.fpondarts.foodie.network.request.UpdatePictureRequest
+import com.fpondarts.foodie.network.request.*
 import com.fpondarts.foodie.network.response.PricingResponse
 import com.fpondarts.foodie.network.response.SuccessResponse
 import com.google.firebase.database.DatabaseReference
@@ -289,10 +286,10 @@ class Repository(
             try {
                 val fetched = apiRequest{ api.getOrdersByState(token!!
                     ,currentUser.value!!.user_id!!
-                    ,state.stringVal,db.getOrderDao().getCount().value!!,10)}
+                    ,state.stringVal)}
                 db.getOrderDao().upsert(fetched)
             } catch (e: FoodieApiException){
-
+                apiError.postValue(e)
             }
         }
         return res
@@ -407,6 +404,72 @@ class Repository(
                 live.postValue(apiResp)
             } catch (e: FoodieApiException){
                 apiError.postValue(e)
+            }
+        }
+        return live
+    }
+
+    fun getOrderItems(order_id:Long):LiveData<List<com.fpondarts.foodie.data.db.entity.OrderItem>>{
+        var liveData = db.getOrderItemDao().getOrderItems(order_id)
+        if (liveData.value.isNullOrEmpty()){
+            liveData = MutableLiveData<List<com.fpondarts.foodie.data.db.entity.OrderItem>>().apply {
+                value = null
+            }
+            Coroutines.io{
+                try {
+                    val apiResponse = apiRequest { api.getOrderItems(token!!,order_id) }
+                    liveData.postValue(apiResponse)
+                    db.getOrderItemDao().upsert(apiResponse)
+                } catch (e:FoodieApiException){
+                    apiError.postValue(e)
+                }
+            }
+        }
+        return liveData
+    }
+
+    fun getMenuItem(product_id:Long):LiveData<MenuItem>{
+        val item = db.getMenuItemDao().loadItem(product_id)
+        if (item.value == null){
+            Coroutines.io{
+                try{
+                    val apiResponse = apiRequest { api.getProduct(token!!,product_id) }
+                    db.getMenuItemDao().upsert(apiResponse)
+                } catch (e :FoodieApiException){
+                    apiError.postValue(e)
+                }
+            }
+        }
+        return item
+    }
+
+    fun rateShop(order_id:Long,rating:Float):LiveData<SuccessResponse>{
+        val live = MutableLiveData<SuccessResponse>().apply {
+            value = null
+        }
+        Coroutines.io {
+            try {
+                val apiResponse = apiRequest { api.rateShop(token!!,order_id, ReviewRequest(rating)) }
+                live.postValue(apiResponse)
+            } catch (e: FoodieApiException){
+                apiError.postValue(e)
+                live.postValue(SuccessResponse("Error",400))
+            }
+        }
+        return live
+    }
+
+    fun rateDelivery(order_id:Long,rating:Float):LiveData<SuccessResponse>{
+        val live = MutableLiveData<SuccessResponse>().apply {
+            value = null
+        }
+        Coroutines.io {
+            try {
+                val apiResponse = apiRequest { api.rateDelivery(token!!,order_id, ReviewRequest(rating)) }
+                live.postValue(apiResponse)
+            } catch (e: FoodieApiException){
+                apiError.postValue(e)
+                live.postValue(SuccessResponse("Error",400))
             }
         }
         return live

@@ -1,65 +1,56 @@
 package com.fpondarts.foodie.ui.my_orders
 
-import androidx.lifecycle.ViewModelProviders
+
+import android.app.ProgressDialog
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 
 import com.fpondarts.foodie.R
 import com.fpondarts.foodie.data.repository.Repository
 import com.fpondarts.foodie.model.OrderPricedItem
-import com.fpondarts.foodie.ui.FoodieViewModelFactory
 import com.fpondarts.foodie.ui.delivery.offers.OrderAdapter
-import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.OnMapReadyCallback
-import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.Marker
-import com.google.android.gms.maps.model.MarkerOptions
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.card_shop.*
+import kotlinx.android.synthetic.main.card_to_rate.view.*
 import kotlinx.android.synthetic.main.card_user.*
 import kotlinx.android.synthetic.main.content_order.*
+import kotlinx.android.synthetic.main.fragment_delivery_option.*
+import kotlinx.android.synthetic.main.fragment_past_order.*
+import org.kodein.di.Kodein
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.kodein
 import org.kodein.di.generic.instance
 
-open class ActiveOrderFragment : Fragment(), KodeinAware {
-
-    companion object {
-        fun newInstance() = ActiveOrderFragment()
-    }
+/**
+ * A simple [Fragment] subclass.
+ */
+class PastOrderFragment : Fragment(), KodeinAware {
 
     override val kodein by kodein()
 
-    val factory: FoodieViewModelFactory by instance()
+    var progressDialog: ProgressDialog? = null
 
     val repository: Repository by instance()
 
-    private lateinit var mMap:GoogleMap
+    private var orderId:Long? = null
 
-    private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
+    private var shopId:Long? = null
 
-    private var orderId: Long? = null
-
-    private var deliveryMarker:Marker? = null
-
-    private lateinit var viewModel: ActiveOrderViewModel
-
+    private var deliveryId: Long = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        viewModel = ViewModelProviders.of(this,factory).get(ActiveOrderViewModel::class.java)
 
         orderId = arguments!!.getLong("orderId")
-        return inflater.inflate(R.layout.fragment_active_order, container, false)
+        return inflater.inflate(R.layout.fragment_past_order, container, false)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -73,6 +64,8 @@ open class ActiveOrderFragment : Fragment(), KodeinAware {
         val order = repository.getOrder(orderId!!)
         order.observe(this, Observer {
             it?.let {
+                shopId = it.shop_id
+                deliveryId = it.delivery_id
                 val menu = repository.getShopMenu(it.shop_id!!)
                 menu.observe(this, Observer {
                     it?.let {
@@ -122,7 +115,79 @@ open class ActiveOrderFragment : Fragment(), KodeinAware {
                 })
                 order.removeObservers(this)
             }
+
+            val rate_delivery = delivery_rating_card.rate_button
+            val rate_shop = shop_rating_card.rate_button
+
+            if (it.deliveryRating == null){
+
+                rate_delivery.isEnabled = true
+
+                rate_delivery.setOnClickListener(View.OnClickListener {
+                    this.rateDelivery()
+                })
+
+            } else {
+                rate_delivery.isEnabled = false
+                delivery_rating_card.card_rating_rating.rating = it.deliveryRating!!.toFloat()
+            }
+
+            if (it.shopRating == null){
+
+                rate_shop.isEnabled = true
+
+                rate_shop.setOnClickListener(View.OnClickListener {
+                    rateShop()
+                })
+
+            } else {
+                rate_shop.isEnabled = false
+                shop_rating_card.card_rating_rating.rating = it.shopRating!!.toFloat()
+            }
         })
+    }
+
+
+    fun rateShop(){
+        progressDialog = ProgressDialog.show(context,"Enviando calificacion","Espere")
+        val rating = shop_rating_card.card_rating_rating.rating
+        if ( rating > 0) {
+            repository.rateShop(orderId!!,rating).observe(this, Observer {
+                it?.let{
+                    if (it.code in 200..299){
+                          shop_rating_card.card_rating_rating.isEnabled = false
+                          shop_rating_card.rate_button.isEnabled = false
+                          Toast.makeText(activity,"Tu calificación se ha procesado con exito",Toast.LENGTH_SHORT).show()
+                          progressDialog?.dismiss()
+                    } else {
+                          Toast.makeText(activity,"Hubo un error en el proceso, intente nuevamente",Toast.LENGTH_LONG).show()
+                          progressDialog?.dismiss()
+                    }
+                }
+            })
+
+        }
+    }
+
+    fun rateDelivery(){
+        progressDialog = ProgressDialog.show(context,"Enviando calificacion","Espere")
+        val rating = delivery_rating_card.card_rating_rating.rating
+        if ( rating > 0) {
+            repository.rateDelivery(orderId!!,rating).observe(this, Observer {
+                it?.let{
+                    if (it.code in 200..299){
+                        delivery_rating_card.card_rating_rating.isEnabled = false
+                        delivery_rating_card.rate_button.isEnabled = false
+                        Toast.makeText(activity,"Tu calificación se ha procesado con exito",Toast.LENGTH_SHORT).show()
+                        progressDialog?.dismiss()
+                    } else {
+                        Toast.makeText(activity,"Hubo un error en el proceso, intente nuevamente",Toast.LENGTH_LONG).show()
+                        progressDialog?.dismiss()
+                    }
+                }
+            })
+
+        }
     }
 
 }

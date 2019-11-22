@@ -50,7 +50,7 @@ class DeliveryProfileFragment : DialogFragment(), KodeinAware {
     private var uploading = false
     var progressDialog : ProgressDialog? = null
     lateinit var uid: String
-    lateinit var photoUrl: String
+    var photoUrl: String? = null
 
     lateinit var imageView: ImageView
 
@@ -85,7 +85,7 @@ class DeliveryProfileFragment : DialogFragment(), KodeinAware {
 
         repository.currentUser.observe(this, Observer {
             it?.let{
-
+                photoUrl = it.picture
                 name.text = it.name
                 phone.text = it.phone_number
                 email.text = it.email
@@ -105,7 +105,7 @@ class DeliveryProfileFragment : DialogFragment(), KodeinAware {
 
         photoUrl?.let{
             Picasso.get().load(photoUrl)
-                .resize(imageView.width,imageView.height)
+                .resize(80,80)
                 .rotate(270.0.toFloat()).into(imageView)
         }
     }

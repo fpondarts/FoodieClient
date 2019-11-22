@@ -100,30 +100,37 @@ class SingleOfferFragment : Fragment(),KodeinAware{
             layoutManager = LinearLayoutManager(activity)
         }
 
-        repository.getOrder(order_id!!).observe(this, Observer {
+        val order = repository.getOrder(order_id!!)
+        order.observe(this, Observer {
             it?.let{
                 shop_id = it.shop_id
                 user_id = it.user_id
 
-                repository.getMenu(shop_id!!).observe(this@SingleOfferFragment, Observer {
+                val menu = repository.getMenu(shop_id!!)
+                menu.observe(this@SingleOfferFragment, Observer {
                     it?.let{
-                        repository.getOrderItems(order_id!!).observe(this@SingleOfferFragment, Observer {
+                        val orderItems = repository.getOrderItems(order_id!!)
+                        menu.removeObservers(this)
+                        orderItems.observe(this@SingleOfferFragment, Observer {
                             it?.let {
                                 val recyclerList = ArrayList<OrderPricedItem>()
+                                items_recycler_view.adapter = OrderAdapter(recyclerList)
                                 for (item in it){
                                     val menuItem = repository.getMenuItem(item.product_id)
                                     menuItem.observe(this@SingleOfferFragment, Observer {
                                         it?.let{
                                             recyclerList.add(OrderPricedItem(it.name,item.units,it.price))
                                             menuItem.removeObservers(this@SingleOfferFragment)
+                                            items_recycler_view.adapter!!.notifyItemInserted(recyclerList.size-1)
                                         }
                                     })
                                 }
-                                items_recycler_view.adapter = OrderAdapter(recyclerList)
+
                             }
                         })
                     }
                 })
+                order.removeObservers(this)
             }
         })
 

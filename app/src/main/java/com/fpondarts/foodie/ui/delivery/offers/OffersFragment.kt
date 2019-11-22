@@ -11,6 +11,7 @@ import com.fpondarts.foodie.R
 import androidx.core.os.HandlerCompat.postDelayed
 import android.os.Handler
 import android.util.Log
+import android.widget.Button
 import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.lifecycle.Observer
@@ -100,7 +101,17 @@ class OffersFragment : Fragment(), OnOfferItemClickListener, KodeinAware {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(com.fpondarts.foodie.R.layout.fragment_offers, container, false)
+        val rootView = inflater.inflate(com.fpondarts.foodie.R.layout.fragment_offers, container, false)
+
+        repository.isWorking.observe(this,Observer{
+            if (it){
+                val navOptions = NavOptions.Builder().setPopUpTo(R.id.offersFragment,true).build()
+                findNavController().navigate(R.id.action_offersFragment_to_workingFragment,null,navOptions)
+            }
+
+        })
+
+        return rootView
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {

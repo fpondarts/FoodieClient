@@ -72,7 +72,8 @@ class DeliveryHomeActivity : AppCompatActivity(), KodeinAware {
         // menu should be considered as top level destinations.
         appBarConfiguration = AppBarConfiguration(
             setOf(
-                R.id.offersFragment
+                R.id.delivery_nav_home,
+                R.id.nav_profile
             ), drawerLayout
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
@@ -97,8 +98,6 @@ class DeliveryHomeActivity : AppCompatActivity(), KodeinAware {
             }
         })
 
-
-
         askLocationPermission()
 
         // 2 es el índice del item logout
@@ -113,7 +112,6 @@ class DeliveryHomeActivity : AppCompatActivity(), KodeinAware {
             finish()
             true
         }
-
 
     }
 

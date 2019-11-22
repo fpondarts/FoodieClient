@@ -13,6 +13,9 @@
         <action
             android:id="@+id/action_offersFragment_to_singleOfferFragment"
             app:destination="@id/singleOfferFragment" />
+        <action
+            android:id="@+id/action_offersFragment_to_workingFragment"
+            app:destination="@id/workingFragment" />
     </fragment>
     <fragment
         android:id="@+id/singleOfferFragment"
@@ -25,6 +28,9 @@
         <argument
             android:name="offer_id"
             app:argType="long" />
+        <action
+            android:id="@+id/action_singleOfferFragment_to_workingFragment"
+            app:destination="@id/workingFragment" />
     </fragment>
     <fragment
         android:id="@+id/workingFragment"

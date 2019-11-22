@@ -61,11 +61,11 @@ class HomeActivity : AppCompatActivity(), KodeinAware {
         val toolbar: Toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
 
-        val fab: FloatingActionButton = findViewById(R.id.fab)
-        fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show()
-        }
+//        val fab: FloatingActionButton = findViewById(R.id.fab)
+//        fab.setOnClickListener { view ->
+//            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+//                .setAction("Action", null).show()
+//        }
 
         val token = intent.getStringExtra("token")
         val id = intent.getLongExtra("user_id",-1)
@@ -87,15 +87,15 @@ class HomeActivity : AppCompatActivity(), KodeinAware {
         // menu should be considered as top level destinations.
         appBarConfiguration = AppBarConfiguration(
             setOf(
-                R.id.nav_home, R.id.nav_profile
+                R.id.nav_home, R.id.nav_profile, R.id.myOrdersFragment
             ), drawerLayout
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
 
 
-        // 2 es el índice del item logout
-        navView.menu.getItem(2).setOnMenuItemClickListener {
+        // 3 es el índice del item logout
+        navView.menu.getItem(3).setOnMenuItemClickListener {
             FirebaseAuth.getInstance().signOut()
             val repository : AuthRepository by instance()
             repository.role = null

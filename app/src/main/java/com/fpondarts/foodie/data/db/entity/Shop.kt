@@ -13,5 +13,6 @@ data class Shop (
     val photoUrl: String?,
     val latitude: Double,
     val longitude: Double,
-    val rating: Float
+    val rating: Float,
+    val address:String?
 ){}
