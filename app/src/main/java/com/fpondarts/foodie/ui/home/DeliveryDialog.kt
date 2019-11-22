@@ -185,6 +185,14 @@ class DeliveryDialog(
 
     override fun onResume() {
         super.onResume()
+
+        url?.let{
+            Picasso.get().load(url)
+                .resize(80,80)
+                .rotate(270.0.toFloat()).into(delivery_pic)
+        }
+
+
     }
 
 }

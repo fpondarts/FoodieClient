@@ -42,12 +42,20 @@ class DeliveryRepository(
         value = false
     }
 
+    var current_order:Long = -1
+
     fun initUser(token:String, id:Long){
         this.token = token
         userId = id
         Coroutines.io{
             try {
-                currentUser.postValue(apiRequest{ api.getDelivery(token,id) })
+                val user = apiRequest{ api.getDelivery(token,id) }
+                currentUser.postValue(user)
+                if (user.state == "working"){
+                    current_order = user.current_order!!
+                    isWorking.postValue(true)
+                }
+
             } catch (e:FoodieApiException) {
                 apiError.postValue(e)
                 if (e.code > 500){
@@ -210,7 +218,7 @@ class DeliveryRepository(
         }
         Coroutines.io{
             try {
-                val apiResponse = apiRequest { api.finishOrder(token!!,order_id,StateChangeRequest("finished")) }
+                val apiResponse = apiRequest { api.finishOrder(token!!,order_id,StateChangeRequest("delivered")) }
                 liveData.postValue(true)
             } catch (e:FoodieApiException){
                 apiError.postValue(e)

@@ -90,7 +90,7 @@ interface FoodieApi {
     @GET("orders/{id}/items")
     suspend fun getOrderItems(@Header(API_KEY_HEADER) token: String,@Path("id") order_id:Long):Response<List<OrderItem>>
 
-    @PATCH("orders/{id}")
+    @PUT("orders/{id}/state")
     suspend fun finishOrder(@Header(API_KEY_HEADER) token: String,@Path("id")order_id:Long,@Body state: StateChangeRequest):Response<SuccessResponse>
 
     @POST(API_PREFIX+"orders")

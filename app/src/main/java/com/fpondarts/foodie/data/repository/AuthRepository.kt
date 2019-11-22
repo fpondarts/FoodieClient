@@ -77,6 +77,8 @@ class AuthRepository(private val api:FoodieApi):SafeApiRequest() {
                 if (e.code == 500){
                     delay(500)
                     retryLogin(email,password,response)
+                } else {
+                    response.postValue(SignInResponse("","",-1,400))
                 }
             }
         }

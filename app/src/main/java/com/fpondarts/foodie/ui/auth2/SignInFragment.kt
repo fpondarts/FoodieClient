@@ -143,7 +143,10 @@ class SignInFragment : Fragment(), KodeinAware, GoogleAuthHandler {
                                             startActivity(intent)
                                             activity!!.finish()
                                         }
-                                        progressDialog?.dismiss()
+                                        else {
+                                            progressDialog?.dismiss()
+                                            Toast.makeText(context,"Contraseña errónea",Toast.LENGTH_LONG).show()
+                                        }
                                     }
                                 })
                             } else {

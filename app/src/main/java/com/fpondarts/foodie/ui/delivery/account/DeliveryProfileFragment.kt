@@ -29,12 +29,16 @@ import com.fpondarts.foodie.data.repository.DeliveryRepository
 import com.google.firebase.storage.FirebaseStorage
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_delivery_profile.*
+import kotlinx.android.synthetic.main.fragment_delivery_profile.password_card
+import kotlinx.android.synthetic.main.fragment_delivery_profile.user_card
 import kotlinx.android.synthetic.main.fragment_register_data.*
+import kotlinx.android.synthetic.main.fragment_user_profile.*
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.kodein
 import org.kodein.di.generic.instance
 import java.io.File
 import java.io.IOException
+import java.lang.Math.round
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -86,15 +90,22 @@ class DeliveryProfileFragment : DialogFragment(), KodeinAware {
         repository.currentUser.observe(this, Observer {
             it?.let{
                 photoUrl = it.picture
+                Picasso.get().load(photoUrl).resize(80,80)
+                    .rotate(270.0.toFloat()).into(imageView)
                 name.text = it.name
                 phone.text = it.phone_number
                 email.text = it.email
 
                 reviews.text = it.reviews.toString()
                 rating.rating = it.rating.toFloat()
+                rating.isEnabled = false
 
-                balance.text = it.balance.toString()
+                balance.text = "$" + (round(it.balance!! * 100.0) / 100.0 ).toString()
             }
+        })
+
+        password_card.setOnClickListener(View.OnClickListener {
+            changePassword()
         })
 
     }
@@ -171,6 +182,10 @@ class DeliveryProfileFragment : DialogFragment(), KodeinAware {
         }
     }
 
+    fun changePassword(){
+        val passDialog = ChangePasswordFragment.newInstance(true)
+        passDialog.show(fragmentManager!!,"ChangePassword")
+    }
 
     private fun createImageFile(): File {
         // Create an image file name

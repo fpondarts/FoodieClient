@@ -91,15 +91,16 @@ class UserProfileFragment : DialogFragment(), KodeinAware {
         val suscription = suscription_card.findViewById<TextView>(R.id.suscription_tv)
 
 
-        password_card.setOnClickListener(View.OnClickListener {
-            changePassword()
-        })
+
         repository.currentUser.observe(this, Observer {
             it?.let{
 
                 uid = it.firebase_uid!!
                 it.picture?.let{
                     photoUrl = it
+                    Picasso.get().load(photoUrl)
+                        .resize(80,80)
+                        .rotate(270.0.toFloat()).into(imageView)
                 }
 
                 name.text = it.name

@@ -60,18 +60,7 @@ class Repository(
 
 
     val SHOP_PAGE_SIZE = 3;
-
-    suspend fun foodieSignInLive(email:String, password: String?, fbToken: String):LiveData<User>{
-        Coroutines.main{
-            try {
-                val response = foodieSignIn(email, password, fbToken)
-            } catch (e: ApiException){
-
-            }
-
-        }
-        return currentUser
-    }
+    
 
     suspend fun foodieSignIn(email: String, password:String?, fbToken:String):SignInResponse{
         return apiRequest { api.signIn(email,password, fbToken) }
@@ -224,7 +213,8 @@ class Repository(
                val response = apiRequest{ api.getDeliveries(token!!,lat_rounded,lon_roundded) }
                availableDeliveries.postValue(response)
            } catch (e: FoodieApiException){
-               apiError.postValue(e)
+               if (e.code != 500)
+                   apiError.postValue(e)
                availableDeliveries.postValue(ArrayList<Delivery>())
            }
         }

@@ -8,13 +8,12 @@
     <fragment
         android:id="@+id/delivery_nav_home"
         android:name="com.fpondarts.foodie.ui.delivery.nav_home.DeliveryNavHomeFragment"
-        android:label="Home"
-        tools:layout="@layout/fragment_delivery_nav_home">
-    </fragment>
+        android:label="Ofertas"
+        tools:layout="@layout/fragment_delivery_nav_home"></fragment>
 
     <fragment
         android:id="@+id/nav_profile"
         android:name="com.fpondarts.foodie.ui.delivery.account.DeliveryProfileFragment"
-        android:label="fragment_delivery_profile"
+        android:label="Tu Cuenta"
         tools:layout="@layout/fragment_delivery_profile" />
 </navigation>

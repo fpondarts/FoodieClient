@@ -105,8 +105,9 @@ class OffersFragment : Fragment(), OnOfferItemClickListener, KodeinAware {
 
         repository.isWorking.observe(this,Observer{
             if (it){
+                val bundle = bundleOf("order_id" to repository.current_order)
                 val navOptions = NavOptions.Builder().setPopUpTo(R.id.offersFragment,true).build()
-                findNavController().navigate(R.id.action_offersFragment_to_workingFragment,null,navOptions)
+                findNavController().navigate(R.id.action_offersFragment_to_workingFragment,bundle,navOptions)
             }
 
         })

@@ -8,8 +8,8 @@
     <fragment
         android:id="@+id/offersFragment"
         android:name="com.fpondarts.foodie.ui.delivery.offers.OffersFragment"
-        android:label="fragment_offers"
-        tools:layout="@layout/fragment_offers" >
+        android:label="Ofertas"
+        tools:layout="@layout/fragment_offers">
         <action
             android:id="@+id/action_offersFragment_to_singleOfferFragment"
             app:destination="@id/singleOfferFragment" />
@@ -20,8 +20,8 @@
     <fragment
         android:id="@+id/singleOfferFragment"
         android:name="com.fpondarts.foodie.ui.delivery.offers.SingleOfferFragment"
-        android:label="fragment_single_offer"
-        tools:layout="@layout/fragment_single_offer" >
+        android:label="Oferta"
+        tools:layout="@layout/fragment_single_offer">
         <argument
             android:name="order_id"
             app:argType="long" />
@@ -35,11 +35,14 @@
     <fragment
         android:id="@+id/workingFragment"
         android:name="com.fpondarts.foodie.ui.delivery.working.WorkingFragment"
-        android:label="fragment_working"
-        tools:layout="@layout/fragment_working" >
+        android:label="Pedido Actual"
+        tools:layout="@layout/fragment_working">
         <argument
             android:name="order_id"
             app:argType="long" />
+        <action
+            android:id="@+id/action_workingFragment_to_offersFragment"
+            app:destination="@id/offersFragment" />
     </fragment>
 
 

@@ -187,8 +187,11 @@ class DeliveryMapFragment : Fragment()
         viewModel.repository.availableDeliveries.observe(this, Observer {
             if (it.isEmpty()){
                 accumulatedEmpties += 1
-                if (accumulatedEmpties == 10){
-                    showCancelDialog()
+                if (accumulatedEmpties % 3 == 0){
+                    Toast.makeText(context,"Buscando deliveries cercanos a la tienda",Toast.LENGTH_LONG).show()
+                }
+                if (accumulatedEmpties == 5){
+                    showCancelDialog("No parece haber deliveries cercanos, desea salir y probar mas tarde?")
                 }
             } else {
                 accumulatedEmpties = 0
