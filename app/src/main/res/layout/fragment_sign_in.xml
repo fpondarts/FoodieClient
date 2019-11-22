@@ -63,7 +63,12 @@
                     android:hint="@string/userPassword"
                     android:inputType="textPassword" />
 
-
+                <Button
+                    android:id="@+id/signInButton"
+                    android:layout_width="144dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="15dp"
+                    android:text="@string/signIn" />
 
                 <com.google.android.gms.common.SignInButton
                     android:id="@+id/googleSignInButton"
@@ -72,6 +77,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/toSignUpButton" />
 
+
                 <TextView
                     android:id="@+id/signUpText"
                     android:layout_width="match_parent"
@@ -79,12 +85,6 @@
                     android:gravity="center"
                     android:text="@string/noSignedUp"
                     android:typeface="normal"></TextView>
-                <Button
-                    android:id="@+id/signInButton"
-                    android:layout_width="144dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="15dp"
-                    android:text="@string/signIn" />
                 <Button
                     android:id="@+id/toSignUpButton"
                     android:layout_width="wrap_content"

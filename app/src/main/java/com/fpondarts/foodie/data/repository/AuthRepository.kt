@@ -53,7 +53,7 @@ class AuthRepository(private val api:FoodieApi):SafeApiRequest() {
 
         Coroutines.io{
             try{
-                val requestBody = DeliveryRegisterRequest(name,email,password,fbUid,phone,"usuario",0,photoUri)
+                val requestBody = DeliveryRegisterRequest(name,email,password,fbUid,phone,"delivery",0,photoUri)
                 val response = apiRequest{ api.registerDelivery(requestBody) }
                 registered.postValue(true)
             } catch (e:FoodieApiException){
@@ -109,7 +109,7 @@ class AuthRepository(private val api:FoodieApi):SafeApiRequest() {
             } catch (e:FoodieApiException){
                 e.message?.let {
                     apiErrors.postValue(e)
-                    response.postValue(null)
+                    response.postValue(SignInResponse("","",-1,400))
                 }
             }
         }

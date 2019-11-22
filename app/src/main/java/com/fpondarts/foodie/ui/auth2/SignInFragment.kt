@@ -15,6 +15,7 @@ import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.navigation.NavController
+import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import com.firebase.ui.auth.AuthUI
 import com.fpondarts.foodie.R
@@ -199,6 +200,7 @@ class SignInFragment : Fragment(), KodeinAware, GoogleAuthHandler {
                             val idToken = task.result!!.token
                             idToken?.let{
                                 viewModel?.tokenSignIn(it).observe(this,Observer{
+                                    progressDialog?.dismiss()
                                     it?.let{
                                         if (it.role == "usuario"){
                                             val intent = Intent(activity, HomeActivity::class.java)
@@ -212,6 +214,15 @@ class SignInFragment : Fragment(), KodeinAware, GoogleAuthHandler {
                                             intent.putExtra("user_id",it.token)
                                             startActivity(intent)
                                             activity!!.finish()
+                                        } else if (it.code >= 400){
+                                            user?.delete()
+                                                ?.addOnCompleteListener { task ->
+                                                    if (task.isSuccessful) {
+                                                        Toast.makeText(activity,"Primero debe registrarse como usuario",Toast.LENGTH_LONG).show()
+                                                    } else {
+                                                        Toast.makeText(activity,"USUARIO INVALIDADO REGISTRESE PRIMERO ",Toast.LENGTH_SHORT).show()
+                                                    }
+                                            }
                                         }
                                     }
                                 })
@@ -225,7 +236,6 @@ class SignInFragment : Fragment(), KodeinAware, GoogleAuthHandler {
                 Toast.makeText(activity, "Hubo un error en el ingreso", Toast.LENGTH_LONG).show()
             }
         }
-        progressDialog?.dismiss()
     }
 
 

@@ -129,10 +129,12 @@ class RegisterDataFragment : DialogFragment(), KodeinAware {
 
         buttonFinishSignUp.setOnClickListener(View.OnClickListener {
             if (!uploading) {
+                progressDialog = ProgressDialog.show(context,"Registrando usuario","Espere")
                 try {
                     if (spinnerRoles.selectedItem.toString() == "User"){
                         viewModel.signUpUser().observe(this, Observer {
                             it?.let {
+                                progressDialog?.dismiss()
                                 if (it) {
                                     navController.navigate(
                                         R.id.action_registerDataFragment_to_signInFragment, null,
@@ -147,6 +149,7 @@ class RegisterDataFragment : DialogFragment(), KodeinAware {
                     } else {
                         viewModel.signUpDelivery().observe(this, Observer {
                             it?.let {
+                                progressDialog?.dismiss()
                                 if (it) {
                                     navController.navigate(
                                         R.id.action_registerDataFragment_to_signInFragment, null,
@@ -160,9 +163,11 @@ class RegisterDataFragment : DialogFragment(), KodeinAware {
                         })
                     }
                 } catch (e: IncompleteDataException) {
+                    progressDialog?.dismiss()
                     Toast.makeText(activity, e.message, Toast.LENGTH_SHORT).show()
                 }
             } else {
+
                 Toast.makeText(activity,"La imagen de perfil se esta cargando, espere",Toast.LENGTH_LONG).show()
             }
         })
@@ -285,7 +290,7 @@ class RegisterDataFragment : DialogFragment(), KodeinAware {
             imageRef.downloadUrl.addOnSuccessListener {
                 uploading = false
                 viewModel.photo = it.toString()
-                Picasso.get().load(viewModel.photo).resize(imageViewPhoto.width,imageViewPhoto.height).rotate(90.0.toFloat()).into(imageViewPhoto)
+                Picasso.get().load(viewModel.photo).resize(imageViewPhoto.width,imageViewPhoto.height).rotate(270.0.toFloat()).into(imageViewPhoto)
                 progressDialog?.dismiss()
             }
         }
@@ -304,7 +309,6 @@ class RegisterDataFragment : DialogFragment(), KodeinAware {
                 }
             }
     }
-
 
 
 }
