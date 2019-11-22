@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 
 import com.fpondarts.foodie.R
@@ -82,6 +83,10 @@ class ShopMenuFragment : Fragment(), KodeinAware, AuthListener,
             } ?: run {
 
             }
+        })
+
+        button_fin_pedido.setOnClickListener(View.OnClickListener {
+            findNavController().navigate(R.id.action_shopFragment_to_deliveryAddressFragment)
         })
 
     }

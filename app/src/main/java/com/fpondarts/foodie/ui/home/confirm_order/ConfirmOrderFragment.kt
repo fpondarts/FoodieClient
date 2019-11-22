@@ -84,7 +84,7 @@ class ConfirmOrderFragment : Fragment(), AuthListener, KodeinAware {
                             findNavController().navigate(R.id.action_confirmOrderFragment_to_deliveryMapFragment,bundle,
                                 NavOptions.Builder().setPopUpTo(
                                     R.id.nav_home,
-                                    true
+                                    false
                                 ).build())
                         } else {
                             Toast.makeText(
@@ -102,6 +102,5 @@ class ConfirmOrderFragment : Fragment(), AuthListener, KodeinAware {
         })
 
     }
-
 
 }

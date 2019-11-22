@@ -86,7 +86,7 @@ class HomeFragment : Fragment(), KodeinAware, OnShopClickListener, AuthListener 
             .observe(this, Observer {
             it?.let{
                 if (it.isEmpty()){
-                    Toast.makeText(activity,"No hay top shops",Toast.LENGTH_SHORT).show()
+
                 }
                 shop_recycler_view.adapter = ShopAdapter(it!!, this)
                 shop_recycler_view.adapter?.notifyDataSetChanged()

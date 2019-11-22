@@ -24,6 +24,7 @@ class OrderViewHolder(inflater:LayoutInflater, parent:ViewGroup):
     }
 
     fun bind(order: Order, listener: OnMyOrderClickListener, active:Boolean){
+        mShopName!!.text = "Orden # ${order.order_id}"
         mDate!!.text = order.created_at.substring(0,17)
         val number2digits :Double = Math.round(order.price * 100.0) / 100.0
         mPrice!!.text = "$${number2digits.toString()}"

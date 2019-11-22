@@ -42,7 +42,7 @@ class PastOrderFragment : Fragment(), KodeinAware {
 
     private var shopId:Long? = null
 
-    private var deliveryId: Long = null
+    private var deliveryId: Long? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

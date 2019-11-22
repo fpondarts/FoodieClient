@@ -1,11 +1,13 @@
 package com.fpondarts.foodie.ui.home.delivery_map
 
 import android.app.ProgressDialog
+import android.content.Context
 import androidx.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.os.Handler
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
@@ -21,6 +23,10 @@ import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.kodein
 import org.kodein.di.generic.instance
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
+import androidx.activity.addCallback
+import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.MutableLiveData
 import androidx.navigation.NavDirections
 import androidx.navigation.NavOptions
@@ -40,7 +46,24 @@ import com.google.android.gms.maps.model.*
 class DeliveryMapFragment : Fragment()
     , OnMapReadyCallback
     , GoogleMap.OnMarkerClickListener
+    , CancelOrderDialog.CancelDialogListener
     , KodeinAware{
+
+
+    override fun onDialogPositiveClick(dialog: DialogFragment) {
+        val options = NavOptions.Builder().setPopUpTo(R.id.deliveryMapFragment,true).build()
+        findNavController().navigate(R.id.action_deliveryMapFragment_to_nav_home,null,options)
+    }
+
+    override fun onDialogNegativeClick(dialog: DialogFragment) {
+        accumulatedEmpties = 0
+    }
+
+    fun showCancelDialog(msj:String = "Si decide salir, la orden se cancelará") {
+        // Create an instance of the dialog fragment and show it
+        val dialog = CancelOrderDialog.newInstance(msj)
+        dialog.show(fragmentManager!!, "CancelOrderDialog")
+    }
 
 
     override fun onMarkerClick(p0: Marker?): Boolean {
@@ -104,6 +127,8 @@ class DeliveryMapFragment : Fragment()
     private var shop_id:Long? = null
     private lateinit var order: Order
 
+    private var accumulatedEmpties = 0
+
     private val currentOfferId = MutableLiveData<Long>().apply {
         value = null
     }
@@ -115,6 +140,11 @@ class DeliveryMapFragment : Fragment()
         savedInstanceState: Bundle?
     ): View? {
         viewModel = ViewModelProviders.of(this,factory).get(DeliveryMapViewModel::class.java)
+
+        val callback = requireActivity().onBackPressedDispatcher.addCallback(this) {
+            showCancelDialog()
+        }
+
 
         return inflater.inflate(R.layout.delivery_map_fragment, container, false)
     }
@@ -132,8 +162,8 @@ class DeliveryMapFragment : Fragment()
 
         viewModel.repository.currentOfferId.postValue(-1)
 
-
     }
+
 
     override fun onMapReady(p0: GoogleMap?) {
         mMap = p0 as GoogleMap
@@ -152,7 +182,17 @@ class DeliveryMapFragment : Fragment()
             }
         })
 
+
+
         viewModel.repository.availableDeliveries.observe(this, Observer {
+            if (it.isEmpty()){
+                accumulatedEmpties += 1
+                if (accumulatedEmpties == 10){
+                    showCancelDialog()
+                }
+            } else {
+                accumulatedEmpties = 0
+            }
             mMap?.apply {
                 Log.d("MapFragment","Se observaron cambios en deliveries")
                 val list = it
@@ -237,11 +277,30 @@ class DeliveryMapFragment : Fragment()
         })
     }
 
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == android.R.id.home){
+            showCancelDialog()
+            Log.d("Clicked","La puta madre")
+            return true
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
     override fun onDestroy() {
         super.onDestroy()
 
         mHandler = null
     }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        (activity as AppCompatActivity)
+            .supportActionBar!!
+            .setDisplayHomeAsUpEnabled(false)
+
+    }
+
 
     override fun onDetach() {
         super.onDetach()
