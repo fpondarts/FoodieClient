@@ -7,9 +7,12 @@ import com.fpondarts.foodie.data.db.entity.Offer
 import com.fpondarts.foodie.data.db.entity.OrderItem
 import com.fpondarts.foodie.model.OfferItem
 
-class OfferAdapter (private val list: Collection<OfferItem>, val listener: OnOfferItemClickListener):
+class OfferAdapter (val map: HashMap<Long,OfferItem>, val listener: OnOfferItemClickListener):
     RecyclerView.Adapter<OfferItemViewHolder>()
 {
+
+    val list = map.values
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): OfferItemViewHolder {
         val inflater = LayoutInflater.from(parent.context)
 

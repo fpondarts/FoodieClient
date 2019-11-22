@@ -3,6 +3,7 @@ package com.fpondarts.foodie.ui.auth2
 import android.app.Activity
 import android.app.AlertDialog
 import android.app.Dialog
+import android.app.ProgressDialog
 import android.content.DialogInterface
 import android.content.Intent
 import android.net.Uri
@@ -67,6 +68,8 @@ class RegisterDataFragment : DialogFragment(), KodeinAware {
     val REQUEST_GALLERY = 2
 
     var localPhotoPath:String? = null
+
+    var progressDialog : ProgressDialog? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -184,7 +187,7 @@ class RegisterDataFragment : DialogFragment(), KodeinAware {
                         if (which == 0){
                             onCamara()
                         } else if (which==1){
-                            onGallery()
+                            Toast.makeText(activity,"No disponible",Toast.LENGTH_LONG).show()
                         }
                     })
             builder.create()
@@ -264,6 +267,8 @@ class RegisterDataFragment : DialogFragment(), KodeinAware {
 
     fun uploadPhoto(){
 
+        progressDialog = ProgressDialog.show(context,"Cargando foto","Cargando")
+
         var file = Uri.fromFile(File(localPhotoPath))
 
         val storage = FirebaseStorage.getInstance()
@@ -275,11 +280,13 @@ class RegisterDataFragment : DialogFragment(), KodeinAware {
         uploadTask.addOnFailureListener{
             Toast.makeText(activity,"No pudo cargarse la imagen de perfil",Toast.LENGTH_SHORT).show()
             uploading = false
+            progressDialog?.dismiss()
         }.addOnSuccessListener {
             imageRef.downloadUrl.addOnSuccessListener {
                 uploading = false
                 viewModel.photo = it.toString()
-                Picasso.get().load(viewModel.photo).resize(imageViewPhoto.width,imageViewPhoto.height).into(imageViewPhoto)
+                Picasso.get().load(viewModel.photo).resize(imageViewPhoto.width,imageViewPhoto.height).rotate(90.0.toFloat()).into(imageViewPhoto)
+                progressDialog?.dismiss()
             }
         }
     }

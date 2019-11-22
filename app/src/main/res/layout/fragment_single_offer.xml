@@ -9,8 +9,8 @@
     <include
         android:id="@+id/order_content"
         layout="@layout/content_order"
-        android:layout_width="358dp"
-        android:layout_height="524dp" />
+        android:layout_width="352dp"
+        android:layout_height="461dp" />
 
     <Button
         android:id="@+id/button_accept"
@@ -19,10 +19,13 @@
         android:layout_marginStart="40dp"
         android:layout_marginTop="36dp"
         android:text="Aceptar"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/order_content" />
+        app:layout_constraintTop_toBottomOf="@id/order_content"
+        app:layout_constraintVertical_bias="0.0" />
 
     <Button
+        android:id="@+id/button_reject_offer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="80dp"

@@ -14,10 +14,15 @@ data class User(
     var user_id: Long,
     var name:String,
     var email:String,
+    val latitude: Double,
+    val longitude: Double,
     var password:String?,
     var firebase_uid:String?,
-    var photoUrl:String?,
+    var picture:String?,
+    val phone_number:String,
     var registered:Boolean?,
-    var sessionToken:String?
+    var sessionToken:String?,
+    var favourPoints: Int = 0,
+    var suscripcion: String?
 ){
 }

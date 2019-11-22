@@ -49,7 +49,6 @@ class DeliveryMapFragment : Fragment()
             Log.d("MapFragment","Click on delivery: ${p0.tag}")
             val liveDel = viewModel.repository.getDelivery(delivery_id)
             liveDel.removeObservers(this)
-
             liveDel.observe(
                 this, Observer {
                     it?.let{
@@ -75,7 +74,7 @@ class DeliveryMapFragment : Fragment()
             )
         }
 
-        return true
+        return false
     }
 
     private var shop_init: Boolean = false 
@@ -97,6 +96,7 @@ class DeliveryMapFragment : Fragment()
 
     private var order_id:Long = 0
 
+    var first_move = true
     private var user_lat:Double? = null
     private var user_lon:Double? = null
     private var shop_lat:Double? = null
@@ -148,6 +148,7 @@ class DeliveryMapFragment : Fragment()
                 this.shop_lat = it.latitude
                 this.shop_lon = it.longitude
                 this.shop_title = it.name
+
             }
         })
 
@@ -159,14 +160,24 @@ class DeliveryMapFragment : Fragment()
                 if (shop_init){
                     Log.d("MapFragment","Actualizando el mapa")
                     shop_title?.let{
-                        mMap.addMarker(MarkerOptions().position(LatLng(shop_lat!!,shop_lon!!)).title(shop_title))
-                        mMap.addMarker(MarkerOptions().position(LatLng(user_lat!!,user_lon!!)).title("Tu posición"))
+                        mMap.addMarker(MarkerOptions().position(LatLng(shop_lat!!,shop_lon!!))
+                            .title(shop_title)
+                            .snippet(shop_title))
+                        if (first_move){
+                            val coordinates = LatLng(shop_lat!!,shop_lon!!)
+                            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(coordinates, 15.0.toFloat()))
+                            first_move = false
+                        }
+                        mMap.addMarker(MarkerOptions().position(LatLng(user_lat!!,user_lon!!))
+                            .title("Tu posición")
+                            .snippet(""))
                         list.forEach {
                             Log.d("MapFragment","Se agrega delivery marker en:${it.latitude},${it.longitude}")
                             val marker = mMap.addMarker(MarkerOptions()
                                 .position(LatLng(it.latitude,it.longitude))
                                 .title("Delivery")
-                                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)))
+                                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE))
+                                .snippet("Rating: ${it.rating.toString()}"))
                             marker.tag = it.user_id
                         }
                     }
@@ -184,7 +195,7 @@ class DeliveryMapFragment : Fragment()
                 Log.d("Map fragment","Order not null ")
                 val coordinates = LatLng(user_lat!!,user_lon!!)
                 order = it
-                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(coordinates, 15.0.toFloat()))
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(coordinates, 10.0.toFloat()))
                 mMap.addMarker(MarkerOptions().position(coordinates).title("Tu posicion"))
             }
         })
@@ -197,11 +208,17 @@ class DeliveryMapFragment : Fragment()
                         ,"Oferta realizada"
                         ,"Esperando respuesta (Max 2 min)"
                     )
+                    val timeMilis = System.currentTimeMillis()
                     val liveOffer = viewModel.repository.getOffer(it)
                     liveOffer.observe(this, Observer {
                         it?.let {
                             if (it.state == "offered"){
-                                viewModel.repository.updateObservedOffer(it.id)
+                                if (System.currentTimeMillis() >= (timeMilis + (1000 * 65 * 2))){
+                                    progressDialog!!.dismiss()
+                                    Toast.makeText(activity,"Oferta rechazada",Toast.LENGTH_LONG).show()
+                                    viewModel.repository.currentOfferId.postValue(-1)
+                                } else
+                                    viewModel.repository.updateObservedOffer(it.id)
                             } else if (it.state == "accepted"){
                                 progressDialog!!.dismiss()
                                 findNavController().navigate(R.id.action_deliveryMapFragment_to_nav_home,

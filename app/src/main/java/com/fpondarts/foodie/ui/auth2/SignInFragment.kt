@@ -1,6 +1,8 @@
 package com.fpondarts.foodie.ui.auth2
 
 import android.app.Activity
+import android.app.AlertDialog
+import android.app.ProgressDialog
 import android.content.Intent
 import androidx.lifecycle.ViewModelProviders
 import android.os.Bundle
@@ -45,6 +47,7 @@ class SignInFragment : Fragment(), KodeinAware, GoogleAuthHandler {
     private val factory : AuthViewModelFactory by instance()
     lateinit var navController: NavController
 
+    private var progressDialog: ProgressDialog? = null
 
 
     override fun onCreateView(
@@ -95,63 +98,73 @@ class SignInFragment : Fragment(), KodeinAware, GoogleAuthHandler {
             navController.navigate(com.fpondarts.foodie.R.id.action_signInFragment_to_signUpFragment)
         })
 
+        googleSignInButton.setOnClickListener(View.OnClickListener {
+            handleAuth()
+        })
+
+
 
         signInButton.setOnClickListener(View.OnClickListener {
-                progress_bar.visibility = View.VISIBLE
-                if (viewModel.userName.value.isNullOrBlank() || viewModel.password.value.isNullOrBlank()){
-                    Toast.makeText(activity,"Los campos son obligatorios",Toast.LENGTH_SHORT).show()
-                    progress_bar.visibility = View.GONE
-                    return@OnClickListener
-                }else {
-                    try {
-                        FirebaseAuth.getInstance().signInWithEmailAndPassword(
-                            viewModel.userName.value!!,
-                            viewModel.password.value!!
-                        )
-                            .addOnCompleteListener(OnCompleteListener { task ->
-                                if (task.isSuccessful) {
-                                    viewModel.signIn().observe(this, Observer {
-                                        it?.let {
-                                            if (it.role == "usuario") {
-                                                val intent =
-                                                    Intent(activity, HomeActivity::class.java)
-                                                intent.putExtra("token", it.token)
-                                                intent.putExtra("user_id",it.user_id)
-                                                startActivity(intent)
-                                                activity!!.finish()
-                                            } else if (it.role == "delivery") {
-                                                val intent = Intent(
-                                                    activity,
-                                                    DeliveryHomeActivity::class.java
-                                                )
-                                                intent.putExtra("user_id",it.user_id)
-                                                intent.putExtra("token", it.token)
-                                                startActivity(intent)
-                                                activity!!.finish()
-                                            }
-                                            progress_bar.visibility = View.GONE
+            progressDialog = ProgressDialog.show(context,"Autenticando",null)
+            if (viewModel.userName.value.isNullOrBlank() || viewModel.password.value.isNullOrBlank()){
+                Toast.makeText(activity,"Los campos son obligatorios",Toast.LENGTH_SHORT).show()
+                progress_bar.visibility = View.GONE
+                progressDialog?.dismiss()
+                return@OnClickListener
+            }else {
+                try {
+                    FirebaseAuth.getInstance().signInWithEmailAndPassword(
+                        viewModel.userName.value!!,
+                        viewModel.password.value!!
+                    )
+                        .addOnCompleteListener(OnCompleteListener { task ->
+                            if (task.isSuccessful) {
+                                viewModel.signIn().observe(this, Observer {
+                                    it?.let {
+
+                                        viewModel.repository.userId = it.user_id
+                                        viewModel.repository.token = it.token
+                                        viewModel.repository.role = it.role
+                                        if (it.role == "usuario") {
+                                            val intent =
+                                                Intent(activity, HomeActivity::class.java)
+                                            intent.putExtra("token", it.token)
+                                            intent.putExtra("user_id",it.user_id)
+                                            startActivity(intent)
+                                            activity!!.finish()
+                                        } else if (it.role == "delivery") {
+                                            val intent = Intent(
+                                                activity,
+                                                DeliveryHomeActivity::class.java
+                                            )
+                                            intent.putExtra("user_id",it.user_id)
+                                            intent.putExtra("token", it.token)
+                                            startActivity(intent)
+                                            activity!!.finish()
                                         }
-                                    })
-                                } else {
-                                    Toast.makeText(
-                                        activity,
-                                        task.exception?.message,
-                                        Toast.LENGTH_SHORT
-                                    ).show()
-                                    progress_bar.visibility = View.GONE
-                                }
-                            })
+                                        progressDialog?.dismiss()
+                                    }
+                                })
+                            } else {
+                                Toast.makeText(
+                                    activity,
+                                    task.exception?.message,
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                                progressDialog?.dismiss()
+                            }
+                        })
 
-                    } catch (e: IncompleteDataException) {
-                        Toast.makeText(
-                            activity,
-                            "Usuario y contraseña son obligatorios",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                        progress_bar.visibility = View.GONE
+                } catch (e: IncompleteDataException) {
+                    Toast.makeText(
+                        activity,
+                        "Usuario y contraseña son obligatorios",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    progressDialog?.dismiss()
 
-                    }
                 }
+            }
         })
 
 
@@ -159,6 +172,7 @@ class SignInFragment : Fragment(), KodeinAware, GoogleAuthHandler {
     }
 
     override fun handleAuth() {
+        progressDialog = ProgressDialog.show(context,"Autenticando",null)
         val providers = Arrays.asList(
             AuthUI.IdpConfig.GoogleBuilder().build()
         )
@@ -189,11 +203,13 @@ class SignInFragment : Fragment(), KodeinAware, GoogleAuthHandler {
                                         if (it.role == "usuario"){
                                             val intent = Intent(activity, HomeActivity::class.java)
                                             intent.putExtra("token",it.token)
+                                            intent.putExtra("user_id",it.user_id)
                                             startActivity(intent)
                                             activity!!.finish()
                                         } else if (it.role == "delivery"){
                                             val intent = Intent(activity,DeliveryHomeActivity::class.java)
                                             intent.putExtra("token",it.token)
+                                            intent.putExtra("user_id",it.token)
                                             startActivity(intent)
                                             activity!!.finish()
                                         }
@@ -209,7 +225,7 @@ class SignInFragment : Fragment(), KodeinAware, GoogleAuthHandler {
                 Toast.makeText(activity, "Hubo un error en el ingreso", Toast.LENGTH_LONG).show()
             }
         }
-
+        progressDialog?.dismiss()
     }
 
 

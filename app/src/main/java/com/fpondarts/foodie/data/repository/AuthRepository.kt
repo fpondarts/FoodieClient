@@ -13,6 +13,7 @@ import com.fpondarts.foodie.util.ApiExceptionHandler
 import com.fpondarts.foodie.util.Coroutines
 import com.fpondarts.foodie.util.exception.FoodieApiException
 import com.google.android.gms.common.api.ApiException
+import kotlinx.coroutines.delay
 import retrofit2.Response
 import java.lang.Exception
 
@@ -66,17 +67,36 @@ class AuthRepository(private val api:FoodieApi):SafeApiRequest() {
 
     fun passwordLogin(email:String,password:String): LiveData<SignInResponse?>{
         val request = PasswordLoginRequest(email,password)
-        val response = MutableLiveData<SignInResponse?>().apply { value = null }
+        val response = MutableLiveData<SignInResponse>().apply { value = null }
         Coroutines.io{
             try {
                 val foodieResponse = apiRequest{ api.passwordLogin(request) }
                 response.postValue(foodieResponse)
             } catch (e:FoodieApiException){
                 apiErrors.postValue(e)
-
+                if (e.code == 500){
+                    delay(500)
+                    retryLogin(email,password,response)
+                }
             }
         }
         return response
+    }
+
+    fun retryLogin(email:String,password:String,response:MutableLiveData<SignInResponse>){
+        val request = PasswordLoginRequest(email,password)
+        Coroutines.io {
+            try {
+                val foodieResponse = apiRequest{ api.passwordLogin(request) }
+                response.postValue(foodieResponse)
+            } catch (e:FoodieApiException){
+                apiErrors.postValue(e)
+                if (e.code == 500){
+                    delay(500)
+                    retryLogin(email,password,response)
+                }
+            }
+        }
     }
 
     fun tokenLogin(idToken:String):LiveData<SignInResponse?>{

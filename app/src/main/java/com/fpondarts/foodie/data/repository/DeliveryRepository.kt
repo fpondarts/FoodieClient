@@ -10,7 +10,9 @@ import com.fpondarts.foodie.model.Coordinates
 import com.fpondarts.foodie.network.DirectionsApi
 import com.fpondarts.foodie.network.FoodieApi
 import com.fpondarts.foodie.network.SafeApiRequest
+import com.fpondarts.foodie.network.request.ChangePasswordRequest
 import com.fpondarts.foodie.network.request.StateChangeRequest
+import com.fpondarts.foodie.network.request.UpdatePictureRequest
 import com.fpondarts.foodie.network.response.SuccessResponse
 import com.fpondarts.foodie.util.Coroutines
 import com.fpondarts.foodie.util.exception.FoodieApiException
@@ -32,8 +34,12 @@ class DeliveryRepository(
     var token:String? = null
     var userId:Long? = null
 
-    var currentUser = MutableLiveData<User>().apply {
+    var currentUser = MutableLiveData<Delivery>().apply {
         value = null
+    }
+
+    val isWorking = MutableLiveData<Boolean>().apply {
+        value = false
     }
 
     fun initUser(token:String, id:Long){
@@ -41,9 +47,12 @@ class DeliveryRepository(
         userId = id
         Coroutines.io{
             try {
-                currentUser.postValue(apiRequest{ api.getUserById(token,id) })
+                currentUser.postValue(apiRequest{ api.getDelivery(token,id) })
             } catch (e:FoodieApiException) {
                 apiError.postValue(e)
+                if (e.code > 500){
+                    initUser(token,id)
+                }
             }
         }
 
@@ -101,7 +110,7 @@ class DeliveryRepository(
 
         Coroutines.io {
             try{
-                val apiResponse = apiRequest {api.changeOfferState(token!!,offer_id, StateChangeRequest("accepted")) }
+                val apiResponse = apiRequest {api.changeOfferState(token!!,userId!!,offer_id, StateChangeRequest("accepted")) }
                 successResponse.postValue(true)
             } catch (e:FoodieApiException){
                 apiError.postValue(e)
@@ -118,7 +127,7 @@ class DeliveryRepository(
         }
         Coroutines.io{
             try{
-                val apiResponse = apiRequest{api.changeOfferState(token!!,offer_id,
+                val apiResponse = apiRequest{api.changeOfferState(token!!,userId!!,offer_id,
                     StateChangeRequest("rejected")
                 )}
                 successResponse.postValue(true)
@@ -228,4 +237,40 @@ class DeliveryRepository(
         return liveData
     }
 
+
+    fun changePassword(new_pass:String):LiveData<SuccessResponse>{
+        val live = MutableLiveData<SuccessResponse>().apply {
+            value = null
+        }
+        Coroutines.io{
+            try {
+                val apiResponse = apiRequest { api.changePassword(token!!,userId!!,
+                    ChangePasswordRequest(new_pass)
+                ) }
+                live.postValue(apiResponse)
+            } catch (e:FoodieApiException){
+                apiError.postValue(e)
+                live.postValue(SuccessResponse(e.message,400))
+            }
+        }
+        return live
+    }
+
+
+    fun updatePic(url:String):LiveData<SuccessResponse>{
+        val live = MutableLiveData<SuccessResponse>().apply {
+            value = null
+         }
+        Coroutines.io{
+            try{
+                val apiResp = apiRequest { api.updateUserPicture(token!!,userId!!,
+                    UpdatePictureRequest(url)
+                ) }
+                live.postValue(apiResp)
+            } catch (e: FoodieApiException){
+                apiError.postValue(e)
+            }
+        }
+        return live
+    }
 }

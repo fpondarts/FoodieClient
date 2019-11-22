@@ -19,7 +19,7 @@ class OfferItemViewHolder(inflater: LayoutInflater, parent:ViewGroup):
 
     fun bind(item:OfferItem,listener: OnOfferItemClickListener){
         time.text = item.remainingSeconds.toString()
-        earnings.text = item.earnings.toString()
+        earnings.text = "$${(item.earnings * 100.0 / 100.0).toString()}"
         itemView.findViewById<Button>(R.id.button_accept).setOnClickListener(View.OnClickListener {
             listener.onAcceptClick(item.offer_id,item.order_id)
         })

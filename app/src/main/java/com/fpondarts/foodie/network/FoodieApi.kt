@@ -78,6 +78,11 @@ interface FoodieApi {
     @PATCH(USERS_PREFIX+"/{order_id}/position")
     suspend fun updateCoordinates(@Header(API_KEY_HEADER)token: String, @Path("order_id") userId:Long, @Body coordinates:Coordinates):Response<SuccessResponse>
 
+    @PUT(USERS_PREFIX+"/{user_id}/password")
+    suspend fun changePassword(@Header(API_KEY_HEADER)token: String, @Path("user_id") userId:Long, @Body passwordRequest:ChangePasswordRequest):Response<SuccessResponse>
+
+    @PUT(USERS_PREFIX+"/{user_id}/picture")
+    suspend fun updateUserPicture(@Header(API_KEY_HEADER)token:String, @Path("user_id")userId:Long, @Body picture:UpdatePictureRequest):Response<SuccessResponse>
 
     // PRODUCTS
     @GET("products/{order_id}")
@@ -98,8 +103,8 @@ interface FoodieApi {
     @GET("deliveries/{id}/offers")
     suspend fun getCurrentOffers(@Header(API_KEY_HEADER)token: String,@Path("id")id:Long):Response<List<Offer>>
 
-    @PUT("offers/{id}")
-    suspend fun changeOfferState(@Header(API_KEY_HEADER)token: String,@Path("id")id:Long,@Body state:StateChangeRequest):Response<SuccessResponse>
+    @PATCH("deliveries/{del_id}/offers/{id}")
+    suspend fun changeOfferState(@Header(API_KEY_HEADER)token: String,@Path("del_id") del_id:Long,@Path("id")id:Long,@Body state:StateChangeRequest):Response<SuccessResponse>
 
     @POST("deliveries/{id}/offers")
     suspend fun postOffer(@Header(API_KEY_HEADER)token: String, @Path("id")id:Long,@Body request: PostOfferRequest):Response<IdResponse>

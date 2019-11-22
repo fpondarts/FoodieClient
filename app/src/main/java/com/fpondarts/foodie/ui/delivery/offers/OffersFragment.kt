@@ -10,37 +10,58 @@ import android.view.ViewGroup
 import com.fpondarts.foodie.R
 import androidx.core.os.HandlerCompat.postDelayed
 import android.os.Handler
+import android.util.Log
 import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.lifecycle.Observer
+import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.fpondarts.foodie.data.repository.DeliveryRepository
 import com.fpondarts.foodie.model.OfferItem
 import kotlinx.android.synthetic.main.fragment_offers.*
+import org.kodein.di.KodeinAware
+import org.kodein.di.generic.instance
+import org.kodein.di.android.x.kodein
 
 
-class OffersFragment : Fragment(), OnOfferItemClickListener {
+class OffersFragment : Fragment(), OnOfferItemClickListener, KodeinAware {
 
+
+    override val kodein by kodein()
+
+    val repository: DeliveryRepository by instance()
 
     override fun onAcceptClick(offer_id:Long,order_id:Long) {
 
         progress_bar.visibility = View.VISIBLE
-        viewModel.repository.acceptOffer(offer_id).observe(this@OffersFragment, Observer {
+
+        repository.acceptOffer(offer_id).observe(this@OffersFragment, Observer {
             it?.let {
                 if (it){
+                    val bundle = Bundle().apply {
+                        this.putLong("offer_id",offer_id)
+                        this.putLong("order_id",order_id)
+                    }
                     Toast.makeText(activity,"Oferta aceptada",Toast.LENGTH_SHORT).show()
-                    findNavController()
+//                    findNavController().navigate(R.id.action_offersFragment_to_workingFragment
+//                        ,bundle
+//                        ,NavOptions.Builder().setPopUpTo(R.id.offersFragment,true).build())
                 }
                 progress_bar.visibility = View.GONE
             }
         })
     }
 
+
     override fun onRejectClick(offer_id:Long,order_id: Long) {
         progress_bar.visibility = View.VISIBLE
-        viewModel.repository.rejectOffer(offer_id).observe(this@OffersFragment, Observer {
+        repository.rejectOffer(offer_id).observe(this@OffersFragment, Observer {
             it?.let {
                 if (it){
+                    val adapter = offers_recycler_view.adapter as OfferAdapter
+                    adapter.map.remove(offer_id)
+                    adapter.notifyDataSetChanged()
                     Toast.makeText(activity,"La oferta fue rechazada",Toast.LENGTH_SHORT).show()
                 }
                 progress_bar.visibility = View.GONE
@@ -50,7 +71,10 @@ class OffersFragment : Fragment(), OnOfferItemClickListener {
     }
 
     override fun onViewClick(offer_id:Long,order_id: Long) {
-        val bundle = bundleOf("offer_id" to offer_id)
+        val bundle = Bundle().apply {
+            this.putLong("offer_id",offer_id)
+            this.putLong("order_id",order_id)
+        }
         findNavController().navigate(R.id.action_offersFragment_to_singleOfferFragment,bundle)
     }
 
@@ -58,7 +82,19 @@ class OffersFragment : Fragment(), OnOfferItemClickListener {
         fun newInstance() = OffersFragment()
     }
 
-    private lateinit var viewModel: OffersViewModel
+    override fun onStop() {
+        super.onStop()
+        Log.d("Offers","Stopppedd")
+        mHandler = null
+        timeUpdateHandler = null
+    }
+
+    override fun onResume() {
+        super.onResume()
+        Log.d("Offers","Resumed")
+        useHandler()
+    }
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -69,8 +105,6 @@ class OffersFragment : Fragment(), OnOfferItemClickListener {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProviders.of(this).get(OffersViewModel::class.java)
-
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -78,36 +112,75 @@ class OffersFragment : Fragment(), OnOfferItemClickListener {
 
         offers_recycler_view?.apply{
             layoutManager = LinearLayoutManager(activity)
+            adapter = OfferAdapter(HashMap<Long,OfferItem>(),this@OffersFragment)
         }
-
-        useHandler()
     }
 
     var mHandler:Handler? = null
 
+    var timeUpdateHandler:Handler? = null
+
     fun useHandler() {
         mHandler = Handler()
         mHandler!!.postDelayed(mRunnable, 5000)
+        timeUpdateHandler = Handler()
+        timeUpdateHandler!!.postDelayed(mUpdateTime,1000)
     }
+
+
 
     private val mRunnable = object : Runnable {
 
         override fun run() {
+            offers_recycler_view?.let {
 
-            this@OffersFragment.
-            viewModel.getOffers().observe(this@OffersFragment, Observer {
-                it?.let{
-                    val itemList = ArrayList<OfferItem>()
-                    for (offer in it) {
-                        itemList.add(OfferItem(offer.created_at_seconds!!,offer.delivery_price,offer.id,offer.orderId))
+                var ld = this@OffersFragment.repository.getCurrentOffers()
+                ld.observe(this@OffersFragment, Observer {
+                    it?.let {
+                        val itemMap = HashMap<Long, OfferItem>()
+                        val adapter = offers_recycler_view.adapter as OfferAdapter
+                        for (offer in it) {
+                            val item = OfferItem(
+                                offer.created_at_seconds!!,
+                                offer.delivery_price,
+                                offer.id,
+                                offer.order_id
+                            )
+                            if (item.remainingSeconds < 0) {
+                                adapter.map.remove(offer.id)
+                            } else {
+                                adapter.map.getOrPut(offer.id, { item })
+                            }
+                        }
+                        offers_recycler_view.adapter!!.notifyDataSetChanged()
+                        ld.removeObservers(this@OffersFragment)
                     }
-                    offers_recycler_view.adapter = OfferAdapter(itemList,this@OffersFragment)
-                    offers_recycler_view.adapter!!.notifyDataSetChanged()
-                }
-            })
-
-            mHandler!!.postDelayed(this, 5000)
+                })
+            }
+            mHandler?.postDelayed(this, 5000)
         }
+    }
+
+    private val mUpdateTime = object : Runnable {
+
+        override fun run(){
+            this@OffersFragment
+
+            offers_recycler_view?.let{
+                val adapter = offers_recycler_view?.adapter as OfferAdapter
+                for (item in adapter.map){
+                    item.value.remainingSeconds -= 1
+                    if (item.value.remainingSeconds < 0 ){
+                        adapter.map.remove(item.key)
+                    }
+                }
+                adapter.notifyDataSetChanged()
+
+                timeUpdateHandler?.postDelayed(this,1000)
+            }
+
+        }
+
     }
 
 }

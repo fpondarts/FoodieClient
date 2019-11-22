@@ -2,6 +2,7 @@ package com.fpondarts.foodie.ui.delivery.offers
 
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -47,15 +48,17 @@ class SingleOfferFragment : Fragment(),KodeinAware{
         savedInstanceState: Bundle?
     ): View? {
 
+        offer_id = arguments!!.getLong("offer_id")
+        order_id = arguments!!.getLong("order_id")
+
+        Log.d("SingleOffer","Offer_id:${offer_id}, Order_id:${order_id}")
+
+
         return inflater.inflate(R.layout.fragment_single_offer, container, false)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-
-        offer_id = arguments!!.getLong("offer_id")
-        order_id = arguments!!.getLong("order_id")
-
 
         button_accept.setOnClickListener(View.OnClickListener {
             repository.acceptOffer(offer_id!!).observe(this, Observer {
@@ -74,11 +77,12 @@ class SingleOfferFragment : Fragment(),KodeinAware{
         })
 
 
-        button_reject.setOnClickListener(View.OnClickListener {
+        button_reject_offer.setOnClickListener(View.OnClickListener {
             repository.rejectOffer(offer_id!!).observe(this,Observer{
                 it?.let {
                     if (it){
                         Toast.makeText(activity,"Oferta rechazada",Toast.LENGTH_SHORT).show()
+                        fragmentManager!!.popBackStack()
                     }
                 }
             })
@@ -98,25 +102,32 @@ class SingleOfferFragment : Fragment(),KodeinAware{
 
         repository.getOrder(order_id!!).observe(this, Observer {
             it?.let{
+                shop_id = it.shop_id
+                user_id = it.user_id
 
-            }
-        })
-
-        repository.getMenu(shop_id!!).observe(this, Observer {
-            it?.let{
-                repository.getOrderItems(order_id!!).observe(this, Observer {
-                    it?.let {
-                        val recyclerList = ArrayList<OrderPricedItem>()
-                        for (item in it){
-                            val menuItem = repository.getMenuItem(item.product_id).value
-                            recyclerList.add(OrderPricedItem(menuItem!!.name,item.units,menuItem!!.price))
-                        }
-
-                        items_recycler_view.adapter = OrderAdapter(recyclerList)
+                repository.getMenu(shop_id!!).observe(this@SingleOfferFragment, Observer {
+                    it?.let{
+                        repository.getOrderItems(order_id!!).observe(this@SingleOfferFragment, Observer {
+                            it?.let {
+                                val recyclerList = ArrayList<OrderPricedItem>()
+                                for (item in it){
+                                    val menuItem = repository.getMenuItem(item.product_id)
+                                    menuItem.observe(this@SingleOfferFragment, Observer {
+                                        it?.let{
+                                            recyclerList.add(OrderPricedItem(it.name,item.units,it.price))
+                                            menuItem.removeObservers(this@SingleOfferFragment)
+                                        }
+                                    })
+                                }
+                                items_recycler_view.adapter = OrderAdapter(recyclerList)
+                            }
+                        })
                     }
                 })
             }
         })
+
+
 
     }
 

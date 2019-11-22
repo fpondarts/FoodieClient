@@ -1,4 +1,4 @@
-package com.fpondarts.foodie.ui.delivery.working
+package com.fpondarts.foodie.ui.home
 
 
 import android.os.Bundle
@@ -12,20 +12,14 @@ import com.fpondarts.foodie.R
 /**
  * A simple [Fragment] subclass.
  */
-class WorkingFragment : Fragment() {
-
-
-    var order_id:Long? = null
+class UserNavHomeFragment : Fragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-
-        //order_id = arguments!!.getLong("order_id")
-
-        return inflater.inflate(R.layout.fragment_working, container, false)
+        return inflater.inflate(R.layout.fragment_user_nav_home, container, false)
     }
 
 

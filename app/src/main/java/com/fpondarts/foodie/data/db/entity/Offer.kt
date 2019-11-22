@@ -10,7 +10,7 @@ import com.fpondarts.foodie.model.OfferState
 data class Offer(
     @PrimaryKey
     val id:Long,
-    val orderId:Long,
+    val order_id:Long,
     val delivery_id:Long,
     val state: String,
     val created_at_seconds:Long?,

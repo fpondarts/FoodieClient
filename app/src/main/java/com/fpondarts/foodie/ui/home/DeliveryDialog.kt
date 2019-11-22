@@ -23,6 +23,7 @@ import com.fpondarts.foodie.data.db.entity.Delivery
 import com.fpondarts.foodie.data.db.entity.Order
 import com.fpondarts.foodie.data.repository.Repository
 import com.squareup.picasso.Picasso
+import kotlinx.android.synthetic.main.fragment_delivery_option.*
 import org.kodein.di.KodeinAware
 import org.kodein.di.generic.instance
 import org.kodein.di.android.x.kodein
@@ -37,9 +38,9 @@ class DeliveryDialog(
 
     val repository: Repository by instance()
 
-    var delivery_pic: String? = null
-
     var imageView : ImageView? = null
+
+    var url :String? = null
 
     companion object {
 
@@ -120,6 +121,8 @@ class DeliveryDialog(
 
         val priceText = rootView.findViewById<TextView>(R.id.price_tv)
 
+        url = arguments!!.getString("pic")
+
         if (price == 0.0)
             priceText.text = "Gratis!"
         else
@@ -127,7 +130,9 @@ class DeliveryDialog(
 
         progressBar.visibility = View.GONE
 
-        delivery_pic = arguments!!.getString("pic")
+        imageView = rootView.findViewById(R.id.delivery_pic)
+
+
 
         offer_button.setOnClickListener(View.OnClickListener {
             progressBar.visibility = View.VISIBLE
@@ -155,9 +160,31 @@ class DeliveryDialog(
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        imageView = view.findViewById(R.id.delivery_pic)
+
+        val price = arguments!!.getDouble("price")
+        val delivery_id = arguments!!.getLong("delivery_id")
 
 
+        repository.getDelivery(delivery_id).observe(this, Observer {
+            it?.let{
+                delivery_rating.rating = it.rating.toFloat()
+                delivery_name.text = it.name
+
+                if (price == 0.0)
+                    price_tv.text = "Gratis!"
+                else
+                    price_tv.text = "$${price.toString().substring(0,5)}"
+
+                Picasso.get().load(it.picture)
+                    .resize(80,80)
+                    .rotate(270.0.toFloat()).into(delivery_pic)
+            }
+        })
+
+    }
+
+    override fun onResume() {
+        super.onResume()
     }
 
 }

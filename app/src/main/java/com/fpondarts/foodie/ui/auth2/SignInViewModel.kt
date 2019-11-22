@@ -1,5 +1,6 @@
 package com.fpondarts.foodie.ui.auth2
 
+import android.util.Log
 import android.view.View
 import androidx.databinding.Bindable
 import androidx.databinding.Observable
@@ -13,7 +14,7 @@ import com.fpondarts.foodie.util.exception.IncompleteDataException
 class SignInViewModel (val repository: AuthRepository) : ViewModel() {
 
     val userName = MutableLiveData<String>().apply{
-        value = "normal@gmail.com"}
+        value = "delivery@gmail.com"}
 
     val password = MutableLiveData<String>().apply {
         value = "taller2"
@@ -28,6 +29,7 @@ class SignInViewModel (val repository: AuthRepository) : ViewModel() {
     }
 
     fun tokenSignIn(token:String):LiveData<SignInResponse?>{
+        Log.d("idToken: ",token)
         return repository.tokenLogin(token)
     }
 

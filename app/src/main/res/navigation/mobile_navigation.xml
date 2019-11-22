@@ -14,23 +14,21 @@
             android:id="@+id/action_nav_home_to_shopFragment"
             app:destination="@id/shopFragment" />
         <action
-            android:id="@+id/action_nav_home_to_nav_profile"
-            app:destination="@id/nav_profile" />
-        <action
             android:id="@+id/action_nav_home_to_myOrdersFragment"
             app:destination="@id/navigation" />
     </fragment>
 
     <fragment
         android:id="@+id/nav_profile"
-        android:name="com.fpondarts.foodie.ui.profile.ProfileFragment"
-        android:label="@string/menu_profile" />
+        android:name="com.fpondarts.foodie.ui.profile.UserProfileFragment"
+        android:label="@string/menu_profile"
+        tools:layout="@layout/fragment_user_profile" />
 
     <fragment
         android:id="@+id/shopFragment"
         android:name="com.fpondarts.foodie.ui.home.shop_menu.ShopMenuFragment"
-        android:label="shop_fragment"
-        tools:layout="@layout/fragment_shop_menu" >
+        android:label="Haz tu pedido"
+        tools:layout="@layout/fragment_shop_menu">
         <argument
             android:name="shopId"
             app:argType="long" />

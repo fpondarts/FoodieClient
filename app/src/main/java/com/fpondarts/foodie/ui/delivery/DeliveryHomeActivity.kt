@@ -19,13 +19,16 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import android.view.Menu
 import android.widget.Toast
+import androidx.lifecycle.Observer
 import com.fpondarts.foodie.R
+import com.fpondarts.foodie.data.repository.AuthRepository
 import com.fpondarts.foodie.data.repository.DeliveryRepository
 import com.fpondarts.foodie.services.MyLocationService
 import com.fpondarts.foodie.ui.auth2.AuthActivity
 import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.location.*
 import com.google.android.gms.tasks.Task
+import com.google.firebase.auth.FirebaseAuth
 import com.karumi.dexter.Dexter
 import com.karumi.dexter.PermissionToken
 import com.karumi.dexter.listener.PermissionDeniedResponse
@@ -63,14 +66,13 @@ class DeliveryHomeActivity : AppCompatActivity(), KodeinAware {
                 .setAction("Action", null).show()
         }
         val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
-        val navView: NavigationView = findViewById(R.id.nav_view)
+        val navView: NavigationView = findViewById(R.id.nav_view_delivery)
         val navController = findNavController(R.id.nav_host_fragment)
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         appBarConfiguration = AppBarConfiguration(
             setOf(
-                R.id.nav_home, R.id.nav_gallery, R.id.nav_slideshow,
-                R.id.nav_tools, R.id.nav_share, R.id.nav_send
+                R.id.offersFragment
             ), drawerLayout
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
@@ -89,7 +91,29 @@ class DeliveryHomeActivity : AppCompatActivity(), KodeinAware {
 
         repository.initUser(token,id)
 
+        repository.apiError.observe(this, Observer {
+            it?.let {
+                Toast.makeText(this,"${it.code}: ${it.message}",Toast.LENGTH_SHORT).show()
+            }
+        })
+
+
+
         askLocationPermission()
+
+        // 2 es el índice del item logout
+        navView.menu.getItem(2).setOnMenuItemClickListener {
+            FirebaseAuth.getInstance().signOut()
+            val repository : AuthRepository by instance()
+            repository.role = null
+            repository.userId = null
+            repository.token = null
+            val intent = Intent(this,AuthActivity::class.java)
+            startActivity(intent)
+            finish()
+            true
+        }
+
 
     }
 
@@ -176,7 +200,6 @@ class DeliveryHomeActivity : AppCompatActivity(), KodeinAware {
             .withPermission(Manifest.permission.ACCESS_FINE_LOCATION)
             .withListener(object: PermissionListener {
                 override fun onPermissionGranted(response: PermissionGrantedResponse?) {
-
                     updateLocation()
                 }
 

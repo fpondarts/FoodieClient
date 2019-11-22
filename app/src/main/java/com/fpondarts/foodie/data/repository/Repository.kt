@@ -16,9 +16,12 @@ import com.fpondarts.foodie.model.Coordinates
 import com.fpondarts.foodie.model.OrderItem
 import com.fpondarts.foodie.model.OrderState
 import com.fpondarts.foodie.network.DirectionsApi
+import com.fpondarts.foodie.network.request.ChangePasswordRequest
 import com.fpondarts.foodie.network.request.OrderRequest
 import com.fpondarts.foodie.network.request.PostOfferRequest
+import com.fpondarts.foodie.network.request.UpdatePictureRequest
 import com.fpondarts.foodie.network.response.PricingResponse
+import com.fpondarts.foodie.network.response.SuccessResponse
 import com.google.firebase.database.DatabaseReference
 import kotlinx.coroutines.delay
 import java.lang.Exception
@@ -364,9 +367,26 @@ class Repository(
     }
 
 
+    fun changePassword(new_pass:String):LiveData<SuccessResponse>{
+        val live = MutableLiveData<SuccessResponse>().apply {
+            value = null
+        }
+        Coroutines.io{
+            try {
+                val apiResponse = apiRequest { api.changePassword(token!!,userId!!,
+                    ChangePasswordRequest(new_pass)) }
+                live.postValue(apiResponse)
+            } catch (e:FoodieApiException){
+                apiError.postValue(e)
+            }
+        }
+        return live
+    }
+
     fun updateObservedOffer(id:Long){
         Coroutines.io {
             try{
+                delay(5000)
                 val apiResponse = apiRequest{ api.getOffer(token!!,id) }
                 observedOffer?.postValue(apiResponse)
             } catch ( e: FoodieApiException){
@@ -375,6 +395,21 @@ class Repository(
                 updateObservedOffer(id)
             }
         }
+    }
+
+    fun updatePic(url:String):LiveData<SuccessResponse>{
+        val live = MutableLiveData<SuccessResponse>().apply {
+            value = null
+        }
+        Coroutines.io{
+            try{
+                val apiResp = apiRequest { api.updateUserPicture(token!!,userId!!,UpdatePictureRequest(url)) }
+                live.postValue(apiResp)
+            } catch (e: FoodieApiException){
+                apiError.postValue(e)
+            }
+        }
+        return live
     }
 
 }

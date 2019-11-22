@@ -6,7 +6,7 @@ class OfferItem(secondsTimestamp:Long,val earnings:Float,val offer_id:Long,val o
 
     init {
         val unixTime = System.currentTimeMillis() / 1000L
-        remainingSeconds = unixTime - secondsTimestamp
+        remainingSeconds = 120 - (unixTime - secondsTimestamp)
     }
 
 

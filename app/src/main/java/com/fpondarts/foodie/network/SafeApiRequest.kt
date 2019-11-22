@@ -22,7 +22,7 @@ abstract class SafeApiRequest {
                     message.append("Error code: "+response.code().toString())
                 }
             }
-            throw FoodieApiException(message.toString())
+            throw FoodieApiException(message.toString(),response?.code())
         }
     }
 }

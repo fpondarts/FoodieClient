@@ -30,9 +30,9 @@
 
     <RatingBar
         android:id="@+id/delivery_rating"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_width="239dp"
+        android:layout_height="44dp"
+        android:layout_marginTop="20dp"
         android:scaleX="0.5"
         android:scaleY="0.5"
         android:transformPivotX="0dp"
@@ -45,7 +45,7 @@
         android:id="@+id/price_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="60dp"
+        android:layout_marginTop="68dp"
         android:text="Precio de envío"
         android:textSize="16dp"
         app:layout_constraintStart_toStartOf="@id/delivery_pic"
@@ -87,8 +87,8 @@
         android:id="@+id/waitin_offer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="152dp"
-        android:layout_marginTop="156dp"
+        android:layout_marginStart="184dp"
+        android:layout_marginTop="132dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -96,7 +96,7 @@
         android:id="@+id/button_offer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="44dp"
+        android:layout_marginTop="40dp"
         android:text="Ofrecer"
         app:layout_constraintStart_toStartOf="@+id/favour_points_title"
         app:layout_constraintTop_toBottomOf="@id/favour_points_title" />
