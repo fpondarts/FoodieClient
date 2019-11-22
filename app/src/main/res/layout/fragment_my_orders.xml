@@ -18,6 +18,8 @@
         android:id="@+id/textView4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:maxHeight="196dp"
+        style="@style/TextAppearance.AppCompat.Title"
         android:layout_marginStart="16dp"
         android:layout_marginLeft="16dp"
         android:layout_marginTop="16dp"
@@ -28,17 +30,19 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_active_orders"
-        android:layout_width="352dp"
-        android:layout_height="263dp"
-        android:layout_marginStart="4dp"
-        android:layout_marginLeft="4dp"
+        android:layout_width="match_parent"
+        android:layout_height="196dp"
+        android:maxHeight="196dp"
         android:layout_marginTop="12dp"
+        app:layout_constraintBottom_toTopOf="@id/recycler_past_orders"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView4"
+        app:layout_constraintVertical_bias="0.0"
         tools:listitem="@layout/item_order" />
-
+s
     <TextView
         android:id="@+id/textView6"
+        style="@style/TextAppearance.AppCompat.Title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -51,13 +55,13 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_past_orders"
-        android:layout_width="345dp"
-        android:layout_height="260dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
+        android:layout_width="match_parent"
+        android:layout_height="256dp"
         android:layout_marginTop="12dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView6"
+        app:layout_constraintVertical_bias="0.0"
         tools:listitem="@layout/item_order" />
 
 

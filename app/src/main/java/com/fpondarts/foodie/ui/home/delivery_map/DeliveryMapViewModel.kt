@@ -11,14 +11,11 @@ import com.google.android.gms.maps.model.LatLng
 
 class DeliveryMapViewModel (val repository: Repository) : ViewModel() {
 
-    val availableDeliveries = repository.availableDeliveries
-
     fun getCurrentShop():LiveData<Shop>{
         return repository.getCurrentShop()
     }
 
-    fun updateMarkers(lat:Double,long:Double){
-        repository.refreshDeliveries(lat,long)
+    fun getAvailableDeliveries():LiveData<List<Delivery>>{
+        return repository.availableDeliveries
     }
-
 }

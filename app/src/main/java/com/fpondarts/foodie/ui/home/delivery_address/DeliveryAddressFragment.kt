@@ -12,7 +12,7 @@ import androidx.lifecycle.Observer
 import androidx.navigation.Navigation
 
 import com.fpondarts.foodie.R
-import com.fpondarts.foodie.ui.auth.FoodieViewModelFactory
+import com.fpondarts.foodie.ui.FoodieViewModelFactory
 import com.google.android.gms.location.FusedLocationProviderClient
 import kotlinx.android.synthetic.main.delivery_address_fragment.*
 import org.kodein.di.android.x.kodein
@@ -23,7 +23,7 @@ class DeliveryAddressFragment : Fragment(), KodeinAware {
 
     override val kodein by kodein()
 
-    private val factory:FoodieViewModelFactory by instance()
+    private val factory: FoodieViewModelFactory by instance()
 
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
     private lateinit var viewModel: DeliveryAddressViewModel
@@ -40,13 +40,6 @@ class DeliveryAddressFragment : Fragment(), KodeinAware {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProviders.of(this,factory).get(DeliveryAddressViewModel::class.java)
 
-        val callback = requireActivity().onBackPressedDispatcher.addCallback(this){
-            viewModel.price.postValue(null)
-        }
-        callback.isEnabled=true
-        choose_location_card.isClickable = true
-        current_location_card.isClickable = true
-
 
         current_location_card.setOnClickListener(View.OnClickListener {
             onCurrentLocationClick()
@@ -59,12 +52,12 @@ class DeliveryAddressFragment : Fragment(), KodeinAware {
 
     fun onCurrentLocationClick(){
         fusedLocationProviderClient.lastLocation.addOnSuccessListener {
-            viewModel.getDeliveryPrice(it.latitude,it.longitude).observe(this, Observer {
-            it?.let {
+            it?.let{
+                viewModel.repository.setOrderCoordinates(it.latitude,it.longitude)
                 Navigation.findNavController(parentFragment!!.view!!).navigate(R.id.confirmOrderFragment)
-                viewModel.price.removeObservers(this)
+            } ?.run {
+
             }
-        })
         }.addOnFailureListener{
             Toast.makeText(activity,it.message,Toast.LENGTH_LONG).show()
         }

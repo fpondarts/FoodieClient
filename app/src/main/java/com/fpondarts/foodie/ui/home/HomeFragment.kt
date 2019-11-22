@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AbsListView
 import androidx.core.os.bundleOf
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
@@ -13,11 +14,12 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.fpondarts.foodie.R
 import com.fpondarts.foodie.data.db.entity.Shop
 import com.fpondarts.foodie.databinding.FragmentHomeBinding
 import com.fpondarts.foodie.ui.auth.AuthListener
-import com.fpondarts.foodie.ui.auth.FoodieViewModelFactory
+import com.fpondarts.foodie.ui.FoodieViewModelFactory
 import kotlinx.android.synthetic.main.fragment_home.*
 import org.kodein.di.Kodein
 import org.kodein.di.KodeinAware
@@ -26,6 +28,15 @@ import org.kodein.di.generic.instance
 
 class HomeFragment : Fragment(), KodeinAware, OnShopClickListener, AuthListener {
 
+    class OnBottomFetcher(val viewModel: HomeViewModel): RecyclerView.OnScrollListener(){
+        override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+            super.onScrollStateChanged(recyclerView, newState)
+
+            if (!recyclerView.canScrollVertically(1)){
+                viewModel.getMoreShops();
+            }
+        }
+    }
 
     override fun onStarted() {
         Toast.makeText(activity,"Started api call",Toast.LENGTH_SHORT).show()
@@ -70,23 +81,26 @@ class HomeFragment : Fragment(), KodeinAware, OnShopClickListener, AuthListener 
         }
 
         homeViewModel.authListener = this
-        homeViewModel.getTopShops()
 
-        homeViewModel.getTopShops()
+        homeViewModel.getAllShops()
             .observe(this, Observer {
             it?.let{
                 if (it.isEmpty()){
-                    Toast.makeText(activity,"No hay top shops",Toast.LENGTH_SHORT).show()
+
                 }
                 shop_recycler_view.adapter = ShopAdapter(it!!, this)
                 shop_recycler_view.adapter?.notifyDataSetChanged()
             }
         })
 
+        shop_recycler_view.addOnScrollListener(OnBottomFetcher(homeViewModel))
+
+
+
     }
 
     override fun onItemClick(shop:Shop){
-        val bundle = bundleOf("shopId" to shop.id)
+        val bundle = bundleOf("shop_id" to shop.id)
         navController!!.navigate(R.id.action_nav_home_to_shopFragment,bundle)
     }
 

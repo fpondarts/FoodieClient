@@ -25,4 +25,7 @@ interface ShopDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun upsertBatch(shop:List<Shop>)
 
+    @Query("Select COUNT(id) from shop")
+    fun getCount():Int
+
 }

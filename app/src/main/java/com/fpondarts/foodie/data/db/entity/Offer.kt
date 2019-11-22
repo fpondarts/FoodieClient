@@ -9,9 +9,10 @@ import com.fpondarts.foodie.model.OfferState
 @Entity
 data class Offer(
     @PrimaryKey
-    val offerId:Long,
-    val orderId:Long,
-    val deliveryId:Long,
-    @TypeConverters(Converters::class)
-    val offerState: OfferState
+    val id:Long,
+    val order_id:Long,
+    val delivery_id:Long,
+    val state: String,
+    val created_at_seconds:Long?,
+    val delivery_price:Float
 )

@@ -1,10 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
-<fragment
+<ScrollView
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/map_active_order_fr"
-    android:name="com.google.android.gms.maps.SupportMapFragment"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+<androidx.constraintlayout.widget.ConstraintLayout
+
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     >
 
-</fragment>
+    <include
+        android:id="@+id/order_content"
+        layout="@layout/content_order"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <include
+        android:id="@+id/price_card"
+        layout="@layout/card_prices"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/order_content" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

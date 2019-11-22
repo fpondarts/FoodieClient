@@ -1,6 +1,7 @@
 package com.fpondarts.foodie.ui.my_orders
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,10 +11,12 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.Navigation
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.fpondarts.foodie.R
+import com.fpondarts.foodie.data.db.entity.Order
 import com.fpondarts.foodie.databinding.FragmentMyOrdersBinding
-import com.fpondarts.foodie.ui.auth.FoodieViewModelFactory
+import com.fpondarts.foodie.ui.FoodieViewModelFactory
 import kotlinx.android.synthetic.main.fragment_my_orders.*
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.kodein
@@ -33,11 +36,11 @@ class MyOrdersFragment : Fragment(), KodeinAware, OnMyOrderClickListener{
         savedInstanceState: Bundle?
     ): View? {
 
-        val binding: FragmentMyOrdersBinding = DataBindingUtil.inflate(inflater,R.layout.current_order_fragment,container,false)
+        val binding: FragmentMyOrdersBinding = DataBindingUtil.inflate(inflater,R.layout.fragment_my_orders,container,false)
         viewModel = ViewModelProviders.of(this,factory).get(MyOrdersViewModel::class.java)
         binding.viewModel = viewModel
-        return inflater.inflate(R.layout.current_order_fragment, container, false)
 
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -53,37 +56,39 @@ class MyOrdersFragment : Fragment(), KodeinAware, OnMyOrderClickListener{
 
 
 
+
+
         viewModel!!.getActiveOrders().observe(this, Observer {
             it?.let{
-                val listener = this
-                recycler_active_orders.adapter?.let{
-                    it.notifyDataSetChanged()
-                } ?.run {
-                    recycler_active_orders.adapter = ActiveOrderAdapter(it,true,listener)
-                }
+                recycler_active_orders.adapter = ActiveOrderAdapter(it,true,this)
+                if (it.size > 0)
+                    recycler_active_orders.adapter!!.notifyItemInserted(it.size-1)
+
             }
         })
 
         viewModel!!.getDeliveredOrders().observe(this, Observer {
-            val listener = this
             it?.let{
-                recycler_past_orders.adapter?.let {
-                    it.notifyDataSetChanged()
-                } ?.run {
-                    recycler_past_orders.adapter = ActiveOrderAdapter(it,false,listener)
-                }
+                recycler_past_orders.adapter = ActiveOrderAdapter(it,false,this)
+                if (it.size > 0)
+                    recycler_past_orders.adapter!!.notifyItemInserted(it.size-1)
             }
         })
         viewModel!!.getDeliveredOrders()
     }
 
+    override fun onResume() {
+        super.onResume()
+
+    }
+
     override fun onActiveOrderClick(active:Boolean,orderId:Long,shopId:Long?,deliveryId:Long?){
         if (active){
             val bundle = bundleOf("orderId" to orderId)
-            Navigation.findNavController(parentFragment!!.view!!).navigate(R.id.activeOrderFragment,bundle)
+            findNavController().navigate(R.id.activeOrderFragment,bundle)
         } else {
-            val bundle = bundleOf("orderId" to orderId, "shopId" to shopId, "deliveryId" to deliveryId)
-            Navigation.findNavController(parentFragment!!.view!!).navigate(R.id.orderRatingFragment,bundle)
+            val bundle = bundleOf("orderId" to orderId, "shop_id" to shopId, "delivery_id" to deliveryId)
+            findNavController().navigate(R.id.pastOrderFragment,bundle)
         }
     }
 

@@ -3,20 +3,25 @@ package com.fpondarts.foodie.data.db.entity
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.fpondarts.foodie.model.OrderState
+import com.google.firebase.database.IgnoreExtraProperties
 import java.time.LocalDateTime
 import java.util.*
 
+@IgnoreExtraProperties
 @Entity
 data class Order(
     @PrimaryKey
-    val id: Long,
-    val dateTime: String,
+    val order_id: Long,
+    val created_at: String,
     val price: Float,
-    val userId: Long,
-    val shopId:Long,
-    val state: OrderState,
-    val deliveryId: Long,
-    val deliveryRating:Float?,
-    val shopRating:Float?
+    val user_id: Long,
+    val shop_id:Long,
+    val state: String,
+    val delivery_id: Long,
+    val latitud:Double,
+    val longitud:Double,
+    val payWithPoints:Boolean,
+    val shop_review:Float?,
+    val delivery_review:Float?
     ) {
 }

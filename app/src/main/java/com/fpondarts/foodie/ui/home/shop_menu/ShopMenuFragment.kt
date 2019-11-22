@@ -9,13 +9,14 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 
 import com.fpondarts.foodie.R
 import com.fpondarts.foodie.data.db.entity.MenuItem
 import com.fpondarts.foodie.databinding.FragmentShopMenuBinding
 import com.fpondarts.foodie.ui.auth.AuthListener
-import com.fpondarts.foodie.ui.auth.FoodieViewModelFactory
+import com.fpondarts.foodie.ui.FoodieViewModelFactory
 import com.fpondarts.foodie.ui.home.menu_item_sheet.MenuItemBottomSheet
 import com.fpondarts.foodie.ui.home.OnMenuItemClickListener
 import com.fpondarts.foodie.ui.home.current_order.CurrentOrderFragment
@@ -62,7 +63,7 @@ class ShopMenuFragment : Fragment(), KodeinAware, AuthListener,
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        val shopId = arguments!!.getLong("shopId")
+        val shopId = arguments!!.getLong("shop_id")
 
         shop_menu_recycler_view.apply {
             layoutManager = LinearLayoutManager(activity)
@@ -74,20 +75,18 @@ class ShopMenuFragment : Fragment(), KodeinAware, AuthListener,
 
         viewModel.setShop(shopId)
 
-        shopId?.let {
-            Toast.makeText(activity,"Shop Id es "+it.toString(),Toast.LENGTH_LONG).show()
-        } ?: run {
-            Toast.makeText(activity,"Shop Id es null", Toast.LENGTH_LONG).show()
-        }
-
         viewModel.getMenu(shopId).observe(this, Observer {
             it?.let{
                 shop_menu_recycler_view.adapter =
                     ShopMenuAdapter(it, this)
                 shop_menu_recycler_view.adapter!!.notifyDataSetChanged()
             } ?: run {
-                Toast.makeText(activity,"Carajo",Toast.LENGTH_SHORT).show()
+
             }
+        })
+
+        button_fin_pedido.setOnClickListener(View.OnClickListener {
+            findNavController().navigate(R.id.action_shopFragment_to_deliveryAddressFragment)
         })
 
     }
@@ -95,7 +94,7 @@ class ShopMenuFragment : Fragment(), KodeinAware, AuthListener,
     override fun onItemClick(item: MenuItem) {
         val dialog = MenuItemBottomSheet().apply{
             arguments = Bundle().apply {
-                putLong("id",item.id)
+                putLong("product_id",item.id)
                 putFloat("price",item.price)
                 putString("name",item.name)
             }

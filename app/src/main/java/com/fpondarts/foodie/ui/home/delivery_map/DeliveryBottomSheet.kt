@@ -1,22 +1,17 @@
 package com.fpondarts.foodie.ui.home.delivery_map
 
-import android.content.Context
-import android.net.Uri
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 
 import com.fpondarts.foodie.R
 import com.fpondarts.foodie.model.OfferState
-import com.fpondarts.foodie.ui.auth.FoodieViewModelFactory
+import com.fpondarts.foodie.ui.FoodieViewModelFactory
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import kotlinx.android.synthetic.main.fragment_delivery_bottom_sheet.*
-import kotlinx.android.synthetic.main.item_delivery.*
 import kotlinx.android.synthetic.main.item_delivery.delivery_name
 import kotlinx.android.synthetic.main.item_delivery.delivery_rating
 import org.kodein.di.KodeinAware

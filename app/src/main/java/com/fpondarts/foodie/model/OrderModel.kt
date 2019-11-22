@@ -2,6 +2,8 @@ package com.fpondarts.foodie.model
 
 class OrderModel(val userId:Long, val shopId:Long) {
     val items = HashMap<Long,OrderItem>()
+    val prices = HashMap<Long,Float>()
+    val names = HashMap<Long,String>()
     var price = 0.0
     var id:Long?=null
     var latitude: Double? = null
@@ -11,24 +13,29 @@ class OrderModel(val userId:Long, val shopId:Long) {
     private var deliveryPrice:Float?=null
 
 
-    fun addItem(item:OrderItem){
-        if (items.containsKey(item.id)){
-            items[item.id]!!.units+=item.units
+    fun addItem(item:OrderItem,name:String,itemPrice:Float){
+        if (items.containsKey(item.product_id)){
+            items[item.product_id]!!.units+=item.units
+            prices.replace(item.product_id,itemPrice)
         } else {
-            items[item.id] = item
+            items[item.product_id] = item
+            prices.put(item.product_id,itemPrice)
+            names.put(item.product_id,name)
         }
+
         updatePrice()
     }
 
     fun updatePrice() {
         price = 0.0
         for ((id,item) in items){
-            price += item.price * item.units
+            price += prices.get(id)!! * item.units
         }
     }
 
     fun removeItem(itemId:Long){
         items.remove(itemId)
+        names.remove(itemId)
         updatePrice()
     }
 
@@ -40,6 +47,10 @@ class OrderModel(val userId:Long, val shopId:Long) {
 
     fun getDeliveryPrice():Float?{
         return deliveryPrice
+    }
+
+    fun isEmpty():Boolean{
+        return (items.isEmpty() || price == 0.0)
     }
 
 

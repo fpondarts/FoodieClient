@@ -22,7 +22,7 @@
         android:layout_marginLeft="72dp"
         android:layout_marginTop="24dp"
         android:hint="Item Name"
-        android:text="@{viewModel.name}"
+        android:text="@={viewModel.name}"
         android:textSize="24dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

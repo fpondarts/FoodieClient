@@ -3,9 +3,10 @@ package com.fpondarts.foodie.ui.home.current_order
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.fpondarts.foodie.model.NamedOrderItem
 import com.fpondarts.foodie.model.OrderItem
 
-class CurrentOrderAdapter(private val list : Collection<OrderItem>, val listener: OnOrderItemClickListener)
+class CurrentOrderAdapter(private val list : Collection<NamedOrderItem>, val listener: OnOrderItemClickListener)
     : RecyclerView.Adapter<CurrentOrderViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CurrentOrderViewHolder {
 
@@ -19,7 +20,9 @@ class CurrentOrderAdapter(private val list : Collection<OrderItem>, val listener
     }
 
     override fun onBindViewHolder(holder: CurrentOrderViewHolder, position: Int) {
-        val item: OrderItem = list.elementAt(position)
+        val item: NamedOrderItem = list.elementAt(position)
         holder.bind(item,listener)
     }
+
+
 }

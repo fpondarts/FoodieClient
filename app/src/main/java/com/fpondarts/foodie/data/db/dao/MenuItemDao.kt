@@ -11,8 +11,8 @@ import com.fpondarts.foodie.data.db.entity.MenuItem
 @Dao
 interface MenuItemDao {
 
-    @Query("Select * from menuitem where shopId = :shopId")
-    fun loadMenu(shopId:Long): LiveData<List<MenuItem>>
+    @Query("Select * from menuitem where shop_id = :shop_id")
+    fun loadMenu(shop_id:Long): LiveData<List<MenuItem>>
 
     @Query("Select * from menuitem")
     fun loadAll(): LiveData<List<MenuItem>>

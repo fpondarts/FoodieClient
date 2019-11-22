@@ -10,7 +10,13 @@ import com.fpondarts.foodie.data.db.entity.*
 
 
 @Database(
-    entities = [User::class, Shop::class, MenuItem::class, Delivery::class, Offer::class, Order::class],
+    entities = [User::class
+        , Shop::class
+        , MenuItem::class
+        , Delivery::class
+        , Offer::class
+        , Order::class
+        , OrderItem::class],
     version = 1
 )
 
@@ -22,6 +28,7 @@ abstract class FoodieDatabase: RoomDatabase(){
     abstract fun getMenuItemDao() : MenuItemDao
     abstract fun getDeliveryDao() : DeliveryDao
     abstract fun getOrderDao(): OrderDao
+    abstract fun getOrderItemDao(): OrderItemDao
 
     companion object{
         @Volatile

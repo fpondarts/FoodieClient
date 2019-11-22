@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/delivery_master_navigation"
+    app:startDestination="@id/offersFragment">
+
+    <fragment
+        android:id="@+id/offersFragment"
+        android:name="com.fpondarts.foodie.ui.delivery.offers.OffersFragment"
+        android:label="Ofertas"
+        tools:layout="@layout/fragment_offers">
+        <action
+            android:id="@+id/action_offersFragment_to_singleOfferFragment"
+            app:destination="@id/singleOfferFragment" />
+        <action
+            android:id="@+id/action_offersFragment_to_workingFragment"
+            app:destination="@id/workingFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/singleOfferFragment"
+        android:name="com.fpondarts.foodie.ui.delivery.offers.SingleOfferFragment"
+        android:label="Oferta"
+        tools:layout="@layout/fragment_single_offer">
+        <argument
+            android:name="order_id"
+            app:argType="long" />
+        <argument
+            android:name="offer_id"
+            app:argType="long" />
+        <action
+            android:id="@+id/action_singleOfferFragment_to_workingFragment"
+            app:destination="@id/workingFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/workingFragment"
+        android:name="com.fpondarts.foodie.ui.delivery.working.WorkingFragment"
+        android:label="Pedido Actual"
+        tools:layout="@layout/fragment_working">
+        <argument
+            android:name="order_id"
+            app:argType="long" />
+        <action
+            android:id="@+id/action_workingFragment_to_offersFragment"
+            app:destination="@id/offersFragment" />
+    </fragment>
+
+
+</navigation>

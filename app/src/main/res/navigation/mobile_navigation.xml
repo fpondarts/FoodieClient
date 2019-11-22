@@ -13,24 +13,19 @@
         <action
             android:id="@+id/action_nav_home_to_shopFragment"
             app:destination="@id/shopFragment" />
-        <action
-            android:id="@+id/action_nav_home_to_nav_profile"
-            app:destination="@id/nav_profile" />
-        <action
-            android:id="@+id/action_nav_home_to_myOrdersFragment"
-            app:destination="@id/navigation" />
     </fragment>
 
     <fragment
         android:id="@+id/nav_profile"
-        android:name="com.fpondarts.foodie.ui.profile.ProfileFragment"
-        android:label="@string/menu_profile" />
+        android:name="com.fpondarts.foodie.ui.profile.UserProfileFragment"
+        android:label="@string/menu_profile"
+        tools:layout="@layout/fragment_user_profile" />
 
     <fragment
         android:id="@+id/shopFragment"
         android:name="com.fpondarts.foodie.ui.home.shop_menu.ShopMenuFragment"
-        android:label="shop_fragment"
-        tools:layout="@layout/fragment_shop_menu" >
+        android:label="Haz tu pedido"
+        tools:layout="@layout/fragment_shop_menu">
         <argument
             android:name="shopId"
             app:argType="long" />
@@ -62,41 +57,42 @@
     <fragment
         android:id="@+id/deliveryMapFragment"
         android:name="com.fpondarts.foodie.ui.home.delivery_map.DeliveryMapFragment"
-        android:label="DeliveryMapFragment" />
+        android:label="DeliveryMapFragment" >
+        <argument
+            android:name="order_id"
+            app:argType="long" />
+        <action
+            android:id="@+id/action_deliveryMapFragment_to_nav_home"
+            app:destination="@id/nav_home" />
+    </fragment>
     <navigation
-        android:id="@+id/navigation"
+        android:id="@+id/my_orders_navigation"
         app:startDestination="@id/myOrdersFragment" >
         <fragment
             android:id="@+id/myOrdersFragment"
             android:name="com.fpondarts.foodie.ui.my_orders.MyOrdersFragment"
-            android:label="MyOrdersFragment" >
+            android:label="Tus pedidos">
             <action
                 android:id="@+id/checkActiveOrder"
                 app:destination="@id/activeOrderFragment" />
             <action
-                android:id="@+id/action_myOrdersFragment_to_orderRatingFragment"
-                app:destination="@id/orderRatingFragment" />
+                android:id="@+id/action_myOrdersFragment_to_pastOrderFragment"
+                app:destination="@id/pastOrderFragment" />
         </fragment>
         <fragment
             android:id="@+id/activeOrderFragment"
             android:name="com.fpondarts.foodie.ui.my_orders.ActiveOrderFragment"
-            android:label="ActiveOrderFragment">
+            android:label="Pedido en camino">
             <argument
                 android:name="orderId"
                 app:argType="long" />
         </fragment>
         <fragment
-            android:id="@+id/orderRatingFragment"
-            android:name="com.fpondarts.foodie.ui.my_orders.OrderRatingFragment"
-            android:label="OrderRatingFragment" >
+            android:id="@+id/pastOrderFragment"
+            android:name="com.fpondarts.foodie.ui.my_orders.PastOrderFragment"
+            android:label="PastOrderFragment" >
             <argument
                 android:name="orderId"
-                app:argType="long" />
-            <argument
-                android:name="deliveryId"
-                app:argType="long" />
-            <argument
-                android:name="shopId"
                 app:argType="long" />
         </fragment>
     </navigation>

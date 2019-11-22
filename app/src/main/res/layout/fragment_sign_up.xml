@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="viewModel"
+            type="com.fpondarts.foodie.ui.auth2.SignUpViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".ui.auth.SignUpActivity">
+
+
+        <EditText
+            android:id="@+id/etName"
+            android:text="@={viewModel.name}"
+            android:layout_width="218dp"
+            android:layout_height="48dp"
+            android:layout_marginStart="76dp"
+            android:layout_marginLeft="76dp"
+            android:layout_marginTop="52dp"
+            android:hint="@string/fui_name_hint"
+            android:inputType="textPersonName"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/alreadySignedUpText"
+            android:layout_width="218dp"
+            android:layout_height="24dp"
+            android:layout_marginStart="76dp"
+            android:layout_marginLeft="76dp"
+            android:layout_marginTop="28dp"
+            android:gravity="center"
+            android:text="@string/alreadySignedUp"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/googleSignUpButton" />
+
+        <Button
+            android:id="@+id/toSignInButton"
+            android:layout_width="218dp"
+            android:layout_height="48dp"
+            android:layout_marginStart="76dp"
+            android:layout_marginLeft="76dp"
+            android:text="@string/signIn"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/alreadySignedUpText" />
+
+        <EditText
+            android:id="@+id/etPassword"
+            android:text="@={viewModel.password}"
+            android:layout_width="218dp"
+            android:layout_height="48dp"
+            android:layout_marginStart="76dp"
+            android:layout_marginLeft="76dp"
+            android:layout_marginTop="16dp"
+            android:ems="10"
+            android:hint="@string/fui_password_hint"
+            android:inputType="textPassword"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/etEmail" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="40dp"
+            android:layout_marginLeft="40dp"
+            android:layout_marginBottom="8dp"
+            android:text="o Acceda con Google"
+            app:layout_constraintBottom_toTopOf="@id/googleSignUpButton"
+            app:layout_constraintStart_toStartOf="@id/googleSignUpButton" />
+
+        <Button
+            android:id="@+id/signUpButton"
+            android:layout_width="218dp"
+            android:layout_height="48dp"
+            android:layout_marginStart="76dp"
+            android:layout_marginLeft="76dp"
+            android:layout_marginTop="16dp"
+            android:text="@string/manualSignUp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/etPassword" />
+
+        <com.google.android.gms.common.SignInButton
+            android:id="@+id/googleSignUpButton"
+            android:layout_width="218dp"
+            android:layout_height="48dp"
+            android:layout_marginStart="76dp"
+            android:layout_marginLeft="76dp"
+            android:layout_marginTop="32dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/signUpButton" />
+
+        <EditText
+            android:id="@+id/etEmail"
+            android:text="@={viewModel.email}"
+            android:layout_width="218dp"
+            android:layout_height="48dp"
+            android:layout_marginStart="76dp"
+            android:layout_marginLeft="76dp"
+            android:layout_marginTop="28dp"
+            android:ems="10"
+            android:hint="@string/emailInput"
+            android:inputType="textEmailAddress"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/etName" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

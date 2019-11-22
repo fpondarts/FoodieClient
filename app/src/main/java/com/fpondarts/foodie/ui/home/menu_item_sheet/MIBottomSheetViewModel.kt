@@ -12,13 +12,13 @@ class MIBottomSheetViewModel(val repository:Repository): ViewModel(){
     var itemId:Long?=null
     var itemPrice:Float?=null
     var name:String?=null
-    var number = 0
+    var number = 1
 
     var listener:AuthListener? = null
 
     fun onAddClick(view: View){
         try{
-            repository.addItemToOrder(OrderItem(itemId!!,name!!,number,itemPrice!!))
+            repository.addItemToOrder(OrderItem(itemId!!,number),name!!,itemPrice!!)
             listener!!.onSuccess()
         } catch( e: NullPointerException){
             listener?.onFailure("No se pudo agregar al pedido")

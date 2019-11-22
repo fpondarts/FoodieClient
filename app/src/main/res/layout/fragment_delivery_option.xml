@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    >
+
+
+    <ImageView
+        android:id="@+id/delivery_pic"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="40dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:src="@mipmap/ic_prof_pic_round"/>
+
+    <TextView
+        android:id="@+id/delivery_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:hint="Flavio Delivery"
+        app:layout_constraintStart_toEndOf="@+id/delivery_pic"
+        app:layout_constraintTop_toTopOf="@+id/delivery_pic" />
+
+
+    <RatingBar
+        android:id="@+id/delivery_rating"
+        android:layout_width="239dp"
+        android:layout_height="44dp"
+        android:layout_marginTop="20dp"
+        android:scaleX="0.5"
+        android:scaleY="0.5"
+        android:transformPivotX="0dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/delivery_name"
+        app:layout_constraintTop_toBottomOf="@+id/delivery_name" />
+
+    <TextView
+        android:id="@+id/price_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="68dp"
+        android:text="Precio de envío"
+        android:textSize="16dp"
+        app:layout_constraintStart_toStartOf="@id/delivery_pic"
+        app:layout_constraintTop_toBottomOf="@id/delivery_pic" />
+
+    <TextView
+        android:id="@+id/price_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="44dp"
+        android:hint="$0.00"
+        android:textSize="16dp"
+        app:layout_constraintStart_toEndOf="@id/price_title"
+        app:layout_constraintTop_toTopOf="@id/price_title" />
+
+    <TextView
+        android:id="@+id/favour_points_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text="Puntos de favor"
+        android:textSize="16dp"
+        app:layout_constraintStart_toStartOf="@id/price_title"
+        app:layout_constraintTop_toBottomOf="@id/price_title" />
+
+    <EditText
+        android:id="@+id/et_favour_points"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="40dp"
+        android:hint="Puntos"
+        android:enabled="false"
+        app:layout_constraintBottom_toBottomOf="@+id/favour_points_title"
+        app:layout_constraintStart_toEndOf="@id/favour_points_title"
+        app:layout_constraintTop_toTopOf="@+id/favour_points_title"
+        app:layout_constraintVertical_bias="0.44" />
+
+    <ProgressBar
+        android:id="@+id/waitin_offer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="184dp"
+        android:layout_marginTop="132dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/button_offer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:text="Ofrecer"
+        app:layout_constraintStart_toStartOf="@+id/favour_points_title"
+        app:layout_constraintTop_toBottomOf="@id/favour_points_title" />
+
+    <Button
+        android:id="@+id/button_cancel_offer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="64dp"
+        android:text="Cancelar"
+        app:layout_constraintStart_toEndOf="@id/button_offer"
+        app:layout_constraintTop_toTopOf="@id/button_offer" />
+</androidx.constraintlayout.widget.ConstraintLayout>
