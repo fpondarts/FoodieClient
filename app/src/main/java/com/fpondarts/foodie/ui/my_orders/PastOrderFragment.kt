@@ -129,7 +129,7 @@ class PastOrderFragment : Fragment(), KodeinAware {
             val rate_delivery = delivery_rating_card.rate_button
             val rate_shop = shop_rating_card.rate_button
 
-            if (it.delivery_review == null){
+            if (it.delivery_review == null || it.delivery_review == (0.0).toFloat()){
 
                 rate_delivery.isEnabled = true
 
@@ -140,9 +140,11 @@ class PastOrderFragment : Fragment(), KodeinAware {
             } else {
                 rate_delivery.isEnabled = false
                 delivery_rating_card.card_rating_rating.rating = it.delivery_review!!.toFloat()
+                delivery_rating_card.card_rating_rating.isEnabled = false
+
             }
 
-            if (it.shop_review == null){
+            if (it.shop_review == null || it.shop_review == (0.0).toFloat()){
 
                 rate_shop.isEnabled = true
 
@@ -153,6 +155,7 @@ class PastOrderFragment : Fragment(), KodeinAware {
             } else {
                 rate_shop.isEnabled = false
                 shop_rating_card.card_rating_rating.rating = it.shop_review!!.toFloat()
+                shop_rating_card.card_rating_rating.isEnabled = false
             }
         })
     }
@@ -164,7 +167,7 @@ class PastOrderFragment : Fragment(), KodeinAware {
         if ( rating > 0) {
             repository.rateShop(orderId!!,rating).observe(this, Observer {
                 it?.let{
-                    if (it.code in 200..299){
+                    if (it.code in 199..299){
                           shop_rating_card.card_rating_rating.isEnabled = false
                           shop_rating_card.rate_button.isEnabled = false
                           Toast.makeText(activity,"Tu calificación se ha procesado con exito",Toast.LENGTH_SHORT).show()
