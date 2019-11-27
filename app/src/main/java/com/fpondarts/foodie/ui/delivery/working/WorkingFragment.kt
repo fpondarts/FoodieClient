@@ -17,11 +17,16 @@ import com.fpondarts.foodie.R
 import com.fpondarts.foodie.data.repository.DeliveryRepository
 import com.fpondarts.foodie.model.OrderPricedItem
 import com.fpondarts.foodie.ui.delivery.offers.OrderAdapter
+import com.squareup.picasso.Picasso
+import kotlinx.android.synthetic.main.card_prices.*
+import kotlinx.android.synthetic.main.card_shop.*
+import kotlinx.android.synthetic.main.card_user.*
 import kotlinx.android.synthetic.main.content_order.*
 import kotlinx.android.synthetic.main.fragment_working.*
 import org.kodein.di.generic.instance
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.kodein
+import kotlin.math.round
 
 /**
  * A simple [Fragment] subclass.
@@ -63,6 +68,30 @@ class WorkingFragment : Fragment(), KodeinAware {
                 shop_id = it.shop_id
                 user_id = it.user_id
 
+                repository.getShop(shop_id!!).observe(this, Observer {
+                    it?.let{
+                        tv_shop_name.text = it.name
+                        tv_shop_address.text = it.address
+                        Picasso.get().load(it.photoUrl).resize(64,64).into(shopPic)
+                    }
+                })
+
+                repository.getUser(user_id!!).observe(this, Observer {
+                    it?.let{
+                        Picasso.get().load(it.picture).resize(64,64).into(profilePic)
+                        tv_user_name.text = it.name
+                        tv_email.text = it.email
+                        tv_phone.text = it.phone_number
+                    }
+                })
+
+                repository.getOrder(order_id!!).observe(this, Observer {
+                    it?.let{
+                        delivery_price.text = "$${(round(it.delivery_pay!! * 100.0) / 100.0).toString()}"
+                        order_price.text = "$${(round(it.price * 100.0) / 100.0).toString()}"
+                        delivery_price_title.text = "Tu ganancia"
+                    }
+                })
 
                 val menu = repository.getMenu(shop_id!!)
                 menu.observe(this, Observer {

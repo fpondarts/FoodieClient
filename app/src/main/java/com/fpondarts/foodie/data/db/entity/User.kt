@@ -22,7 +22,12 @@ data class User(
     val phone_number:String,
     var registered:Boolean?,
     var sessionToken:String?,
-    var favourPoints: Int = 0,
-    var suscripcion: String?
+    var suscripcion: String?,
+    var state:String,
+    var current_order:Long,
+    val make_favours: Boolean,
+    val reviews: Int,
+    val rating: Float,
+    var favourPoints: Int = 0
 ){
 }

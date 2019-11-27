@@ -17,6 +17,10 @@
             android:icon="@drawable/ic_menu_gallery"
             android:title="Mis pedidos" />
         <item
+            android:id="@+id/favours_nav_home"
+            android:title="Realiza favores"
+            />
+        <item
             android:id="@+id/nav_log_out"
             android:title="Cerrar sesión" />
     </group>

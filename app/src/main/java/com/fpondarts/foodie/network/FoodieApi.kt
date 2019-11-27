@@ -43,7 +43,7 @@ interface FoodieApi {
 
 
     @GET(API_PREFIX+"deliveries")
-    suspend fun getDeliveries(@Header(API_KEY_HEADER)token: String, @Query("latitude") lat:Double, @Query("longitude") long:Double,@Query("cantidad")cantidad:Int=10):Response<List<Delivery>>
+    suspend fun getDeliveries(@Header(API_KEY_HEADER)token: String, @Query("latitude") lat:Double, @Query("longitude") long:Double,@Query("cantidad")cantidad:Int=10):Response<List<User>>
 
 
     @GET(API_PREFIX+"orders/{orderId}")
@@ -82,9 +82,14 @@ interface FoodieApi {
     @PUT(USERS_PREFIX+"/{user_id}/picture")
     suspend fun updateUserPicture(@Header(API_KEY_HEADER)token:String, @Path("user_id")userId:Long, @Body picture:UpdatePictureRequest):Response<SuccessResponse>
 
+    @PUT(USERS_PREFIX+"/{id}/make_favours")
+    suspend fun putTakingFavours(@Header(API_KEY_HEADER)token:String, @Path("id")user_id: Long,@Body request: TakeFavoursRequest):Response<SuccessResponse>
+
+
     // PRODUCTS
     @GET("products/{order_id}")
     suspend fun getProduct(@Header(API_KEY_HEADER)token: String,@Path("order_id")id:Long):Response<MenuItem>
+
 
     // Orders
     @GET("orders/{id}/items")
@@ -112,11 +117,18 @@ interface FoodieApi {
     @PATCH("deliveries/{del_id}/offers/{id}")
     suspend fun changeOfferState(@Header(API_KEY_HEADER)token: String,@Path("del_id") del_id:Long,@Path("id")id:Long,@Body state:StateChangeRequest):Response<SuccessResponse>
 
+    @PATCH("users/{id}/favour_offers/{id}")
+    suspend fun changeFavourOfferState(@Header(API_KEY_HEADER)token: String,@Path("del_id") del_id:Long,@Path("id")id:Long,@Body state:StateChangeRequest):Response<SuccessResponse>
+
+
     @POST("deliveries/{id}/offers")
     suspend fun postOffer(@Header(API_KEY_HEADER)token: String, @Path("id")id:Long,@Body request: PostOfferRequest):Response<IdResponse>
 
     @GET("offers/{id}")
     suspend fun getOffer(@Header(API_KEY_HEADER)token:String,@Path("id")id:Long):Response<Offer>
+
+    @GET("users/{id}/favour_offers")
+    suspend fun getCurrentFavourOffers(@Header(API_KEY_HEADER) token:String, @Path("id")user_id:Long):Response<List<FavourOffer>>
 
     companion object {
 

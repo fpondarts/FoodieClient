@@ -20,6 +20,7 @@ data class Delivery(
     val firebase_uid:String,
     val balance:Float?,
     val state:String?,
-    val current_order:Long?
+    val current_order:Long?,
+    val make_favours:Boolean?
 ) {
 }

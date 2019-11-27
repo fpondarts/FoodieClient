@@ -96,4 +96,9 @@
                 app:argType="long" />
         </fragment>
     </navigation>
+    <fragment
+        android:id="@+id/favours_nav_home"
+        android:name="com.fpondarts.foodie.ui.favours.UserFavoursNavHomeFragment"
+        android:label="fragment_user_favours_home"
+        tools:layout="@layout/fragment_user_favours_home" />
 </navigation>

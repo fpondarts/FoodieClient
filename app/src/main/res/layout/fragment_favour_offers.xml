@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.favours.favourOffers.FavourOffersFragment">
+
+    <TextView
+        android:id="@+id/offers_title"
+        style="@style/TextAppearance.AppCompat.Title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:text="Tus ofertas"
+        android:textSize="24dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <TextView
+        android:id="@+id/take_favours_title"
+        style="@style/TextAppearance.AppCompat.SearchResult.Title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="64dp"
+        android:text="Escuchar ofertas"
+        android:textSize="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@id/offers_title"
+        app:layout_constraintTop_toTopOf="@id/offers_title" />
+
+    <Switch
+        android:id="@+id/take_favours_switch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="44dp"
+        app:layout_constraintStart_toStartOf="@id/take_favours_title"
+        app:layout_constraintTop_toBottomOf="@id/take_favours_title" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/offers_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="72dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/offers_title"
+        tools:listitem="@layout/item_offer" />
+
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="196dp"
+        android:layout_marginTop="292dp"
+        android:visibility="invisible"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

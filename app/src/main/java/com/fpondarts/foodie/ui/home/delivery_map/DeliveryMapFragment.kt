@@ -125,6 +125,7 @@ class DeliveryMapFragment : Fragment()
     private var shop_lat:Double? = null
     private var shop_lon:Double? = null
     private var shop_id:Long? = null
+    private var isFavour: Boolean = false
     private lateinit var order: Order
 
     private var accumulatedEmpties = 0
@@ -145,6 +146,7 @@ class DeliveryMapFragment : Fragment()
             showCancelDialog()
         }
 
+        isFavour = arguments!!.getBoolean("isFavour",false)
 
         return inflater.inflate(R.layout.delivery_map_fragment, container, false)
     }
@@ -191,7 +193,7 @@ class DeliveryMapFragment : Fragment()
                     Toast.makeText(context,"Buscando deliveries cercanos a la tienda",Toast.LENGTH_LONG).show()
                 }
                 if (accumulatedEmpties == 5){
-                    showCancelDialog("No parece haber deliveries cercanos, desea salir y probar mas tarde?")
+                    showCancelDialog("No parece haber deliveries cercanos, desea salir y realizar el pedido más tarde?")
                 }
             } else {
                 accumulatedEmpties = 0

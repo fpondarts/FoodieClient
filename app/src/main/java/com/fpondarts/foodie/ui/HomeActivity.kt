@@ -87,15 +87,15 @@ class HomeActivity : AppCompatActivity(), KodeinAware {
         // menu should be considered as top level destinations.
         appBarConfiguration = AppBarConfiguration(
             setOf(
-                R.id.nav_home, R.id.nav_profile, R.id.myOrdersFragment
+                R.id.nav_home, R.id.nav_profile, R.id.myOrdersFragment, R.id.favours_nav_home
             ), drawerLayout
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
 
 
-        // 3 es el índice del item logout
-        navView.menu.getItem(3).setOnMenuItemClickListener {
+        // 4 es el índice del item logout
+        navView.menu.getItem(4).setOnMenuItemClickListener {
             FirebaseAuth.getInstance().signOut()
             val repository : AuthRepository by instance()
             repository.role = null

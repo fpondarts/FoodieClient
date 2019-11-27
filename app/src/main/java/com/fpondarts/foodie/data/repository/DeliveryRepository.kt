@@ -253,6 +253,19 @@ class DeliveryRepository(
         return liveData
     }
 
+    fun getShop(id:Long):LiveData<Shop>{
+        val shop = db.getShopDao().loadShop(id)
+        shop.value?: Coroutines.io {
+            try{
+                val fetched = apiRequest { api.getShop(token!!,id) }
+                db.getShopDao().upsert(fetched)
+            } catch (e: FoodieApiException){
+                apiError.postValue(e)
+            }
+
+        }
+        return shop
+    }
 
     fun changePassword(new_pass:String):LiveData<SuccessResponse>{
         val live = MutableLiveData<SuccessResponse>().apply {
@@ -288,5 +301,21 @@ class DeliveryRepository(
             }
         }
         return live
+    }
+
+    fun getUser(user_id:Long):LiveData<User>{
+        val liveUser = MutableLiveData<User>().apply {
+            value = null
+        }
+        Coroutines.io {
+            try {
+                val response = apiRequest { api.getUserById(token!!,user_id) }
+                liveUser.postValue(response)
+            } catch (e:FoodieApiException) {
+                liveUser.postValue(null)
+                apiError.postValue(e)
+            }
+        }
+        return liveUser
     }
 }

@@ -22,6 +22,8 @@ data class Order(
     val longitud:Double,
     val payWithPoints:Boolean,
     val shop_review:Float?,
-    val delivery_review:Float?
+    val delivery_review:Float?,
+    val delivery_pay:Float?,
+    val favourPoints:Int?
     ) {
 }

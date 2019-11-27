@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/favour_navigation">
+
+    <fragment
+        android:id="@+id/workingFavourFragment"
+        android:name="com.fpondarts.foodie.ui.favours.workingFragment.WorkingFavourFragment"
+        android:label="fragment_working_favour"
+        tools:layout="@layout/fragment_working" >
+        <argument
+            android:name="order_id"
+            app:argType="long" />
+        <action
+            android:id="@+id/action_workingFavourFragment_to_favourOffersFragment"
+            app:destination="@id/favourOffersFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/singleFavourOfferFragment"
+        android:name="com.fpondarts.foodie.ui.favours.singleFavourOffer.SingleFavourOfferFragment"
+        android:label="fragment_single_favour_offer"
+        tools:layout="@layout/fragment_single_offer" >
+        <argument
+            android:name="order_id"
+            app:argType="long" />
+        <argument
+            android:name="offer_id"
+            app:argType="long" />
+        <action
+            android:id="@+id/action_singleFavourOfferFragment_to_workingFavourFragment"
+            app:destination="@id/workingFavourFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/favourOffersFragment"
+        android:name="com.fpondarts.foodie.ui.favours.favourOffers.FavourOffersFragment"
+        android:label="FavourOffersFragment" >
+        <action
+            android:id="@+id/action_favourOffersFragment_to_singleFavourOfferFragment"
+            app:destination="@id/singleFavourOfferFragment" />
+        <action
+            android:id="@+id/action_favourOffersFragment_to_workingFavourFragment"
+            app:destination="@id/workingFavourFragment" />
+    </fragment>
+</navigation>
