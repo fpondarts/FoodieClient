@@ -64,6 +64,8 @@ class SignInFragment : Fragment(), KodeinAware, GoogleAuthHandler {
         binding.viewModel = viewModel
         binding.lifecycleOwner = this
 
+        findNavController().navigate(R.id.action_signInFragment_to_orderMapFragment)
+
         return binding.root
     }
 

@@ -8,12 +8,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.os.bundleOf
 import androidx.lifecycle.Observer
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 
 import com.fpondarts.foodie.R
+import com.fpondarts.foodie.data.db.entity.Order
+import com.fpondarts.foodie.data.db.entity.Shop
 import com.fpondarts.foodie.data.repository.DeliveryRepository
 import com.fpondarts.foodie.model.OrderPricedItem
 import com.fpondarts.foodie.ui.delivery.offers.OrderAdapter
@@ -40,6 +43,9 @@ class WorkingFragment : Fragment(), KodeinAware {
     var order_id:Long? = null
     var shop_id: Long? = null
     var user_id: Long? = null
+
+    private lateinit var shop: Shop
+    private lateinit var order: Order
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -70,6 +76,7 @@ class WorkingFragment : Fragment(), KodeinAware {
 
                 repository.getShop(shop_id!!).observe(this, Observer {
                     it?.let{
+                        this.shop = it
                         tv_shop_name.text = it.name
                         tv_shop_address.text = it.address
                         Picasso.get().load(it.photoUrl).resize(64,64).into(shopPic)
@@ -87,6 +94,7 @@ class WorkingFragment : Fragment(), KodeinAware {
 
                 repository.getOrder(order_id!!).observe(this, Observer {
                     it?.let{
+                        this.order = it
                         delivery_price.text = "$${(round(it.delivery_pay!! * 100.0) / 100.0).toString()}"
                         order_price.text = "$${(round(it.price * 100.0) / 100.0).toString()}"
                         delivery_price_title.text = "Tu ganancia"
@@ -120,6 +128,17 @@ class WorkingFragment : Fragment(), KodeinAware {
                 order.removeObservers(this)
             }
         })
+
+        choose_location_card.setOnClickListener {
+            val bundle = bundleOf(
+                "shop_lat" to this.shop.latitude,
+                "shop_lon" to this.shop.longitude,
+                "dest_lat" to this.order.latitud,
+                "dest_lon" to this.order.longitud,
+                "pickedUp" to (this.order.state == "pickedUp"),
+                "isFavour" to this.order.payWithPoints
+            )
+        }
 
         finish_order_card.setOnClickListener(View.OnClickListener {
             Toast.makeText(context,"Click",Toast.LENGTH_LONG).show()

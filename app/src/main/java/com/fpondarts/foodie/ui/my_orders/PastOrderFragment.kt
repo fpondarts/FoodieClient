@@ -16,6 +16,7 @@ import com.fpondarts.foodie.data.repository.Repository
 import com.fpondarts.foodie.model.OrderPricedItem
 import com.fpondarts.foodie.ui.delivery.offers.OrderAdapter
 import com.squareup.picasso.Picasso
+import kotlinx.android.synthetic.main.card_prices.*
 import kotlinx.android.synthetic.main.card_prices.view.*
 import kotlinx.android.synthetic.main.card_shop.*
 import kotlinx.android.synthetic.main.card_to_rate.view.*
@@ -119,7 +120,7 @@ class PastOrderFragment : Fragment(), KodeinAware {
                 })
                 order.removeObservers(this)
 
-                price_card.order_price.text = "$${it.price}"
+                order_price.text = "$${it.price}"
             }
 
             delivery_rating_card.card_rating_title.text = "Calificación del envío"

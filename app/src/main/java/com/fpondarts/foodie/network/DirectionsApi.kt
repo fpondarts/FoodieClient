@@ -4,7 +4,8 @@ import android.content.res.Resources
 import com.fpondarts.foodie.BuildConfig
 import com.fpondarts.foodie.R
 import com.fpondarts.foodie.data.db.entity.User
-import com.google.type.LatLng
+import com.fpondarts.foodie.model.Directions
+import com.google.android.gms.maps.model.LatLng
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.json.JSONObject
@@ -15,15 +16,18 @@ import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.Path
 import retrofit2.http.Query
+import com.google.gson.JsonObject
 
 interface DirectionsApi {
 
 
 
 
-    @GET(API_PREFIX+"{query}"+"&key="+"{key}")
-    suspend fun getRoute(@Path("query") query:String
-                            ,@Path("key")key:String = API_KEY): Response<JSONObject>
+    @GET(API_PREFIX)
+    suspend fun getRoute(@Query("origin")origin:String
+                         , @Query("destination")dest:String
+                         , @Query("waypoints") wayPoint:String
+                         , @Query("key")key:String = API_KEY): Response<Directions>
 
 
     companion object {
@@ -52,7 +56,7 @@ interface DirectionsApi {
         const val USERS_PREFIX="users"
         const val SHOPS_PREFIX="shops"
         const val API_PREFIX = "maps/api/directions/json"
-        const val API_KEY = "AIzaSyA1ZdwCmYIUzHhc62gBw2we-SiVyk-dGTs"
+        const val API_KEY = "AIzaSyDfTfWIPJRWTHeYn89oMhiPi4LYn7IjKRI"
     }
 
 }

@@ -31,6 +31,9 @@
         <action
             android:id="@+id/action_singleOfferFragment_to_workingFragment"
             app:destination="@id/workingFragment" />
+        <action
+            android:id="@+id/action_singleOfferFragment_to_offerMapFragment"
+            app:destination="@id/offerMapFragment" />
     </fragment>
     <fragment
         android:id="@+id/workingFragment"
@@ -43,6 +46,50 @@
         <action
             android:id="@+id/action_workingFragment_to_offersFragment"
             app:destination="@id/offersFragment" />
+        <action
+            android:id="@+id/action_workingFragment_to_workingMapFragment"
+            app:destination="@id/workingMapFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/workingMapFragment"
+        android:name="com.fpondarts.foodie.ui.working_map.WorkingMapFragment"
+        android:label="WorkingMapFragment" >
+        <argument
+            android:name="shop_lat"
+            app:argType="float" />
+        <argument
+            android:name="shop_lon"
+            app:argType="float" />
+        <argument
+            android:name="dest_lat"
+            app:argType="float" />
+        <argument
+            android:name="dest_lon"
+            app:argType="float" />
+        <argument
+            android:name="isFavour"
+            app:argType="boolean" />
+        <argument
+            android:name="pickedUp"
+            app:argType="boolean" />
+    </fragment>
+    <fragment
+        android:id="@+id/offerMapFragment"
+        android:name="com.fpondarts.foodie.ui.offer_map.OfferMapFragment"
+        android:label="OfferMapFragment">
+
+        <argument
+            android:name="shop_lat"
+            app:argType="float" />
+        <argument
+            android:name="shop_lon"
+            app:argType="float" />
+        <argument
+            android:name="dest_lat"
+            app:argType="float" />
+        <argument
+            android:name="dest_lon"
+            app:argType="float" />
     </fragment>
 
 

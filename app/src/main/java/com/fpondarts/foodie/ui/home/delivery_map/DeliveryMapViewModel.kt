@@ -11,11 +11,4 @@ import com.google.android.gms.maps.model.LatLng
 
 class DeliveryMapViewModel (val repository: Repository) : ViewModel() {
 
-    fun getCurrentShop():LiveData<Shop>{
-        return repository.getCurrentShop()
-    }
-
-    fun getAvailableDeliveries():LiveData<List<Delivery>>{
-        return repository.availableDeliveries
-    }
 }

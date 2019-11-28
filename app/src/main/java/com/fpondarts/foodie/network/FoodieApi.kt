@@ -73,8 +73,8 @@ interface FoodieApi {
     suspend fun getShopsPage(@Header(API_KEY_HEADER)token:String,@Query("p")page:Int, @Query("pSize")pageSize:Int):Response<List<Shop>>
 
     //Users
-    @PATCH(USERS_PREFIX+"/{order_id}/position")
-    suspend fun updateCoordinates(@Header(API_KEY_HEADER)token: String, @Path("order_id") userId:Long, @Body coordinates:Coordinates):Response<SuccessResponse>
+    @PATCH(USERS_PREFIX+"/{user_id}/position")
+    suspend fun updateCoordinates(@Header(API_KEY_HEADER)token: String, @Path("user_id") userId:Long, @Body coordinates:Coordinates):Response<SuccessResponse>
 
     @PUT(USERS_PREFIX+"/{user_id}/password")
     suspend fun changePassword(@Header(API_KEY_HEADER)token: String, @Path("user_id") userId:Long, @Body passwordRequest:ChangePasswordRequest):Response<SuccessResponse>

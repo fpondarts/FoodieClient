@@ -2,7 +2,8 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/favour_navigation">
+    android:id="@+id/favour_navigation"
+    app:startDestination="@id/workingMapFragment2">
 
     <fragment
         android:id="@+id/workingFavourFragment"
@@ -15,6 +16,9 @@
         <action
             android:id="@+id/action_workingFavourFragment_to_favourOffersFragment"
             app:destination="@id/favourOffersFragment" />
+        <action
+            android:id="@+id/action_workingFavourFragment_to_workingMapFragment2"
+            app:destination="@id/workingMapFragment2" />
     </fragment>
     <fragment
         android:id="@+id/singleFavourOfferFragment"
@@ -30,6 +34,9 @@
         <action
             android:id="@+id/action_singleFavourOfferFragment_to_workingFavourFragment"
             app:destination="@id/workingFavourFragment" />
+        <action
+            android:id="@+id/action_singleFavourOfferFragment_to_offerMapFragment2"
+            app:destination="@id/offerMapFragment2" />
     </fragment>
     <fragment
         android:id="@+id/favourOffersFragment"
@@ -41,5 +48,46 @@
         <action
             android:id="@+id/action_favourOffersFragment_to_workingFavourFragment"
             app:destination="@id/workingFavourFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/workingMapFragment2"
+        android:name="com.fpondarts.foodie.ui.working_map.WorkingMapFragment"
+        android:label="WorkingMapFragment">
+        <argument
+            android:name="shop_lat"
+            app:argType="float" />
+        <argument
+            android:name="shop_lon"
+            app:argType="float" />
+        <argument
+            android:name="dest_lat"
+            app:argType="float" />
+        <argument
+            android:name="dest_lon"
+            app:argType="float" />
+        <argument
+            android:name="isFavour"
+            app:argType="boolean" />
+        <argument
+            android:name="pickedUp"
+            app:argType="boolean" />
+    </fragment>
+    <fragment
+        android:id="@+id/offerMapFragment2"
+        android:name="com.fpondarts.foodie.ui.offer_map.OfferMapFragment"
+        android:label="OfferMapFragment">
+
+        <argument
+            android:name="shop_lat"
+            app:argType="float" />
+        <argument
+            android:name="shop_lon"
+            app:argType="float" />
+        <argument
+            android:name="dest_lat"
+            app:argType="float" />
+        <argument
+            android:name="dest_lon"
+            app:argType="float" />
     </fragment>
 </navigation>

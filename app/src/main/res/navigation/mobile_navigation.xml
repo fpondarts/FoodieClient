@@ -86,6 +86,9 @@
             <argument
                 android:name="orderId"
                 app:argType="long" />
+            <action
+                android:id="@+id/action_activeOrderFragment_to_waitingOrderMapFragment"
+                app:destination="@id/waitingOrderMapFragment" />
         </fragment>
         <fragment
             android:id="@+id/pastOrderFragment"
@@ -94,6 +97,31 @@
             <argument
                 android:name="orderId"
                 app:argType="long" />
+        </fragment>
+        <fragment
+            android:id="@+id/waitingOrderMapFragment"
+            android:name="com.fpondarts.foodie.ui.waiting_map.WaitingOrderMapFragment"
+            android:label="WaitingOrderMapFragment" >
+            <argument
+                android:name="shop_lat"
+                app:argType="float" />
+            <argument
+                android:name="shop_lon"
+                app:argType="float" />
+            <argument
+                android:name="dest_lat"
+                app:argType="float" />
+            <argument android:name="dest_lon"
+                app:argType="float" />
+            <argument
+                android:name="order_id"
+                app:argType="long" />
+            <argument
+                android:name="isFavour"
+                app:argType="boolean" />
+            <argument
+                android:name="pickedUp"
+                app:argType="boolean" />
         </fragment>
     </navigation>
     <fragment

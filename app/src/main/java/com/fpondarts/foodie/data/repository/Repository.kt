@@ -3,7 +3,6 @@ package com.fpondarts.foodie.data.repository
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.fpondarts.foodie.data.db.FoodieDatabase
-import com.fpondarts.foodie.model.OrderModel
 import com.fpondarts.foodie.network.FoodieApi
 import com.fpondarts.foodie.network.SafeApiRequest
 import com.fpondarts.foodie.network.response.SignInResponse
@@ -12,13 +11,15 @@ import com.fpondarts.foodie.util.exception.FoodieApiException
 import com.google.android.gms.common.api.ApiException
 import android.util.Log
 import com.fpondarts.foodie.data.db.entity.*
-import com.fpondarts.foodie.model.Coordinates
+import com.fpondarts.foodie.data.parser.RoutesParser
+import com.fpondarts.foodie.model.*
 import com.fpondarts.foodie.model.OrderItem
-import com.fpondarts.foodie.model.OrderState
 import com.fpondarts.foodie.network.DirectionsApi
 import com.fpondarts.foodie.network.request.*
 import com.fpondarts.foodie.network.response.PricingResponse
 import com.fpondarts.foodie.network.response.SuccessResponse
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.PolylineOptions
 import com.google.firebase.database.DatabaseReference
 import kotlinx.coroutines.delay
 import java.lang.Exception
@@ -576,6 +577,35 @@ class Repository(
             }
         }
         return liveData
+    }
+
+    fun getRoute(origin: LatLng, destination: LatLng, waypoint: LatLng?): LiveData<Directions>{
+        val response = MutableLiveData<Directions>().apply {
+            value = null
+        }
+        Coroutines.io{
+            try{
+
+                val originStr = origin.latitude.toString() + "," + origin.longitude.toString()
+                val destinationStr = destination.latitude.toString() + "," + destination.longitude.toString()
+                var waypointStr = waypoint?.latitude.toString() + "," + waypoint?.longitude.toString()
+
+                if (waypoint == null)
+                    waypointStr = ""
+
+                val directions = apiRequest{ directionsApi.getRoute(originStr,destinationStr,waypointStr) }
+
+                response.postValue(directions)
+
+
+            } catch (e:FoodieApiException){
+                apiError.postValue(e)
+            }
+
+
+        }
+
+        return response
     }
 
 }

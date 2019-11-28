@@ -7,6 +7,7 @@ import com.fpondarts.foodie.data.db.FoodieDatabase
 import com.fpondarts.foodie.data.db.entity.*
 import com.fpondarts.foodie.data.parser.RoutesParser
 import com.fpondarts.foodie.model.Coordinates
+import com.fpondarts.foodie.model.Directions
 import com.fpondarts.foodie.network.DirectionsApi
 import com.fpondarts.foodie.network.FoodieApi
 import com.fpondarts.foodie.network.SafeApiRequest
@@ -70,22 +71,22 @@ class DeliveryRepository(
 
     }
 
-    fun getRoute(origin: LatLng, destination:LatLng, waypoint:LatLng ): LiveData<List<PolylineOptions>>{
-        val response = MutableLiveData<List<PolylineOptions>>().apply {
+    fun getRoute(origin: LatLng, destination:LatLng, waypoint:LatLng? ): LiveData<Directions>{
+        val response = MutableLiveData<Directions>().apply {
             value = null
         }
         Coroutines.io{
             try{
-                var string = "?origin="
-                string+=origin.latitude.toString()+","+origin.longitude.toString()
-                string+="&destination="+destination.latitude.toString()+","+destination.longitude.toString()
-                string+="&waypoints="+waypoint.latitude.toString()+","+waypoint.longitude.toString()
+                val originStr = origin.latitude.toString() + "," + origin.longitude.toString()
+                val destinationStr = destination.latitude.toString() + "," + destination.longitude.toString()
 
-                val json = apiRequest{ directionsApi.getRoute(string) }
+                var waypointStr = waypoint?.latitude.toString() + "," + waypoint?.longitude.toString()
 
-                val parser = RoutesParser()
+                if (waypoint == null)
+                    waypointStr = ""
+                val directions = apiRequest{ directionsApi.getRoute(originStr,destinationStr,waypointStr) }
 
-                response.postValue(parser.parse(json))
+                response.postValue(directions)
 
 
             } catch (e:FoodieApiException){

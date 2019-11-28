@@ -6,10 +6,14 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 
 import com.fpondarts.foodie.R
+import com.fpondarts.foodie.data.db.entity.Order
+import com.fpondarts.foodie.data.db.entity.Shop
 import com.fpondarts.foodie.data.repository.Repository
 import com.fpondarts.foodie.model.OrderPricedItem
 import com.fpondarts.foodie.ui.FoodieViewModelFactory
@@ -49,6 +53,10 @@ open class ActiveOrderFragment : Fragment(), KodeinAware {
 
     private var orderId: Long? = null
 
+    private lateinit var order: Order
+
+    private lateinit var shop: Shop
+
     private var deliveryMarker:Marker? = null
 
     private lateinit var viewModel: ActiveOrderViewModel
@@ -75,6 +83,7 @@ open class ActiveOrderFragment : Fragment(), KodeinAware {
         val order = repository.getOrder(orderId!!)
         order.observe(this, Observer {
             it?.let {
+                this.order = it
                 val menu = repository.getShopMenu(it.shop_id!!)
                 menu.observe(this, Observer {
                     it?.let {
@@ -107,13 +116,16 @@ open class ActiveOrderFragment : Fragment(), KodeinAware {
                         })
                     }
                 })
+
                 repository.getShop(it.shop_id).observe(this, Observer {
                     it?.let{
                         tv_shop_name.text = it.name
                         Picasso.get().load(it.photoUrl).rotate(0.0.toFloat()).into(shopPic)
                         tv_shop_address.text = it.address
+                        shop = it
                     }
                 })
+
                 repository.getDelivery(it.delivery_id).observe(this, Observer {
                     it?.let{
                         tv_user_name.text = it.name
@@ -123,6 +135,17 @@ open class ActiveOrderFragment : Fragment(), KodeinAware {
                     }
                 })
 
+                choose_location_card.setOnClickListener {
+                    val bundle = bundleOf(
+                        "shop_lat" to shop.latitude
+                        ,"shop_lon" to shop.longitude
+                        , "dest_lat" to this.order.latitud
+                        , "dest_lon" to this.order.longitud
+                        , "pickedUp" to (this.order.state == "pickedUp")
+                        , "isFavour" to (this.order.payWithPoints)
+                        , "order_id" to this.order.order_id)
+                    findNavController().navigate(R.id.action_activeOrderFragment_to_waitingOrderMapFragment,bundle)
+                }
                 order_price.text = "$${(Math.round(it.price!! * 100.00 )/ 100.00).toString()}"
 
                 order.removeObservers(this)
