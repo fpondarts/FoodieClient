@@ -66,32 +66,41 @@ class DeliveryMapFragment : Fragment()
     }
 
 
+    fun onFavourMarkerClick(p0:Marker?){}
+
     override fun onMarkerClick(p0: Marker?): Boolean {
         if (p0!!.title == "Delivery"){
-            val delivery_id = p0!!.tag as Long
+
+            val user_id = p0!!.tag as Long
             Log.d("MapFragment","Click on delivery: ${p0.tag}")
-            val liveDel = viewModel.repository.getDelivery(delivery_id)
+            val liveDel = viewModel.repository.getUser(user_id)
             liveDel.removeObservers(this)
             liveDel.observe(
                 this, Observer {
                     it?.let{
-                        val delivery= it
-                        viewModel.repository.askDeliveryPrice(user_lat!!,user_lon!!,shop_id!!,it.user_id).observe(
-                            this, Observer {
-                                it?.let {
-                                    val dialog = DeliveryDialog.newInstance(
-                                        order.payWithPoints
-                                        ,delivery.user_id
-                                        ,order_id
-                                        ,it.price
-                                        ,it.pay
-                                        ,delivery.rating
-                                        ,delivery.picture)
-                                    dialog.show(childFragmentManager,"Ofrece tu pedido")
+                        val user = it
+                        if (isFavour){
+
+
+                        } else {
+                            viewModel.repository.askDeliveryPrice(user_lat!!,user_lon!!,shop_id!!,it.user_id).observe(
+                                this, Observer {
+                                    it?.let {
+                                        val dialog = DeliveryDialog.newInstance(
+                                            order.payWithPoints
+                                            ,user.user_id
+                                            ,order_id
+                                            ,it.price
+                                            ,it.pay
+                                            ,user.rating.toDouble()
+                                            ,user.picture)
+                                        dialog.show(childFragmentManager,"Ofrece tu pedido")
+                                    }
                                 }
-                            }
-                        )
-                        liveDel.removeObservers(this)
+                            )
+                            liveDel.removeObservers(this)
+                        }
+
                     }
                 }
             )
