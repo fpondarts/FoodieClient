@@ -36,12 +36,25 @@ import org.kodein.di.generic.instance
 class FavourOffersFragment : Fragment(), KodeinAware, OnOfferItemClickListener, CompoundButton.OnCheckedChangeListener {
 
 
+    override fun onFavourViewClick(offer_id: Long, order_id: Long, points: Int) {
+        val bundle = Bundle().apply {
+            this.putLong("offer_id",offer_id)
+            Log.d("FavourOffers","Offer_id es ${offer_id.toString()}")
+            this.putLong("order_id",order_id)
+            this.putInt("points",points)
+        }
+        findNavController().navigate(R.id.action_favourOffersFragment_to_singleFavourOfferFragment,bundle)
+    }
+
+
     override fun onAcceptClick(offer_id: Long, order_id: Long) {
         progress_bar.visibility = View.VISIBLE
 
         repository.acceptOffer(offer_id).observe(this@FavourOffersFragment, Observer {
             it?.let {
                 if (it){
+                    repository.current_order = order_id
+                    repository.isWorking.postValue(true)
                     val bundle = Bundle().apply {
                         this.putLong("offer_id",offer_id)
                         this.putLong("order_id",order_id)
@@ -72,12 +85,8 @@ class FavourOffersFragment : Fragment(), KodeinAware, OnOfferItemClickListener, 
 
     }
 
-    override fun onViewClick(offer_id:Long,order_id: Long) {
-        val bundle = Bundle().apply {
-            this.putLong("offer_id",offer_id)
-            this.putLong("order_id",order_id)
-        }
-        findNavController().navigate(R.id.action_favourOffersFragment_to_singleFavourOfferFragment,bundle)
+    override fun onViewClick(offer_id:Long,order_id: Long, price:Float) {
+
     }
 
     override val kodein by kodein()
@@ -94,7 +103,7 @@ class FavourOffersFragment : Fragment(), KodeinAware, OnOfferItemClickListener, 
         repository.isWorking.observe(this, Observer{
             if (it){
                 val bundle = bundleOf("order_id" to repository.current_order)
-                val navOptions = NavOptions.Builder().setPopUpTo(R.id.offersFragment,true).build()
+                val navOptions = NavOptions.Builder().setPopUpTo(R.id.favourOffersFragment,true).build()
                 findNavController().navigate(R.id.action_favourOffersFragment_to_workingFavourFragment,bundle,navOptions)
             }
 
@@ -118,7 +127,8 @@ class FavourOffersFragment : Fragment(), KodeinAware, OnOfferItemClickListener, 
         super.onResume()
         Log.d("Offers","Resumed")
         if (make_favours)
-            useHandler()
+            if (mHandler == null)
+                useHandler()
     }
 
 
@@ -130,10 +140,15 @@ class FavourOffersFragment : Fragment(), KodeinAware, OnOfferItemClickListener, 
             adapter = FavourOfferAdapter(HashMap<Long,OfferItem>(),this@FavourOffersFragment)
         }
 
+
+        take_favours_switch.isChecked = repository.make_favours.value!!
+
         repository.make_favours.observe(this, Observer {
             if (it){
                 make_favours = it
-                useHandler()
+                if (make_favours)
+                    if (mHandler == null)
+                        useHandler()
             } else {
                 mHandler = null
                 timeUpdateHandler = null
@@ -180,8 +195,8 @@ class FavourOffersFragment : Fragment(), KodeinAware, OnOfferItemClickListener, 
     var timeUpdateHandler: Handler? = null
 
     fun useHandler() {
-        mHandler = Handler()
-        mHandler!!.postDelayed(mRunnable, 5000)
+//        mHandler = Handler()
+//        mHandler!!.postDelayed(mRunnable, 5000)
         timeUpdateHandler = Handler()
         timeUpdateHandler!!.postDelayed(mUpdateTime,1000)
     }
@@ -193,43 +208,79 @@ class FavourOffersFragment : Fragment(), KodeinAware, OnOfferItemClickListener, 
         override fun run() {
             offers_recycler_view?.let {
 
-                var ld = this@FavourOffersFragment.repository.getCurrentOffers()
-                ld.observe(this@FavourOffersFragment, Observer {
-                    it?.let {
-                        val itemMap = HashMap<Long, OfferItem>()
-                        val adapter = offers_recycler_view.adapter as FavourOfferAdapter
-                        for (offer in it) {
-                            val item = OfferItem(
-                                offer.created_at_seconds!!,
-                                offer.points.toFloat(),
-                                offer.user_id,
-                                offer.order_id
-                            )
-                            if (item.remainingSeconds < 0) {
-                                adapter.map.remove(offer.id)
-                            } else {
-                                adapter.map.getOrPut(offer.id, { item })
-                            }
-                        }
-                        offers_recycler_view.adapter!!.notifyDataSetChanged()
-                        ld.removeObservers(this@FavourOffersFragment)
+            var ld = this@FavourOffersFragment.repository.getCurrentOffers()
+            ld.observe(this@FavourOffersFragment, Observer {
+                it?.let {
+                    val itemMap = HashMap<Long, OfferItem>()
+                    val adapter = offers_recycler_view.adapter as FavourOfferAdapter
+                    for (offer in it) {
+                        val item = OfferItem(
+                            offer.created_at_seconds!!,
+                            offer.points.toFloat(),
+                            offer.id,
+                            offer.order_id
+                        )
+
+                        adapter.map.getOrPut(offer.id, { item })
+
                     }
-                })
-            }
+                    offers_recycler_view.adapter!!.notifyDataSetChanged()
+                    ld.removeObservers(this@FavourOffersFragment)
+                }
+            })
+        }
             mHandler?.postDelayed(this, 5000)
         }
     }
 
+    var iterations = 0
+
     private val mUpdateTime = object : Runnable {
 
         override fun run(){
+
+            iterations+=1
+
             offers_recycler_view?.let{
                 val adapter = offers_recycler_view?.adapter as FavourOfferAdapter
                 for (item in adapter.map){
                     item.value.remainingSeconds -= 1
-                    if (item.value.remainingSeconds < 0 ){
-                        adapter.map.remove(item.key)
+                    if (item.value.remainingSeconds < 0 ) {
+                        repository.rejectOffer(item.value.offer_id)
+                            .observe(this@FavourOffersFragment, Observer {
+                                it?.let {
+                                    if (it) {
+
+                                    }
+                                }
+                                adapter.notifyDataSetChanged()
+                                adapter.map.remove(item.key)
+                            })
                     }
+                }
+
+                if (iterations == 5) {
+                    iterations = 0
+                    var ld = this@FavourOffersFragment.repository.getCurrentOffers()
+                    ld.observe(this@FavourOffersFragment, Observer {
+                        it?.let {
+                            val itemMap = HashMap<Long, OfferItem>()
+                            val adapter = offers_recycler_view.adapter as FavourOfferAdapter
+                            for (offer in it) {
+                                val item = OfferItem(
+                                    offer.created_at_seconds!!,
+                                    offer.points.toFloat(),
+                                    offer.id,
+                                    offer.order_id
+                                )
+
+                                adapter.map.getOrPut(offer.id, { item })
+
+                            }
+                            offers_recycler_view.adapter!!.notifyDataSetChanged()
+                            ld.removeObservers(this@FavourOffersFragment)
+                        }
+                    })
                 }
                 adapter.notifyDataSetChanged()
 
@@ -237,6 +288,7 @@ class FavourOffersFragment : Fragment(), KodeinAware, OnOfferItemClickListener, 
             }
 
         }
+
 
     }
 

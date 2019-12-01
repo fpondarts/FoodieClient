@@ -56,13 +56,13 @@ class OfferMapFragment : Fragment(), OnMapReadyCallback, KodeinAware {
     ): View? {
 
 
-        val destination_lat = arguments!!.getDouble("dest_lat")
-        val destination_lon = arguments!!.getDouble("dest_lon")
-        destLatLng = LatLng(destination_lat,destination_lon)
+        val destination_lat = arguments!!.getFloat("dest_lat")
+        val destination_lon = arguments!!.getFloat("dest_lon")
+        destLatLng = LatLng(destination_lat.toDouble(),destination_lon.toDouble())
 
-        val shop_lat = arguments!!.getDouble("shop_lat")
-        val shop_lon = arguments!!.getDouble("shop_lon")
-        shopLatLng = LatLng(shop_lat,shop_lon)
+        val shop_lat = arguments!!.getFloat("shop_lat")
+        val shop_lon = arguments!!.getFloat("shop_lon")
+        shopLatLng = LatLng(shop_lat.toDouble(),shop_lon.toDouble())
 
 
         return inflater.inflate(R.layout.delivery_map_fragment, container, false)
@@ -130,7 +130,7 @@ class OfferMapFragment : Fragment(), OnMapReadyCallback, KodeinAware {
         val shopMarker = mMap.addMarker(shopMarkerOptions)
         val endMarker = mMap.addMarker(endMarkerOptions)
 
-        val polylineOptions = PolylineOptions().color(0xff0088ff.toInt()).clickable(true)
+        val polylineOptions = PolylineOptions().color(0xff0088ff.toInt())
         val pointsList = PolyUtil.decode(route.overviewPolyline)
         for (point in pointsList) {
             polylineOptions.add(point)
@@ -145,12 +145,12 @@ class OfferMapFragment : Fragment(), OnMapReadyCallback, KodeinAware {
             .icon(transparent)
             .anchor(0.5.toFloat(), 0.5.toFloat()) //puts the info window on the polyline
 
-        val transparentMarker = mMap.addMarker(options)
+        mMap.addPolyline(polylineOptions)
 
         mMap.animateCamera(CameraUpdateFactory.newLatLng(myLatLng))
-        mMap.setOnPolylineClickListener {
-            transparentMarker.showInfoWindow()
-        }
+//        mMap.setOnPolylineClickListener {
+//            transparentMarker.showInfoWindow()
+//        }
 
 
     }

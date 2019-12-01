@@ -3,12 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/favour_navigation"
-    app:startDestination="@id/workingMapFragment2">
+    app:startDestination="@id/favourOffersFragment">
 
     <fragment
         android:id="@+id/workingFavourFragment"
         android:name="com.fpondarts.foodie.ui.favours.workingFragment.WorkingFavourFragment"
-        android:label="fragment_working_favour"
+        android:label="Favor actual"
         tools:layout="@layout/fragment_working" >
         <argument
             android:name="order_id"
@@ -23,7 +23,7 @@
     <fragment
         android:id="@+id/singleFavourOfferFragment"
         android:name="com.fpondarts.foodie.ui.favours.singleFavourOffer.SingleFavourOfferFragment"
-        android:label="fragment_single_favour_offer"
+        android:label="Oferta de favor"
         tools:layout="@layout/fragment_single_offer" >
         <argument
             android:name="order_id"
@@ -31,6 +31,9 @@
         <argument
             android:name="offer_id"
             app:argType="long" />
+        <argument
+            android:name="points"
+            app:argType="integer" />
         <action
             android:id="@+id/action_singleFavourOfferFragment_to_workingFavourFragment"
             app:destination="@id/workingFavourFragment" />
@@ -41,7 +44,7 @@
     <fragment
         android:id="@+id/favourOffersFragment"
         android:name="com.fpondarts.foodie.ui.favours.favourOffers.FavourOffersFragment"
-        android:label="FavourOffersFragment" >
+        android:label="Ofertas de favor" >
         <action
             android:id="@+id/action_favourOffersFragment_to_singleFavourOfferFragment"
             app:destination="@id/singleFavourOfferFragment" />
@@ -52,7 +55,7 @@
     <fragment
         android:id="@+id/workingMapFragment2"
         android:name="com.fpondarts.foodie.ui.working_map.WorkingMapFragment"
-        android:label="WorkingMapFragment">
+        android:label="Mapa del pedido">
         <argument
             android:name="shop_lat"
             app:argType="float" />
@@ -75,7 +78,7 @@
     <fragment
         android:id="@+id/offerMapFragment2"
         android:name="com.fpondarts.foodie.ui.offer_map.OfferMapFragment"
-        android:label="OfferMapFragment">
+        android:label="Mapa del pedido">
 
         <argument
             android:name="shop_lat"

@@ -53,7 +53,7 @@
     <fragment
         android:id="@+id/workingMapFragment"
         android:name="com.fpondarts.foodie.ui.working_map.WorkingMapFragment"
-        android:label="WorkingMapFragment" >
+        android:label="Mapa del pedido" >
         <argument
             android:name="shop_lat"
             app:argType="float" />
@@ -76,7 +76,7 @@
     <fragment
         android:id="@+id/offerMapFragment"
         android:name="com.fpondarts.foodie.ui.offer_map.OfferMapFragment"
-        android:label="OfferMapFragment">
+        android:label="Mapa del pedido">
 
         <argument
             android:name="shop_lat"

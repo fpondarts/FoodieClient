@@ -22,8 +22,8 @@ class ConfirmOrderViewModel(val repository: Repository) : ViewModel() {
 
 
 
-    fun confirmOrder():LiveData<Boolean>{
-        return repository.confirmOrder()
+    fun confirmOrder(favour:Boolean = false):LiveData<Boolean>{
+        return repository.confirmOrder(favour)
     }
 
 }

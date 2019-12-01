@@ -15,6 +15,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.fpondarts.foodie.R
 import com.fpondarts.foodie.data.db.entity.Order
+import com.fpondarts.foodie.data.repository.Repository
 import com.fpondarts.foodie.databinding.FragmentMyOrdersBinding
 import com.fpondarts.foodie.ui.FoodieViewModelFactory
 import kotlinx.android.synthetic.main.fragment_my_orders.*
@@ -27,6 +28,8 @@ class MyOrdersFragment : Fragment(), KodeinAware, OnMyOrderClickListener{
     override val kodein by kodein()
 
     private var viewModel : MyOrdersViewModel? = null
+
+    val repository: Repository by instance()
 
     val factory: FoodieViewModelFactory by instance()
 
@@ -58,7 +61,7 @@ class MyOrdersFragment : Fragment(), KodeinAware, OnMyOrderClickListener{
 
 
 
-        viewModel!!.getActiveOrders().observe(this, Observer {
+        repository.getActiveOrders().observe(this, Observer {
             it?.let{
                 recycler_active_orders.adapter = ActiveOrderAdapter(it,true,this)
                 if (it.size > 0)

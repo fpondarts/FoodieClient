@@ -66,41 +66,66 @@ class DeliveryMapFragment : Fragment()
     }
 
 
-    fun onFavourMarkerClick(p0:Marker?){}
+    fun onFavourMarkerClick(p0:Marker?): Boolean{
+        val user_id = p0!!.tag as Long
+        val liveDel = viewModel.repository.getUser(user_id)
+        liveDel.removeObservers(this)
+        liveDel.observe(
+            this, Observer {
+                it?.let{
+                    val user = it
+                    viewModel.repository.askDeliveryPrice(user_lat!!,user_lon!!,shop_id!!,it.user_id).observe(
+                        this, Observer {
+                            it?.let {
+                                val dialog = DeliveryDialog.newInstance(
+                                    isFavour
+                                    ,user.user_id
+                                    ,order_id
+                                    ,it.price
+                                    ,it.pay
+                                    ,user.rating.toDouble()
+                                    ,user.picture)
+                                dialog.show(childFragmentManager,"Ofrece tu pedido")
+                            }
+                        }
+                    )
+                    liveDel.removeObservers(this)
+                }
+            }
+        )
+        return false
+    }
 
     override fun onMarkerClick(p0: Marker?): Boolean {
         if (p0!!.title == "Delivery"){
 
             val user_id = p0!!.tag as Long
             Log.d("MapFragment","Click on delivery: ${p0.tag}")
-            val liveDel = viewModel.repository.getUser(user_id)
+            if (isFavour){
+                return onFavourMarkerClick(p0)
+            }
+            val liveDel = viewModel.repository.getDelivery(user_id)
             liveDel.removeObservers(this)
             liveDel.observe(
                 this, Observer {
                     it?.let{
                         val user = it
-                        if (isFavour){
-
-
-                        } else {
-                            viewModel.repository.askDeliveryPrice(user_lat!!,user_lon!!,shop_id!!,it.user_id).observe(
-                                this, Observer {
-                                    it?.let {
-                                        val dialog = DeliveryDialog.newInstance(
-                                            order.payWithPoints
-                                            ,user.user_id
-                                            ,order_id
-                                            ,it.price
-                                            ,it.pay
-                                            ,user.rating.toDouble()
-                                            ,user.picture)
-                                        dialog.show(childFragmentManager,"Ofrece tu pedido")
-                                    }
+                        viewModel.repository.askDeliveryPrice(user_lat!!,user_lon!!,shop_id!!,it.user_id).observe(
+                            this, Observer {
+                                it?.let {
+                                    val dialog = DeliveryDialog.newInstance(
+                                        isFavour
+                                        ,user.user_id
+                                        ,order_id
+                                        ,it.price
+                                        ,it.pay
+                                        ,user.rating.toDouble()
+                                        ,user.picture)
+                                    dialog.show(childFragmentManager,"Ofrece tu pedido")
                                 }
-                            )
-                            liveDel.removeObservers(this)
-                        }
-
+                            }
+                        )
+                        liveDel.removeObservers(this)
                     }
                 }
             )
@@ -219,20 +244,32 @@ class DeliveryMapFragment : Fragment()
                             .snippet(shop_title))
                         if (first_move){
                             val coordinates = LatLng(shop_lat!!,shop_lon!!)
-                            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(coordinates, 15.0.toFloat()))
+                            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(coordinates, 12.0.toFloat()))
                             first_move = false
                         }
                         mMap.addMarker(MarkerOptions().position(LatLng(user_lat!!,user_lon!!))
                             .title("Tu posición")
                             .snippet(""))
+                        val my_id = viewModel.repository.currentUser.value!!.user_id
                         list.forEach {
-                            Log.d("MapFragment","Se agrega delivery marker en:${it.latitude},${it.longitude}")
-                            val marker = mMap.addMarker(MarkerOptions()
-                                .position(LatLng(it.latitude,it.longitude))
-                                .title("Delivery")
-                                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE))
-                                .snippet("Rating: ${it.rating.toString()}"))
-                            marker.tag = it.user_id
+                            if (it.user_id != my_id) {
+                                Log.d(
+                                    "MapFragment",
+                                    "Se agrega delivery marker en:${it.latitude},${it.longitude}"
+                                )
+                                val marker = mMap.addMarker(
+                                    MarkerOptions()
+                                        .position(LatLng(it.latitude, it.longitude))
+                                        .title("Delivery")
+                                        .icon(
+                                            BitmapDescriptorFactory.defaultMarker(
+                                                BitmapDescriptorFactory.HUE_BLUE
+                                            )
+                                        )
+                                        .snippet("Rating: ${it.rating.toString()}")
+                                )
+                                marker.tag = it.user_id
+                            }
                         }
                     }
 
@@ -331,7 +368,7 @@ class DeliveryMapFragment : Fragment()
 
         override fun run() {
 
-            viewModel.repository.refreshDeliveries(user_lat!!,user_lon!!)
+            viewModel.repository.refreshDeliveries(user_lat!!,user_lon!!,isFavour)
 
             mHandler?.postDelayed(this, 5000)
         }

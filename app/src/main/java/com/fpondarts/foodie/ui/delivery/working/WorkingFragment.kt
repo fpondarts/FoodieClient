@@ -1,8 +1,8 @@
 package com.fpondarts.foodie.ui.delivery.working
 
 
+import android.app.ProgressDialog
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -60,6 +60,8 @@ class WorkingFragment : Fragment(), KodeinAware {
         return inflater.inflate(R.layout.fragment_working, container, false)
     }
 
+    private var dialog: ProgressDialog? = null
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -71,6 +73,7 @@ class WorkingFragment : Fragment(), KodeinAware {
         order.observe(this, Observer {
             it?.let{
 
+                this.order = it
                 shop_id = it.shop_id
                 user_id = it.user_id
 
@@ -92,14 +95,13 @@ class WorkingFragment : Fragment(), KodeinAware {
                     }
                 })
 
-                repository.getOrder(order_id!!).observe(this, Observer {
-                    it?.let{
-                        this.order = it
-                        delivery_price.text = "$${(round(it.delivery_pay!! * 100.0) / 100.0).toString()}"
-                        order_price.text = "$${(round(it.price * 100.0) / 100.0).toString()}"
-                        delivery_price_title.text = "Tu ganancia"
-                    }
-                })
+
+                delivery_price.text = "$${(round(it.delivery_pay!! * 100.0) / 100.0).toString()}"
+                order_price.text = "$${(round(it.price * 100.0) / 100.0).toString()}"
+                delivery_price_title.text = "Tu ganancia"
+
+
+                dialog = ProgressDialog.show(activity,"Espere","Cargando orden")
 
                 val menu = repository.getMenu(shop_id!!)
                 menu.observe(this, Observer {
@@ -120,7 +122,7 @@ class WorkingFragment : Fragment(), KodeinAware {
                                         }
                                     })
                                 }
-
+                                dialog?.dismiss()
                             }
                         })
                     }
@@ -138,22 +140,38 @@ class WorkingFragment : Fragment(), KodeinAware {
                 "pickedUp" to (this.order.state == "pickedUp"),
                 "isFavour" to this.order.payWithPoints
             )
+
+            findNavController().navigate(R.id.action_workingFragment_to_workingMapFragment,bundle)
+
         }
 
         finish_order_card.setOnClickListener(View.OnClickListener {
-            Toast.makeText(context,"Click",Toast.LENGTH_LONG).show()
-            repository.finishDelivery(order_id!!).observe(this, Observer {
-                it?.let{
-                    if (it){
-                        repository.isWorking.postValue(false)
-                        repository.current_order = -1
-                        findNavController().navigate(R.id.action_workingFragment_to_offersFragment,null,
-                            NavOptions.Builder().setPopUpTo(R.id.workingFragment,true).build())
-                    } else {
-                        Toast.makeText(activity,"Error en la entrega del pedido",Toast.LENGTH_LONG).show()
+            if (this.order.state == "pickedUp"){
+                repository.changeOrderState(order_id!!,"delivered").observe(this, Observer {
+                    it?.let{
+                        if (it){
+                            repository.isWorking.postValue(false)
+                            repository.current_order = -1
+                            findNavController().navigate(R.id.action_workingFragment_to_offersFragment,null,
+                                NavOptions.Builder().setPopUpTo(R.id.workingFragment,true).build())
+                        } else {
+                            Toast.makeText(activity,"Error en la entrega del pedido",Toast.LENGTH_LONG).show()
+                        }
                     }
-                }
-            })
+                })
+            } else if (this.order.state == "onWay"){
+                repository.changeOrderState(order_id!!,"pickedUp").observe(this, Observer {
+                    it?.let{
+                        if (it){
+                            this.order.state = "pickedUp"
+                            finish_order_tv.text = "Finalizar pedido"
+                        } else {
+                            Toast.makeText(activity,"Error en la entrega del pedido",Toast.LENGTH_LONG).show()
+                        }
+                    }
+                })
+            }
+
         })
 
 

@@ -109,15 +109,28 @@ class PastOrderFragment : Fragment(), KodeinAware {
 
                     }
                 })
-                repository.getDelivery(it.delivery_id).observe(this, Observer {
-                    it?.let{
-                        tv_user_name.text = it.name
-                        tv_email.text = it.email
-                        tv_phone.text = it.phone_number
-                        delivery_rating_card.card_rating_name.text = it.name
-                        Picasso.get().load(it.picture).rotate(90.0.toFloat()).into(profilePic)
-                    }
-                })
+
+                if (it.payWithPoints){
+                    repository.getUser(it.delivery_id).observe(this, Observer {
+                        it?.let{
+                            tv_user_name.text = it.name
+                            tv_email.text = it.email
+                            tv_phone.text = it.phone_number
+                            Picasso.get().load(it.picture).rotate(90.0.toFloat()).into(profilePic)
+                            delivery_rating_card.card_rating_name.text = it.name
+                        }
+                    })
+                } else {
+                    repository.getDelivery(it.delivery_id).observe(this, Observer {
+                        it?.let{
+                            tv_user_name.text = it.name
+                            tv_email.text = it.email
+                            tv_phone.text = it.phone_number
+                            Picasso.get().load(it.picture).rotate(90.0.toFloat()).into(profilePic)
+                        }
+                    })
+                }
+
                 order.removeObservers(this)
 
                 order_price.text = "$${it.price}"
@@ -168,7 +181,7 @@ class PastOrderFragment : Fragment(), KodeinAware {
         if ( rating > 0) {
             repository.rateShop(orderId!!,rating).observe(this, Observer {
                 it?.let{
-                    if (it.code in 199..299){
+                    if (it){
                           shop_rating_card.card_rating_rating.isEnabled = false
                           shop_rating_card.rate_button.isEnabled = false
                           Toast.makeText(activity,"Tu calificación se ha procesado con exito",Toast.LENGTH_SHORT).show()
@@ -190,7 +203,7 @@ class PastOrderFragment : Fragment(), KodeinAware {
         if ( rating > 0) {
             repository.rateDelivery(orderId!!,rating).observe(this, Observer {
                 it?.let{
-                    if (it.code in 199..299){
+                    if (it){
                         delivery_rating_card.card_rating_rating.isEnabled = false
                         delivery_rating_card.rate_button.isEnabled = false
                         Toast.makeText(activity,"Tu calificación se ha procesado con exito",Toast.LENGTH_SHORT).show()

@@ -84,6 +84,7 @@ class Repository(
         this.userId = id
         Coroutines.io{
             try{
+                db.getOrderDao().nukeTable()
                 val user = apiRequest{ api.getUserById(token,id) }
                 currentUser.postValue(user)
                 if (user.state == "working"){
@@ -99,6 +100,7 @@ class Repository(
             }
         }
     }
+
 
     fun getCurrentOffers():LiveData<List<FavourOffer>>{
         val offers = MutableLiveData<List<FavourOffer>>().apply {
@@ -126,6 +128,7 @@ class Repository(
             try{
                 val apiResponse = apiRequest {api.changeFavourOfferState(token!!,userId!!,offer_id, StateChangeRequest("accepted")) }
                 successResponse.postValue(true)
+                currentUser.value!!.state = "working"
             } catch (e:FoodieApiException){
                 apiError.postValue(e)
                 successResponse.postValue(false)
@@ -155,10 +158,10 @@ class Repository(
 
     fun getAllShops():LiveData<List<Shop>>{
         val ans = db.getShopDao().getAllOrdered()
-        if (ans.value == null || ans.value!!.isEmpty()){
+        if (ans.value == null || ans.value!!.isEmpty() || ans.value!!.size < 8){
             Coroutines.io{
                 try {
-                    val top = api.getShopsPage(token!!,0,SHOP_PAGE_SIZE)
+                    val top = api.getShopsPage(token!!,0,1000)
                     if (top.isSuccessful){
                         db.getShopDao().upsertBatch((top.body()!!))
                     }
@@ -179,6 +182,9 @@ class Repository(
             try {
                 val apiResponse = apiRequest { api.putTakingFavours(token!!,userId!!,TakeFavoursRequest(taking)) }
                 liveData.postValue(true)
+                if (taking != make_favours.value!!){
+                    make_favours.postValue(taking)
+                }
             } catch (e:FoodieApiException){
                 liveData.postValue(false)
             }
@@ -254,7 +260,7 @@ class Repository(
     }
 
 
-    fun confirmOrder():LiveData<Boolean> {
+    fun confirmOrder(favour:Boolean=false):LiveData<Boolean> {
 
         val liveData = MutableLiveData<Boolean>().apply {
             value = null
@@ -265,8 +271,8 @@ class Repository(
                     OrderRequest(currentOrder!!.shopId
                         ,currentOrder!!.items.values
                         ,Coordinates(currentOrder!!.latitude!!,currentOrder!!.longitude!!)
-                        ,currentOrder!!.payWitPoints
-                        ,currentOrder!!.favourPoints
+                        ,favour
+                        ,0
                         ,currentOrder!!.price.toFloat()
                         ,userId!!)) }.order_id
                 currentOrder!!.id = orderId
@@ -299,13 +305,18 @@ class Repository(
         return getShop(currentOrder!!.shopId!!)
     }
 
-    fun refreshDeliveries(lat:Double,long:Double){
+    fun refreshDeliveries(lat:Double,long:Double,favour: Boolean = false){
         Coroutines.io{
            try {
                val lat_rounded = Math.round(lat* 1000.0) / 1000.0
                val lon_roundded = Math.round(long * 1000.0) / 1000.0
-               val response = apiRequest{ api.getDeliveries(token!!,lat_rounded,lon_roundded) }
-               availableDeliveries.postValue(response)
+               if (!favour){
+                   val response = apiRequest{ api.getDeliveries(token!!,lat_rounded,lon_roundded) }
+                   availableDeliveries.postValue(response)
+               } else {
+                   val response = apiRequest { api.getFavourUsers(token!!,lat_rounded,lon_roundded) }
+                   availableDeliveries.postValue(response)
+               }
            } catch (e: FoodieApiException){
                if (e.code != 500)
                    apiError.postValue(e)
@@ -362,6 +373,42 @@ class Repository(
         return delivery
     }
 
+    fun getActiveOrders():LiveData<List<Order>>{
+        val live = MutableLiveData<List<Order>>().apply {
+            value = null
+        }
+
+        Coroutines.io{
+            try {
+                val onWay = apiRequest { api.getOrdersByState(token!!
+                    ,currentUser.value!!.user_id!!
+                    ,"onWay") }
+                val pickedUp = apiRequest { api.getOrdersByState(token!!
+                    ,currentUser.value!!.user_id!!
+                    ,"onWay") }
+                val ans = ArrayList<Order>()
+                ans.addAll(onWay)
+                ans.addAll(pickedUp)
+                live.postValue(ans)
+            } catch (e:FoodieApiException){
+                if (e.code == 500){
+                    delay(750)
+                    val onWay = apiRequest { api.getOrdersByState(token!!
+                        ,currentUser.value!!.user_id!!
+                        ,"onWay") }
+                    val pickedUp = apiRequest { api.getOrdersByState(token!!
+                        ,currentUser.value!!.user_id!!
+                        ,"onWay") }
+                    val ans = ArrayList<Order>()
+                    ans.addAll(onWay)
+                    ans.addAll(pickedUp)
+                    live.postValue(ans)
+                }
+            }
+        }
+
+        return live
+    }
 
     fun getOrdersByState(state: OrderState):LiveData<List<Order>>{
         val str = state.stringVal
@@ -404,8 +451,9 @@ class Repository(
                     api.updateCoordinates(token!!,userId!!,
                         Coordinates(latitude,longitude))
                 }
-
                 liveData.postValue(true)
+                currentUser.value!!.latitude = latitude
+                currentUser.value!!.longitude = longitude
             } catch (e:FoodieApiException){
                 apiError.postValue(e)
                 liveData.postValue(false)
@@ -514,33 +562,41 @@ class Repository(
         return item
     }
 
-    fun rateShop(order_id:Long,rating:Float):LiveData<SuccessResponse>{
-        val live = MutableLiveData<SuccessResponse>().apply {
+    fun rateShop(order_id:Long,rating:Float):LiveData<Boolean>{
+        val live = MutableLiveData<Boolean>().apply {
             value = null
         }
         Coroutines.io {
             try {
                 val apiResponse = apiRequest { api.rateShop(token!!,order_id, ReviewRequest(rating)) }
-                live.postValue(apiResponse)
+                live.postValue(true)
             } catch (e: FoodieApiException){
-                apiError.postValue(e)
-                live.postValue(SuccessResponse("Error",400))
+                if (e.code == 500){
+                    val apiResponse = apiRequest { api.rateDelivery(token!!,order_id, ReviewRequest(rating)) }
+                    live.postValue(true)
+                } else {
+                    live.postValue(false)
+                }
             }
         }
         return live
     }
 
-    fun rateDelivery(order_id:Long,rating:Float):LiveData<SuccessResponse>{
-        val live = MutableLiveData<SuccessResponse>().apply {
+    fun rateDelivery(order_id:Long,rating:Float):LiveData<Boolean>{
+        val live = MutableLiveData<Boolean>().apply {
             value = null
         }
         Coroutines.io {
             try {
                 val apiResponse = apiRequest { api.rateDelivery(token!!,order_id, ReviewRequest(rating)) }
-                live.postValue(apiResponse)
+                live.postValue(true)
             } catch (e: FoodieApiException){
-                apiError.postValue(e)
-                live.postValue(SuccessResponse("Error",400))
+                if (e.code == 500){
+                    val apiResponse = apiRequest { api.rateDelivery(token!!,order_id, ReviewRequest(rating)) }
+                    live.postValue(true)
+                } else {
+                    live.postValue(false)
+                }
             }
         }
         return live
@@ -563,14 +619,15 @@ class Repository(
     }
 
 
-    fun finishDelivery(order_id:Long):LiveData<Boolean>{
+    fun changeOrderState(order_id:Long, state:String="delivery"):LiveData<Boolean>{
         val liveData = MutableLiveData<Boolean>().apply {
             value = null
         }
         Coroutines.io{
             try {
-                val apiResponse = apiRequest { api.finishOrder(token!!,order_id,StateChangeRequest("delivered")) }
+                val apiResponse = apiRequest { api.finishOrder(token!!,order_id,StateChangeRequest(state)) }
                 liveData.postValue(true)
+                currentUser.value!!.state = "free"
             } catch (e:FoodieApiException){
                 apiError.postValue(e)
                 liveData.postValue(false)
@@ -606,6 +663,22 @@ class Repository(
         }
 
         return response
+    }
+
+    fun postFavourOffer(del_id:Long,order_id:Long,points:Int):LiveData<Long>{
+        val liveData = MutableLiveData<Long>().apply {
+            value = null
+        }
+        Coroutines.io {
+            try {
+                val response = apiRequest { api.postFavourOffer(token!!,del_id,PostFavourOfferRequest(del_id,order_id,points)) }
+                liveData.postValue(response.id)
+            } catch(e: FoodieApiException){
+                apiError.postValue(e)
+                liveData.postValue(-1)
+            }
+        }
+        return liveData
     }
 
 }

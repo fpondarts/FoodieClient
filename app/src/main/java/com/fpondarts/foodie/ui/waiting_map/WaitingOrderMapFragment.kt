@@ -56,13 +56,15 @@ class WaitingOrderMapFragment : Fragment(), OnMapReadyCallback, KodeinAware {
     ): View? {
 
 
-        val destination_lat = arguments!!.getDouble("dest_lat")
-        val destination_lon = arguments!!.getDouble("dest_lon")
-        destLatLng = LatLng(destination_lat,destination_lon)
 
-        val shop_lat = arguments!!.getDouble("shop_lat")
-        val shop_lon = arguments!!.getDouble("shop_lon")
-        shopLatLng = LatLng(shop_lat,shop_lon)
+        val destination_lat = arguments!!.getFloat("dest_lat")
+        val destination_lon = arguments!!.getFloat("dest_lon")
+        destLatLng = LatLng(destination_lat.toDouble(),destination_lon.toDouble())
+
+        val shop_lat = arguments!!.getFloat("shop_lat")
+        val shop_lon = arguments!!.getFloat("shop_lon")
+        shopLatLng = LatLng(shop_lat.toDouble(),shop_lon.toDouble())
+
 
         pickedUp = arguments!!.getBoolean("pickedUp")
 
@@ -179,6 +181,8 @@ class WaitingOrderMapFragment : Fragment(), OnMapReadyCallback, KodeinAware {
             .anchor(0.5.toFloat(), 0.5.toFloat()) //puts the info window on the polyline
 
         val transparentMarker = mMap.addMarker(options)
+
+        mMap.addPolyline(polylineOptions)
 
         mMap.animateCamera(CameraUpdateFactory.newLatLng(deliveryLatLng))
         mMap.setOnPolylineClickListener {

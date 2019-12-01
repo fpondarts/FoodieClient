@@ -1,6 +1,7 @@
 package com.fpondarts.foodie.ui.delivery.offers
 
 
+import android.app.ProgressDialog
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -19,6 +20,7 @@ import com.fpondarts.foodie.R
 import com.fpondarts.foodie.data.repository.DeliveryRepository
 import com.fpondarts.foodie.model.OrderItem
 import com.fpondarts.foodie.model.OrderPricedItem
+import com.google.android.gms.maps.model.LatLng
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.card_prices.*
 import kotlinx.android.synthetic.main.card_shop.*
@@ -43,6 +45,10 @@ class SingleOfferFragment : Fragment(),KodeinAware{
     var order_id:Long? = null
     var shop_id:Long? = null
     var user_id:Long? = null
+    var delivery_pay : Float = 0.toFloat()
+
+    private lateinit var destLatLng: LatLng
+    private lateinit var shopLatLng: LatLng
 
     override val kodein by kodein()
 
@@ -55,6 +61,7 @@ class SingleOfferFragment : Fragment(),KodeinAware{
 
         offer_id = arguments!!.getLong("offer_id")
         order_id = arguments!!.getLong("order_id")
+        delivery_pay = arguments!!.getFloat("delivery_pay",0.toFloat())
 
         Log.d("SingleOffer","Offer_id:${offer_id}, Order_id:${order_id}")
 
@@ -71,6 +78,7 @@ class SingleOfferFragment : Fragment(),KodeinAware{
                     if (it){
                         val bundle = bundleOf("order_id" to order_id)
                         repository.isWorking.postValue(true)
+                        repository.current_order = order_id!!
                         findNavController().navigate(R.id.action_singleOfferFragment_to_workingFragment
                             ,bundle
                             ,NavOptions.Builder().setPopUpTo(R.id.offersFragment,true).build())
@@ -98,6 +106,8 @@ class SingleOfferFragment : Fragment(),KodeinAware{
 
     }
 
+    var dialog : ProgressDialog? = null
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -105,6 +115,8 @@ class SingleOfferFragment : Fragment(),KodeinAware{
         items_recycler_view?.apply {
             layoutManager = LinearLayoutManager(activity)
         }
+
+        dialog = ProgressDialog.show(activity,"Cargando datos",null)
 
         val order = repository.getOrder(order_id!!)
         order.observe(this, Observer {
@@ -114,6 +126,7 @@ class SingleOfferFragment : Fragment(),KodeinAware{
 
                 repository.getShop(shop_id!!).observe(this, Observer {
                     it?.let{
+                        shopLatLng = LatLng(it.latitude,it.longitude)
                         tv_shop_name.text = it.name
                         tv_shop_address.text = it.address
                         Picasso.get().load(it.photoUrl).resize(64,64).into(shopPic)
@@ -129,13 +142,16 @@ class SingleOfferFragment : Fragment(),KodeinAware{
                     }
                 })
 
-                repository.getOrder(order_id!!).observe(this, Observer {
-                    it?.let{
-                        delivery_price.text = "$${(round(it.delivery_pay!! * 100.0) / 100.0).toString()}"
-                        order_price.text = "$${(round(it.price * 100.0) / 100.0).toString()}"
-                        delivery_price_title.text = "Tu ganancia"
-                    }
-                })
+
+
+                destLatLng = LatLng(it.latitud,it.longitud)
+                delivery_price.text = "$${(round(delivery_pay!! * 100.0) / 100.0).toString()}"
+                order_price.text = "$${(round(it.price * 100.0) / 100.0).toString()}"
+                delivery_price_title.text = "Tu ganancia"
+
+
+
+
 
                 val menu = repository.getMenu(shop_id!!)
                 menu.observe(this@SingleOfferFragment, Observer {
@@ -156,7 +172,7 @@ class SingleOfferFragment : Fragment(),KodeinAware{
                                         }
                                     })
                                 }
-
+                                dialog?.dismiss()
                             }
                         })
                     }
@@ -164,6 +180,16 @@ class SingleOfferFragment : Fragment(),KodeinAware{
                 order.removeObservers(this)
             }
         })
+
+        choose_location_card.setOnClickListener {
+            val bundle = bundleOf("shop_lat" to shopLatLng.latitude.toFloat(),
+                "shop_lon" to shopLatLng.longitude.toFloat(),
+                "dest_lat" to destLatLng.latitude.toFloat(),
+                "dest_lon" to destLatLng.longitude.toFloat())
+
+            findNavController().navigate(R.id.action_singleOfferFragment_to_offerMapFragment,bundle)
+
+        }
 
 
 

@@ -8,11 +8,14 @@
     <fragment
         android:id="@+id/nav_home"
         android:name="com.fpondarts.foodie.ui.home.HomeFragment"
-        android:label="@string/menu_home"
+        android:label="Tiendas"
         tools:layout="@layout/fragment_home" >
         <action
             android:id="@+id/action_nav_home_to_shopFragment"
             app:destination="@id/shopFragment" />
+        <action
+            android:id="@+id/action_nav_home_to_shopsMapFragment"
+            app:destination="@id/shopsMapFragment" />
     </fragment>
 
     <fragment
@@ -36,7 +39,7 @@
     <fragment
         android:id="@+id/confirmOrderFragment"
         android:name="com.fpondarts.foodie.ui.home.confirm_order.ConfirmOrderFragment"
-        android:label="ConfirmOrderFragment" >
+        android:label="Confirma el pedido" >
         <action
             android:id="@+id/action_confirmOrderFragment_to_deliveryMapFragment"
             app:destination="@id/deliveryMapFragment"
@@ -46,7 +49,7 @@
     <fragment
         android:id="@+id/deliveryAddressFragment"
         android:name="com.fpondarts.foodie.ui.home.delivery_address.DeliveryAddressFragment"
-        android:label="delivery_address_fragment"
+        android:label="Lugar de entrega"
         tools:layout="@layout/delivery_address_fragment" >
         <action
             android:id="@+id/action_deliveryAddressFragment_to_confirmOrderFragment"
@@ -57,7 +60,7 @@
     <fragment
         android:id="@+id/deliveryMapFragment"
         android:name="com.fpondarts.foodie.ui.home.delivery_map.DeliveryMapFragment"
-        android:label="DeliveryMapFragment" >
+        android:label="Mapa de deliveries" >
         <argument
             android:name="order_id"
             app:argType="long" />
@@ -93,7 +96,7 @@
         <fragment
             android:id="@+id/pastOrderFragment"
             android:name="com.fpondarts.foodie.ui.my_orders.PastOrderFragment"
-            android:label="PastOrderFragment" >
+            android:label="Historial de pedidos" >
             <argument
                 android:name="orderId"
                 app:argType="long" />
@@ -101,7 +104,7 @@
         <fragment
             android:id="@+id/waitingOrderMapFragment"
             android:name="com.fpondarts.foodie.ui.waiting_map.WaitingOrderMapFragment"
-            android:label="WaitingOrderMapFragment" >
+            android:label="Tu pedido" >
             <argument
                 android:name="shop_lat"
                 app:argType="float" />
@@ -127,6 +130,14 @@
     <fragment
         android:id="@+id/favours_nav_home"
         android:name="com.fpondarts.foodie.ui.favours.UserFavoursNavHomeFragment"
-        android:label="fragment_user_favours_home"
+        android:label="Favores"
         tools:layout="@layout/fragment_user_favours_home" />
+    <fragment
+        android:id="@+id/shopsMapFragment"
+        android:name="com.fpondarts.foodie.ui.shops_map.ShopsMapFragment"
+        android:label="Mapa de tiendas" >
+        <action
+            android:id="@+id/action_shopsMapFragment_to_shopFragment"
+            app:destination="@id/shopFragment" />
+    </fragment>
 </navigation>

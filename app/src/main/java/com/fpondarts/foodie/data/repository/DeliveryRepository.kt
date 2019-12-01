@@ -54,6 +54,7 @@ class DeliveryRepository(
         userId = id
         Coroutines.io{
             try {
+                db.getOrderDao().nukeTable()
                 val user = apiRequest{ api.getDelivery(token,id) }
                 currentUser.postValue(user)
                 if (user.state == "working"){
@@ -217,13 +218,13 @@ class DeliveryRepository(
         return item
     }
 
-    fun finishDelivery(order_id:Long):LiveData<Boolean>{
+    fun changeOrderState(order_id:Long,state:String="delivered"):LiveData<Boolean>{
         val liveData = MutableLiveData<Boolean>().apply {
             value = null
         }
         Coroutines.io{
             try {
-                val apiResponse = apiRequest { api.finishOrder(token!!,order_id,StateChangeRequest("delivered")) }
+                val apiResponse = apiRequest { api.finishOrder(token!!,order_id,StateChangeRequest(state)) }
                 liveData.postValue(true)
             } catch (e:FoodieApiException){
                 apiError.postValue(e)

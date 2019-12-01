@@ -85,6 +85,9 @@ interface FoodieApi {
     @PUT(USERS_PREFIX+"/{id}/make_favours")
     suspend fun putTakingFavours(@Header(API_KEY_HEADER)token:String, @Path("id")user_id: Long,@Body request: TakeFavoursRequest):Response<SuccessResponse>
 
+    @GET(USERS_PREFIX+"/favours")
+    suspend fun getFavourUsers(@Header(API_KEY_HEADER)token: String, @Query("latitude") lat:Double, @Query("longitude") long:Double,@Query("cantidad")cantidad:Int=10):Response<List<User>>
+
 
     // PRODUCTS
     @GET("products/{order_id}")
@@ -117,12 +120,15 @@ interface FoodieApi {
     @PATCH("deliveries/{del_id}/offers/{id}")
     suspend fun changeOfferState(@Header(API_KEY_HEADER)token: String,@Path("del_id") del_id:Long,@Path("id")id:Long,@Body state:StateChangeRequest):Response<SuccessResponse>
 
-    @PATCH("users/{id}/favour_offers/{id}")
-    suspend fun changeFavourOfferState(@Header(API_KEY_HEADER)token: String,@Path("del_id") del_id:Long,@Path("id")id:Long,@Body state:StateChangeRequest):Response<SuccessResponse>
+    @PATCH("users/{user_id}/favour_offers/{id}")
+    suspend fun changeFavourOfferState(@Header(API_KEY_HEADER)token: String,@Path("user_id") user_id:Long,@Path("id")id:Long,@Body state:StateChangeRequest):Response<SuccessResponse>
 
 
     @POST("deliveries/{id}/offers")
     suspend fun postOffer(@Header(API_KEY_HEADER)token: String, @Path("id")id:Long,@Body request: PostOfferRequest):Response<IdResponse>
+
+    @POST("users/{id}/favour_offers")
+    suspend fun postFavourOffer(@Header(API_KEY_HEADER)token: String, @Path("id") id: Long, @Body request: PostFavourOfferRequest):Response<IdResponse>
 
     @GET("offers/{id}")
     suspend fun getOffer(@Header(API_KEY_HEADER)token:String,@Path("id")id:Long):Response<Offer>

@@ -8,22 +8,22 @@ import com.fpondarts.foodie.ui.delivery.offers.OfferItemViewHolder
 import com.fpondarts.foodie.ui.delivery.offers.OnOfferItemClickListener
 
 class FavourOfferAdapter (val map: HashMap<Long, OfferItem>, val listener: OnOfferItemClickListener):
-    RecyclerView.Adapter<OfferItemViewHolder>()
+    RecyclerView.Adapter<FavourOfferViewHolder>()
 {
 
     val list = map.values
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): OfferItemViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FavourOfferViewHolder {
         val inflater = LayoutInflater.from(parent.context)
 
-        return OfferItemViewHolder(inflater,parent)
+        return FavourOfferViewHolder(inflater,parent)
     }
 
     override fun getItemCount(): Int {
         return list.size
     }
 
-    override fun onBindViewHolder(holder: OfferItemViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: FavourOfferViewHolder, position: Int) {
         val item: OfferItem = list.elementAt(position)
         holder.bind(item, listener)
     }

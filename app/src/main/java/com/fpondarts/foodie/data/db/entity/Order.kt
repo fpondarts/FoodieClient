@@ -16,7 +16,7 @@ data class Order(
     val price: Float,
     val user_id: Long,
     val shop_id:Long,
-    val state: String,
+    var state: String,
     val delivery_id: Long,
     val latitud:Double,
     val longitud:Double,

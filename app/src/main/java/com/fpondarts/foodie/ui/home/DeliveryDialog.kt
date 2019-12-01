@@ -27,6 +27,8 @@ import kotlinx.android.synthetic.main.fragment_delivery_option.*
 import org.kodein.di.KodeinAware
 import org.kodein.di.generic.instance
 import org.kodein.di.android.x.kodein
+import java.lang.Math.round
+
 /**
  * A simple [Fragment] subclass.
  */
@@ -82,6 +84,8 @@ class DeliveryDialog(
 
     }
 
+    private var withPoints: Boolean = false
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -96,16 +100,13 @@ class DeliveryDialog(
 
         var points = rootView.findViewById<EditText>(R.id.et_favour_points)
 
-        val withPoints = arguments!!.getBoolean("withPoints")
+        withPoints = arguments!!.getBoolean("withPoints")
 
         cancel_button.setOnClickListener(View.OnClickListener {
             dismiss()
         })
 
-        if (withPoints)
-            points.isEnabled = true
-        else
-            points.isEnabled = false
+        points.isEnabled = withPoints
 
 
         var rating = arguments!!.getDouble("rating")
@@ -114,19 +115,14 @@ class DeliveryDialog(
 
         val delivery_id = arguments!!.getLong("delivery_id")
         val order_id = arguments!!.getLong("order_id")
-        val price = arguments!!.getDouble("price")
-        val pay = arguments!!.getDouble("pay")
+        val price = arguments!!.getDouble("price",0.0)
+        val pay = arguments!!.getDouble("pay",0.0)
 
         val progressBar = rootView.findViewById<ProgressBar>(R.id.waitin_offer)
 
         val priceText = rootView.findViewById<TextView>(R.id.price_tv)
 
         url = arguments!!.getString("pic")
-
-        if (price == 0.0)
-            priceText.text = "Gratis!"
-        else
-            priceText.text = "$${price.toString().substring(0,5)}"
 
         progressBar.visibility = View.GONE
 
@@ -138,22 +134,40 @@ class DeliveryDialog(
             progressBar.visibility = View.VISIBLE
             cancel_button.isEnabled = false
             it.isEnabled = false
-            repository.postOffer(delivery_id,order_id,price,pay).observe(
-                this, Observer {
-                    it?.let {
-                        if (it > 0){
-                            repository.currentOfferId.postValue(it)
-                            Toast.makeText(activity,"Esperando respuesta del delivery",Toast.LENGTH_LONG).show()
-                            dismiss()
-                        } else {
-                            Toast.makeText(activity,"No se pudo realizar la oferta",Toast.LENGTH_LONG).show()
-                            offer_button.isEnabled = true
-                            cancel_button.isEnabled = true
-                        }
-                        progressBar.visibility = View.GONE
+
+            if (withPoints){
+                if (points.text.isNullOrBlank()){
+                    Toast.makeText(activity,"Debe ingresar los puntos a ofrecer",Toast.LENGTH_LONG).show()
+                }
+                else {
+                    val number = points.text.toString().toInt()
+                    if (number <= 0){
+                        Toast.makeText(activity,"Debe ofrecer al menos 1 punto",Toast.LENGTH_LONG).show()
+                    } else if (number > repository.currentUser.value!!.favourPoints){
+                        Toast.makeText(activity,"No tienes suficientes puntos",Toast.LENGTH_LONG).show()
+                    } else {
+                        repository.postFavourOffer(delivery_id,order_id,number)
                     }
                 }
-            )
+            } else {
+                repository.postOffer(delivery_id,order_id,price,pay).observe(
+                    this, Observer {
+                        it?.let {
+                            if (it > 0){
+                                repository.currentOfferId.postValue(it)
+                                Toast.makeText(activity,"Esperando respuesta del delivery",Toast.LENGTH_LONG).show()
+                                dismiss()
+                            } else {
+                                Toast.makeText(activity,"No se pudo realizar la oferta",Toast.LENGTH_LONG).show()
+                                offer_button.isEnabled = true
+                                cancel_button.isEnabled = true
+                            }
+                            progressBar.visibility = View.GONE
+                        }
+                    }
+                )
+            }
+
         })
         return rootView
     }
@@ -165,15 +179,37 @@ class DeliveryDialog(
         val delivery_id = arguments!!.getLong("delivery_id")
 
 
+        if (withPoints){
+            price_tv.text = "No aplica"
+
+            repository.getUser(delivery_id).observe(this, Observer {
+
+                delivery_rating.rating = it.rating.toFloat()
+                delivery_name.text = it.name
+
+                Picasso.get().load(it.picture)
+                    .resize(80,80)
+                    .rotate(270.0.toFloat()).into(delivery_pic)
+
+            })
+        }
+
+
         repository.getDelivery(delivery_id).observe(this, Observer {
             it?.let{
                 delivery_rating.rating = it.rating.toFloat()
                 delivery_name.text = it.name
 
-                if (price == 0.0)
-                    price_tv.text = "Gratis!"
-                else
-                    price_tv.text = "$${price.toString().substring(0,5)}"
+                val price = arguments!!.getDouble("price",0.0)
+
+                if (withPoints){
+                    price_tv.text = "No aplica"
+                } else {
+                    if (price == 0.0)
+                        price_tv.text = "Gratis!"
+                    else
+                        price_tv.text = "$${(round(price * 100.0) / 100.0)}}"
+                }
 
                 Picasso.get().load(it.picture)
                     .resize(80,80)
