@@ -16,4 +16,33 @@
         android:name="com.fpondarts.foodie.ui.delivery.account.DeliveryProfileFragment"
         android:label="Tu Cuenta"
         tools:layout="@layout/fragment_delivery_profile" />
+    <fragment
+        android:id="@+id/delivered_orders"
+        android:name="com.fpondarts.foodie.ui.delivery.delivered.DeliveredOrdersFragment"
+        android:label="Pedidos entregados"
+        tools:layout="@layout/fragment_delivered_orders"
+        >
+        <action
+            android:id="@+id/action_delivered_orders_to_delivered_order"
+            app:destination="@id/delivered_order" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/delivered_order"
+        android:name="com.fpondarts.foodie.ui.delivery.delivered.DeliveredOrderFragment"
+        android:label="Pedido entregado"
+        tools:layout="@layout/fragment_delivered_order">
+        <argument
+            android:name="order_id"
+            app:argType="long"
+            />
+        <argument
+            android:name="shop_id"
+            app:argType="long"
+            />
+        <argument
+            android:name="user_id"
+            app:argType="long"
+            />
+    </fragment>
 </navigation>

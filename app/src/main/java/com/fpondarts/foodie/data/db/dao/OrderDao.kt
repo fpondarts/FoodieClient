@@ -15,6 +15,9 @@ interface OrderDao {
     @Query("Select * from `order` where state = :state")
     fun getOrdersByState(state:String): LiveData<List<Order>>
 
+    @Query("Select * from `order`")
+    fun getAll(): LiveData<List<Order>>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun upsert(order:Order)
 

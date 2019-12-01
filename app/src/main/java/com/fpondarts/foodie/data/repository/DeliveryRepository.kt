@@ -20,6 +20,7 @@ import com.fpondarts.foodie.util.exception.FoodieApiException
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.PolylineOptions
 import com.google.gson.JsonObject
+import kotlinx.coroutines.delay
 import java.lang.Exception
 
 class DeliveryRepository(
@@ -252,6 +253,46 @@ class DeliveryRepository(
                 liveData.postValue(false)
             }
         }
+        return liveData
+    }
+
+
+    fun refreshOrder(order_id: Long):LiveData<Order>{
+        val liveData = db.getOrderDao().getOrder(order_id)
+        Coroutines.io {
+            try {
+                val response = apiRequest { api.getOrder(token!!,order_id) }
+                db.getOrderDao().upsert(response)
+            } catch (e:FoodieApiException){
+                if (e.code == 500){
+                    delay(500)
+                    refreshOrder(order_id)
+                }
+            }
+        }
+        return liveData
+    }
+
+    fun getDeliveredByMe():LiveData<List<Order>>{
+        val liveData = db.getOrderDao().getAll()
+
+        if (liveData.value.isNullOrEmpty()){
+            Coroutines.io {
+                try {
+                    val response = apiRequest { api.getDeliveredBy(token!!,userId!!) }
+                    db.getOrderDao().upsert(response)
+                } catch (e: FoodieApiException){
+                    if (e.code == 500){
+                        delay(500)
+                        getDeliveredByMe()
+                    }
+                }
+            }
+
+
+        }
+
+
         return liveData
     }
 

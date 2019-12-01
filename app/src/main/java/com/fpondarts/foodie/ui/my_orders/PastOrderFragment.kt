@@ -28,6 +28,7 @@ import org.kodein.di.Kodein
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.kodein
 import org.kodein.di.generic.instance
+import java.lang.Math.round
 
 /**
  * A simple [Fragment] subclass.
@@ -133,7 +134,14 @@ class PastOrderFragment : Fragment(), KodeinAware {
 
                 order.removeObservers(this)
 
-                order_price.text = "$${it.price}"
+                order_price.text = "$${(round(it.price * 100.0)/100.0).toString()}"
+
+                if (it.payWithPoints){
+                    delivery_price_title.text = "Costo de envío"
+                    delivery_price.text = it.favourPoints.toString() + " puntos"
+                } else {
+                    delivery_price.text = "$${(round(it.delivery_price!! * 100.00)/100.0).toString()}"
+                }
             }
 
             delivery_rating_card.card_rating_title.text = "Calificación del envío"

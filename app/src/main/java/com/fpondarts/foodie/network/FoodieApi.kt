@@ -111,6 +111,8 @@ interface FoodieApi {
     @POST("orders/{id}/delivery_review")
     suspend fun rateDelivery(@Header(API_KEY_HEADER)token:String,@Path("id")id:Long,@Body review:ReviewRequest):Response<SuccessResponse>
 
+    @GET("orders")
+    suspend fun getDeliveredBy(@Header(API_KEY_HEADER)token: String, @Query("delivery_id") id: Long):Response<List<Order>>
 
 
     // Offers

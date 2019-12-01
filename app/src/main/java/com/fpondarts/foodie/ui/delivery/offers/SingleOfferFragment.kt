@@ -77,8 +77,8 @@ class SingleOfferFragment : Fragment(),KodeinAware{
                 it?.let {
                     if (it){
                         val bundle = bundleOf("order_id" to order_id)
-                        repository.isWorking.postValue(true)
                         repository.current_order = order_id!!
+                        repository.isWorking.postValue(true)
                         findNavController().navigate(R.id.action_singleOfferFragment_to_workingFragment
                             ,bundle
                             ,NavOptions.Builder().setPopUpTo(R.id.offersFragment,true).build())

@@ -14,12 +14,15 @@ import androidx.recyclerview.widget.LinearLayoutManager
 
 import com.fpondarts.foodie.R
 import com.fpondarts.foodie.data.db.entity.MenuItem
+import com.fpondarts.foodie.data.repository.Repository
 import com.fpondarts.foodie.databinding.FragmentShopMenuBinding
 import com.fpondarts.foodie.ui.auth.AuthListener
 import com.fpondarts.foodie.ui.FoodieViewModelFactory
 import com.fpondarts.foodie.ui.home.menu_item_sheet.MenuItemBottomSheet
 import com.fpondarts.foodie.ui.home.OnMenuItemClickListener
 import com.fpondarts.foodie.ui.home.current_order.CurrentOrderFragment
+import com.squareup.picasso.Picasso
+import kotlinx.android.synthetic.main.card_shop.*
 import kotlinx.android.synthetic.main.fragment_shop_menu.*
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.kodein
@@ -39,6 +42,8 @@ class ShopMenuFragment : Fragment(), KodeinAware, AuthListener,
     }
 
     override val kodein by kodein()
+
+    private val repository: Repository by instance()
 
     private val factory: FoodieViewModelFactory by instance()
 
@@ -69,11 +74,20 @@ class ShopMenuFragment : Fragment(), KodeinAware, AuthListener,
             layoutManager = LinearLayoutManager(activity)
         }
 
+        repository.getShop(shopId).observe(this, Observer {
+            it?.let{
+                tv_shop_name.text = it.name
+                tv_shop_address.text = it.address
+                Picasso.get().load(it.photoUrl).resize(64,64).into(shopPic)
+            }
+        })
+
         button_pedido_actual.setOnClickListener(View.OnClickListener {
             this.onViewOrder(it)
         })
 
         viewModel.setShop(shopId)
+
 
         viewModel.getMenu(shopId).observe(this, Observer {
             it?.let{

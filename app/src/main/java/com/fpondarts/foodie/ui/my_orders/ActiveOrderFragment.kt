@@ -165,6 +165,13 @@ open class ActiveOrderFragment : Fragment(), KodeinAware {
                 }
                 order_price.text = "$${(Math.round(it.price!! * 100.00 )/ 100.00).toString()}"
 
+                if (it.payWithPoints){
+                    delivery_price_title.text = "Costo de envío"
+                    delivery_price.text = it.favourPoints.toString() + " puntos"
+                } else {
+                    delivery_price.text = "$${(Math.round(it.delivery_price!! * 100.00) /100.0).toString()}"
+                }
+
                 order.removeObservers(this)
             }
         })
