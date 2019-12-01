@@ -24,5 +24,7 @@ interface OrderDao {
     @Query("Select COUNT(order_id) from `order`")
     fun getCount():LiveData<Int>
 
+    @Query("DELETE FROM `order` ")
+    fun nukeTable()
 
 }

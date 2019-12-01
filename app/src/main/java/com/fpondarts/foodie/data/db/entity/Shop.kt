@@ -14,5 +14,6 @@ data class Shop (
     val latitude: Double,
     val longitude: Double,
     val rating: Float,
+    val reviews: Int,
     val address:String?
 ){}

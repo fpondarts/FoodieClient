@@ -6,5 +6,7 @@ interface OnOfferItemClickListener {
 
     fun onRejectClick(offer_id:Long,order_id:Long)
 
-    fun onViewClick(offer_id:Long,order_id:Long)
+    fun onViewClick(offer_id:Long,order_id:Long, price: Float)
+
+    fun onFavourViewClick(offer_id:Long,order_id:Long,points:Int)
 }

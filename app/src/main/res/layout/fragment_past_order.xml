@@ -19,14 +19,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <include
-            android:id="@+id/price_card"
-            layout="@layout/card_prices"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/order_content" />
 
         <include
             android:id="@+id/shop_rating_card"
@@ -35,7 +27,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/price_card" />
+            app:layout_constraintTop_toBottomOf="@id/order_content" />
 
         <include
             android:id="@+id/delivery_rating_card"

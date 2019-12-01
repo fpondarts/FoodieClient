@@ -26,6 +26,7 @@ class DeliveryAddressFragment : Fragment(), KodeinAware {
     private val factory: FoodieViewModelFactory by instance()
 
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
+
     private lateinit var viewModel: DeliveryAddressViewModel
 
     override fun onCreateView(

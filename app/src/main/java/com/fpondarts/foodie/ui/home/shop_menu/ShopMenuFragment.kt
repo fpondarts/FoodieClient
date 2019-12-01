@@ -86,7 +86,11 @@ class ShopMenuFragment : Fragment(), KodeinAware, AuthListener,
         })
 
         button_fin_pedido.setOnClickListener(View.OnClickListener {
-            findNavController().navigate(R.id.action_shopFragment_to_deliveryAddressFragment)
+            if (viewModel.repository.currentOrder!!.isEmpty()){
+                Toast.makeText(activity,"El pedido está vacío",Toast.LENGTH_LONG).show()
+            } else {
+                findNavController().navigate(R.id.action_shopFragment_to_deliveryAddressFragment)
+            }
         })
 
     }

@@ -17,7 +17,7 @@ class OrderItemViewHolder(inflater: LayoutInflater, parent: ViewGroup)
 
     fun bind(item:OrderPricedItem) {
         tv_name.text = item.name
-        tv_units.text = item.units.toString()
+        tv_units.text = item.units.toString() + " unidades"
         tv_unit_price.text = "$"+item.unitPrice.toString()+" / unidad"
     }
 

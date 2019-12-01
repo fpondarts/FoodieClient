@@ -29,7 +29,7 @@ class OfferItemViewHolder(inflater: LayoutInflater, parent:ViewGroup):
         })
 
         itemView.findViewById<Button>(R.id.button_detail).setOnClickListener(View.OnClickListener {
-            listener.onViewClick(item.offer_id,item.order_id)
+            listener.onViewClick(item.offer_id,item.order_id,item.earnings)
         })
     }
 

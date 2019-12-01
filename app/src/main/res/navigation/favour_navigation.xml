@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/favour_navigation"
+    app:startDestination="@id/favourOffersFragment">
+
+    <fragment
+        android:id="@+id/workingFavourFragment"
+        android:name="com.fpondarts.foodie.ui.favours.workingFragment.WorkingFavourFragment"
+        android:label="Favor actual"
+        tools:layout="@layout/fragment_working" >
+        <argument
+            android:name="order_id"
+            app:argType="long" />
+        <action
+            android:id="@+id/action_workingFavourFragment_to_favourOffersFragment"
+            app:destination="@id/favourOffersFragment" />
+        <action
+            android:id="@+id/action_workingFavourFragment_to_workingMapFragment2"
+            app:destination="@id/workingMapFragment2" />
+    </fragment>
+    <fragment
+        android:id="@+id/singleFavourOfferFragment"
+        android:name="com.fpondarts.foodie.ui.favours.singleFavourOffer.SingleFavourOfferFragment"
+        android:label="Oferta de favor"
+        tools:layout="@layout/fragment_single_offer" >
+        <argument
+            android:name="order_id"
+            app:argType="long" />
+        <argument
+            android:name="offer_id"
+            app:argType="long" />
+        <argument
+            android:name="points"
+            app:argType="integer" />
+        <action
+            android:id="@+id/action_singleFavourOfferFragment_to_workingFavourFragment"
+            app:destination="@id/workingFavourFragment" />
+        <action
+            android:id="@+id/action_singleFavourOfferFragment_to_offerMapFragment2"
+            app:destination="@id/offerMapFragment2" />
+    </fragment>
+    <fragment
+        android:id="@+id/favourOffersFragment"
+        android:name="com.fpondarts.foodie.ui.favours.favourOffers.FavourOffersFragment"
+        android:label="Ofertas de favor" >
+        <action
+            android:id="@+id/action_favourOffersFragment_to_singleFavourOfferFragment"
+            app:destination="@id/singleFavourOfferFragment" />
+        <action
+            android:id="@+id/action_favourOffersFragment_to_workingFavourFragment"
+            app:destination="@id/workingFavourFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/workingMapFragment2"
+        android:name="com.fpondarts.foodie.ui.working_map.WorkingMapFragment"
+        android:label="Mapa del pedido">
+        <argument
+            android:name="shop_lat"
+            app:argType="float" />
+        <argument
+            android:name="shop_lon"
+            app:argType="float" />
+        <argument
+            android:name="dest_lat"
+            app:argType="float" />
+        <argument
+            android:name="dest_lon"
+            app:argType="float" />
+        <argument
+            android:name="isFavour"
+            app:argType="boolean" />
+        <argument
+            android:name="pickedUp"
+            app:argType="boolean" />
+    </fragment>
+    <fragment
+        android:id="@+id/offerMapFragment2"
+        android:name="com.fpondarts.foodie.ui.offer_map.OfferMapFragment"
+        android:label="Mapa del pedido">
+
+        <argument
+            android:name="shop_lat"
+            app:argType="float" />
+        <argument
+            android:name="shop_lon"
+            app:argType="float" />
+        <argument
+            android:name="dest_lat"
+            app:argType="float" />
+        <argument
+            android:name="dest_lon"
+            app:argType="float" />
+    </fragment>
+</navigation>

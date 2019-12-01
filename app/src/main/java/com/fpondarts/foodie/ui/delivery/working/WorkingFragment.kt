@@ -1,27 +1,35 @@
 package com.fpondarts.foodie.ui.delivery.working
 
 
+import android.app.ProgressDialog
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.os.bundleOf
 import androidx.lifecycle.Observer
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 
 import com.fpondarts.foodie.R
+import com.fpondarts.foodie.data.db.entity.Order
+import com.fpondarts.foodie.data.db.entity.Shop
 import com.fpondarts.foodie.data.repository.DeliveryRepository
 import com.fpondarts.foodie.model.OrderPricedItem
 import com.fpondarts.foodie.ui.delivery.offers.OrderAdapter
+import com.squareup.picasso.Picasso
+import kotlinx.android.synthetic.main.card_prices.*
+import kotlinx.android.synthetic.main.card_shop.*
+import kotlinx.android.synthetic.main.card_user.*
 import kotlinx.android.synthetic.main.content_order.*
 import kotlinx.android.synthetic.main.fragment_working.*
 import org.kodein.di.generic.instance
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.kodein
+import kotlin.math.round
 
 /**
  * A simple [Fragment] subclass.
@@ -36,6 +44,9 @@ class WorkingFragment : Fragment(), KodeinAware {
     var shop_id: Long? = null
     var user_id: Long? = null
 
+    private lateinit var shop: Shop
+    private lateinit var order: Order
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -49,6 +60,8 @@ class WorkingFragment : Fragment(), KodeinAware {
         return inflater.inflate(R.layout.fragment_working, container, false)
     }
 
+    private var dialog: ProgressDialog? = null
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -60,9 +73,35 @@ class WorkingFragment : Fragment(), KodeinAware {
         order.observe(this, Observer {
             it?.let{
 
+                this.order = it
                 shop_id = it.shop_id
                 user_id = it.user_id
 
+                repository.getShop(shop_id!!).observe(this, Observer {
+                    it?.let{
+                        this.shop = it
+                        tv_shop_name.text = it.name
+                        tv_shop_address.text = it.address
+                        Picasso.get().load(it.photoUrl).resize(64,64).into(shopPic)
+                    }
+                })
+
+                repository.getUser(user_id!!).observe(this, Observer {
+                    it?.let{
+                        Picasso.get().load(it.picture).resize(64,64).into(profilePic)
+                        tv_user_name.text = it.name
+                        tv_email.text = it.email
+                        tv_phone.text = it.phone_number
+                    }
+                })
+
+
+                delivery_price.text = "$${(round(it.delivery_pay!! * 100.0) / 100.0).toString()}"
+                order_price.text = "$${(round(it.price * 100.0) / 100.0).toString()}"
+                delivery_price_title.text = "Tu ganancia"
+
+
+                dialog = ProgressDialog.show(activity,"Espere","Cargando orden")
 
                 val menu = repository.getMenu(shop_id!!)
                 menu.observe(this, Observer {
@@ -83,7 +122,7 @@ class WorkingFragment : Fragment(), KodeinAware {
                                         }
                                     })
                                 }
-
+                                dialog?.dismiss()
                             }
                         })
                     }
@@ -92,20 +131,47 @@ class WorkingFragment : Fragment(), KodeinAware {
             }
         })
 
+        choose_location_card.setOnClickListener {
+            val bundle = bundleOf(
+                "shop_lat" to this.shop.latitude,
+                "shop_lon" to this.shop.longitude,
+                "dest_lat" to this.order.latitud,
+                "dest_lon" to this.order.longitud,
+                "pickedUp" to (this.order.state == "pickedUp"),
+                "isFavour" to this.order.payWithPoints
+            )
+
+            findNavController().navigate(R.id.action_workingFragment_to_workingMapFragment,bundle)
+
+        }
+
         finish_order_card.setOnClickListener(View.OnClickListener {
-            Toast.makeText(context,"Click",Toast.LENGTH_LONG).show()
-            repository.finishDelivery(order_id!!).observe(this, Observer {
-                it?.let{
-                    if (it){
-                        repository.isWorking.postValue(false)
-                        repository.current_order = -1
-                        findNavController().navigate(R.id.action_workingFragment_to_offersFragment,null,
-                            NavOptions.Builder().setPopUpTo(R.id.workingFragment,true).build())
-                    } else {
-                        Toast.makeText(activity,"Error en la entrega del pedido",Toast.LENGTH_LONG).show()
+            if (this.order.state == "pickedUp"){
+                repository.changeOrderState(order_id!!,"delivered").observe(this, Observer {
+                    it?.let{
+                        if (it){
+                            repository.isWorking.postValue(false)
+                            repository.current_order = -1
+                            findNavController().navigate(R.id.action_workingFragment_to_offersFragment,null,
+                                NavOptions.Builder().setPopUpTo(R.id.workingFragment,true).build())
+                        } else {
+                            Toast.makeText(activity,"Error en la entrega del pedido",Toast.LENGTH_LONG).show()
+                        }
                     }
-                }
-            })
+                })
+            } else if (this.order.state == "onWay"){
+                repository.changeOrderState(order_id!!,"pickedUp").observe(this, Observer {
+                    it?.let{
+                        if (it){
+                            this.order.state = "pickedUp"
+                            finish_order_tv.text = "Finalizar pedido"
+                        } else {
+                            Toast.makeText(activity,"Error en la entrega del pedido",Toast.LENGTH_LONG).show()
+                        }
+                    }
+                })
+            }
+
         })
 
 

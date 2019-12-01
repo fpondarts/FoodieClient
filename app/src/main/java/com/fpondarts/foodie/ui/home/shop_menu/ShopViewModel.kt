@@ -6,7 +6,7 @@ import com.fpondarts.foodie.data.repository.Repository
 import com.fpondarts.foodie.ui.auth.AuthListener
 import com.fpondarts.foodie.util.exception.FoodieApiException
 
-class ShopViewModel (private val repository: Repository ) : ViewModel() {
+class ShopViewModel (val repository: Repository ) : ViewModel() {
 
     var liveMenu = MutableLiveData<ArrayList<MenuItem>>().apply {
         value = ArrayList()

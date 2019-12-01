@@ -16,12 +16,14 @@ data class Order(
     val price: Float,
     val user_id: Long,
     val shop_id:Long,
-    val state: String,
+    var state: String,
     val delivery_id: Long,
     val latitud:Double,
     val longitud:Double,
     val payWithPoints:Boolean,
     val shop_review:Float?,
-    val delivery_review:Float?
+    val delivery_review:Float?,
+    val delivery_pay:Float?,
+    val favourPoints:Int?
     ) {
 }

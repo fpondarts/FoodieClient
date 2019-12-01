@@ -29,6 +29,11 @@ import org.kodein.di.android.x.kodein
 class OffersFragment : Fragment(), OnOfferItemClickListener, KodeinAware {
 
 
+    override fun onFavourViewClick(offer_id: Long, order_id: Long, points: Int) {
+
+    }
+
+
     override val kodein by kodein()
 
     val repository: DeliveryRepository by instance()
@@ -39,6 +44,8 @@ class OffersFragment : Fragment(), OnOfferItemClickListener, KodeinAware {
 
         repository.acceptOffer(offer_id).observe(this@OffersFragment, Observer {
             it?.let {
+                repository.current_order = order_id
+                repository.isWorking.postValue(true)
                 if (it){
                     val bundle = Bundle().apply {
                         this.putLong("offer_id",offer_id)
@@ -71,10 +78,11 @@ class OffersFragment : Fragment(), OnOfferItemClickListener, KodeinAware {
 
     }
 
-    override fun onViewClick(offer_id:Long,order_id: Long) {
+    override fun onViewClick(offer_id:Long,order_id: Long, price:Float) {
         val bundle = Bundle().apply {
             this.putLong("offer_id",offer_id)
             this.putLong("order_id",order_id)
+            this.putFloat("delivery_pay",price)
         }
         findNavController().navigate(R.id.action_offersFragment_to_singleOfferFragment,bundle)
     }
@@ -152,6 +160,7 @@ class OffersFragment : Fragment(), OnOfferItemClickListener, KodeinAware {
                         val itemMap = HashMap<Long, OfferItem>()
                         val adapter = offers_recycler_view.adapter as OfferAdapter
                         for (offer in it) {
+                            Log.d("OfferItem: ","${offer.id.toString()}")
                             val item = OfferItem(
                                 offer.created_at_seconds!!,
                                 offer.delivery_price,

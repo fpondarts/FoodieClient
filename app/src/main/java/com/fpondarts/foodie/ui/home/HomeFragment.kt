@@ -13,6 +13,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.fpondarts.foodie.R
@@ -27,16 +28,16 @@ import org.kodein.di.android.x.kodein
 import org.kodein.di.generic.instance
 
 class HomeFragment : Fragment(), KodeinAware, OnShopClickListener, AuthListener {
-
-    class OnBottomFetcher(val viewModel: HomeViewModel): RecyclerView.OnScrollListener(){
-        override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-            super.onScrollStateChanged(recyclerView, newState)
-
-            if (!recyclerView.canScrollVertically(1)){
-                viewModel.getMoreShops();
-            }
-        }
-    }
+//
+//    class OnBottomFetcher(val viewModel: HomeViewModel): RecyclerView.OnScrollListener(){
+//        override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+//            super.onScrollStateChanged(recyclerView, newState)
+//
+//            if (!recyclerView.canScrollVertically(1)){
+//                viewModel.getMoreShops();
+//            }
+//        }
+//    }
 
     override fun onStarted() {
         Toast.makeText(activity,"Started api call",Toast.LENGTH_SHORT).show()
@@ -93,9 +94,11 @@ class HomeFragment : Fragment(), KodeinAware, OnShopClickListener, AuthListener 
             }
         })
 
-        shop_recycler_view.addOnScrollListener(OnBottomFetcher(homeViewModel))
+        choose_location_card.setOnClickListener {
+            findNavController().navigate(R.id.action_nav_home_to_shopsMapFragment)
+        }
 
-
+//        shop_recycler_view.addOnScrollListener(OnBottomFetcher(homeViewModel))
 
     }
 

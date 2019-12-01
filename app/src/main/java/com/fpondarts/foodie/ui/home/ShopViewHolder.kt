@@ -9,6 +9,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.fpondarts.foodie.R
 import com.fpondarts.foodie.data.db.entity.Shop
+import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.item_shop.view.*
 
 class ShopViewHolder(inflater: LayoutInflater, parent:ViewGroup):
@@ -29,8 +30,9 @@ class ShopViewHolder(inflater: LayoutInflater, parent:ViewGroup):
     fun bind(shop : Shop, listener: OnShopClickListener){
 
         shop.photoUrl?.let{
-            mShopIm?.setImageURI(Uri.parse(shop.photoUrl))
+            Picasso.get().load(it).resize(64,64).into(mShopIm)
         }
+
         mShopName?.text = shop.name
         mShopRating?.rating = shop.rating
         itemView.button_begin_order.setOnClickListener { listener.onItemClick(shop) }

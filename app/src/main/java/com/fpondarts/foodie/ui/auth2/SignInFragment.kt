@@ -106,7 +106,7 @@ class SignInFragment : Fragment(), KodeinAware, GoogleAuthHandler {
 
 
         signInButton.setOnClickListener(View.OnClickListener {
-            progressDialog = ProgressDialog.show(context,"Autenticando",null)
+            progressDialog = ProgressDialog.show(activity,"Autenticando",null)
             if (viewModel.userName.value.isNullOrBlank() || viewModel.password.value.isNullOrBlank()){
                 Toast.makeText(activity,"Los campos son obligatorios",Toast.LENGTH_SHORT).show()
                 progress_bar.visibility = View.GONE

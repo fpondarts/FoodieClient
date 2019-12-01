@@ -7,6 +7,7 @@ import com.fpondarts.foodie.data.db.FoodieDatabase
 import com.fpondarts.foodie.data.db.entity.*
 import com.fpondarts.foodie.data.parser.RoutesParser
 import com.fpondarts.foodie.model.Coordinates
+import com.fpondarts.foodie.model.Directions
 import com.fpondarts.foodie.network.DirectionsApi
 import com.fpondarts.foodie.network.FoodieApi
 import com.fpondarts.foodie.network.SafeApiRequest
@@ -53,6 +54,7 @@ class DeliveryRepository(
         userId = id
         Coroutines.io{
             try {
+                db.getOrderDao().nukeTable()
                 val user = apiRequest{ api.getDelivery(token,id) }
                 currentUser.postValue(user)
                 if (user.state == "working"){
@@ -70,22 +72,22 @@ class DeliveryRepository(
 
     }
 
-    fun getRoute(origin: LatLng, destination:LatLng, waypoint:LatLng ): LiveData<List<PolylineOptions>>{
-        val response = MutableLiveData<List<PolylineOptions>>().apply {
+    fun getRoute(origin: LatLng, destination:LatLng, waypoint:LatLng? ): LiveData<Directions>{
+        val response = MutableLiveData<Directions>().apply {
             value = null
         }
         Coroutines.io{
             try{
-                var string = "?origin="
-                string+=origin.latitude.toString()+","+origin.longitude.toString()
-                string+="&destination="+destination.latitude.toString()+","+destination.longitude.toString()
-                string+="&waypoints="+waypoint.latitude.toString()+","+waypoint.longitude.toString()
+                val originStr = origin.latitude.toString() + "," + origin.longitude.toString()
+                val destinationStr = destination.latitude.toString() + "," + destination.longitude.toString()
 
-                val json = apiRequest{ directionsApi.getRoute(string) }
+                var waypointStr = waypoint?.latitude.toString() + "," + waypoint?.longitude.toString()
 
-                val parser = RoutesParser()
+                if (waypoint == null)
+                    waypointStr = ""
+                val directions = apiRequest{ directionsApi.getRoute(originStr,destinationStr,waypointStr) }
 
-                response.postValue(parser.parse(json))
+                response.postValue(directions)
 
 
             } catch (e:FoodieApiException){
@@ -216,13 +218,13 @@ class DeliveryRepository(
         return item
     }
 
-    fun finishDelivery(order_id:Long):LiveData<Boolean>{
+    fun changeOrderState(order_id:Long,state:String="delivered"):LiveData<Boolean>{
         val liveData = MutableLiveData<Boolean>().apply {
             value = null
         }
         Coroutines.io{
             try {
-                val apiResponse = apiRequest { api.finishOrder(token!!,order_id,StateChangeRequest("delivered")) }
+                val apiResponse = apiRequest { api.finishOrder(token!!,order_id,StateChangeRequest(state)) }
                 liveData.postValue(true)
             } catch (e:FoodieApiException){
                 apiError.postValue(e)
@@ -253,6 +255,19 @@ class DeliveryRepository(
         return liveData
     }
 
+    fun getShop(id:Long):LiveData<Shop>{
+        val shop = db.getShopDao().loadShop(id)
+        shop.value?: Coroutines.io {
+            try{
+                val fetched = apiRequest { api.getShop(token!!,id) }
+                db.getShopDao().upsert(fetched)
+            } catch (e: FoodieApiException){
+                apiError.postValue(e)
+            }
+
+        }
+        return shop
+    }
 
     fun changePassword(new_pass:String):LiveData<SuccessResponse>{
         val live = MutableLiveData<SuccessResponse>().apply {
@@ -288,5 +303,21 @@ class DeliveryRepository(
             }
         }
         return live
+    }
+
+    fun getUser(user_id:Long):LiveData<User>{
+        val liveUser = MutableLiveData<User>().apply {
+            value = null
+        }
+        Coroutines.io {
+            try {
+                val response = apiRequest { api.getUserById(token!!,user_id) }
+                liveUser.postValue(response)
+            } catch (e:FoodieApiException) {
+                liveUser.postValue(null)
+                apiError.postValue(e)
+            }
+        }
+        return liveUser
     }
 }

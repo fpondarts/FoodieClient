@@ -79,8 +79,11 @@ class ConfirmOrderFragment : Fragment(), AuthListener, KodeinAware {
                             val user_lat = viewModel!!.repository.currentOrder!!.latitude
                             val user_lon = viewModel!!.repository.currentOrder!!.longitude
                             val shop_id = viewModel!!.repository.currentOrder!!.shopId
-                            val bundle = bundleOf("order_id" to viewModel!!.repository.currentOrder!!.id,
-                            "user_lat" to user_lat, "user_lon" to user_lon,"shop_id" to shop_id)
+                            val bundle = bundleOf("order_id" to viewModel!!.repository.currentOrder!!.id
+                                ,"user_lat" to user_lat
+                                ,"user_lon" to user_lon
+                                ,"shop_id" to shop_id)
+
                             findNavController().navigate(R.id.action_confirmOrderFragment_to_deliveryMapFragment,bundle,
                                 NavOptions.Builder().setPopUpTo(
                                     R.id.nav_home,
@@ -96,7 +99,34 @@ class ConfirmOrderFragment : Fragment(), AuthListener, KodeinAware {
                     }
                 })
             } else {
-                Toast.makeText(activity,"La opcion puntos de favor aun no esta disponible",Toast.LENGTH_LONG).show()
+                viewModel!!.confirmOrder(true).observe(this, Observer {
+                    it?.let {
+                        if (it) {
+
+                            val user_lat = viewModel!!.repository.currentOrder!!.latitude
+                            val user_lon = viewModel!!.repository.currentOrder!!.longitude
+                            val shop_id = viewModel!!.repository.currentOrder!!.shopId
+
+                            val bundle = bundleOf("order_id" to viewModel!!.repository.currentOrder!!.id
+                                ,"user_lat" to user_lat
+                                ,"user_lon" to user_lon
+                                ,"shop_id" to shop_id
+                                ,"isFavour" to true)
+
+                            findNavController().navigate(R.id.action_confirmOrderFragment_to_deliveryMapFragment,bundle,
+                                NavOptions.Builder().setPopUpTo(
+                                    R.id.nav_home,
+                                    false
+                                ).build())
+                        } else {
+                            Toast.makeText(
+                                activity,
+                                "No pudo confirmarse la orden",
+                                Toast.LENGTH_LONG
+                            ).show()
+                        }
+                    }
+                })
             }
 
         })
