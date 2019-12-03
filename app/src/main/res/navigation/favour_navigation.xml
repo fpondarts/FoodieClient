@@ -19,6 +19,9 @@
         <action
             android:id="@+id/action_workingFavourFragment_to_workingMapFragment2"
             app:destination="@id/workingMapFragment2" />
+        <action
+            android:id="@+id/action_workingFavourFragment_to_conversationFragment"
+            app:destination="@id/conversationFragment" />
     </fragment>
     <fragment
         android:id="@+id/singleFavourOfferFragment"
@@ -92,5 +95,19 @@
         <argument
             android:name="dest_lon"
             app:argType="float" />
+    </fragment>
+    <fragment
+        android:id="@+id/conversationFragment"
+        android:name="com.fpondarts.foodie.ui.chat.ConversationFragment"
+        android:label="Chat" >
+        <argument
+            android:name="my_id"
+            app:argType="string" />
+        <argument
+            android:name="their_id"
+            app:argType="string" />
+        <argument
+            android:name="order_id"
+            app:argType="long" />
     </fragment>
 </navigation>

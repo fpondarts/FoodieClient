@@ -3,12 +3,9 @@ package com.fpondarts.foodie.ui
 import android.Manifest
 import android.app.Activity
 import android.app.PendingIntent
-import android.content.Context
 import android.content.Intent
 import android.content.IntentSender
 import android.os.Bundle
-import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.google.android.material.snackbar.Snackbar
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
@@ -20,14 +17,12 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import android.view.Menu
 import android.widget.Toast
-import androidx.core.app.ActivityCompat
 import androidx.lifecycle.Observer
 import com.fpondarts.foodie.R
 import com.fpondarts.foodie.data.repository.AuthRepository
-import com.fpondarts.foodie.data.repository.Repository
+import com.fpondarts.foodie.data.repository.UserRepository
 import com.fpondarts.foodie.services.MyLocationService
 import com.fpondarts.foodie.ui.auth2.AuthActivity
-import com.google.android.gms.common.api.GoogleApiClient
 import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.location.*
 import com.google.android.gms.tasks.Task
@@ -47,7 +42,7 @@ class HomeActivity : AppCompatActivity(), KodeinAware {
 
     override val kodein by kodein()
 
-    val repository : Repository by instance()
+    val repository : UserRepository by instance()
 
     private lateinit var locationRequest: LocationRequest
 

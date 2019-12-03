@@ -6,14 +6,10 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
-import androidx.core.os.bundleOf
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.Observer
-import androidx.navigation.fragment.findNavController
 import com.fpondarts.foodie.R
-import com.fpondarts.foodie.data.repository.Repository
-import com.google.firebase.database.core.Repo
+import com.fpondarts.foodie.data.repository.UserRepository
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.card_rating.*
 import kotlinx.android.synthetic.main.card_shop.*
@@ -44,7 +40,7 @@ class ShopDialogFragment : DialogFragment(), KodeinAware {
     }
 
     override val kodein by kodein()
-    val repository: Repository by instance()
+    val repository: UserRepository by instance()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

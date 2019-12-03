@@ -22,7 +22,7 @@ import androidx.core.content.FileProvider
 import androidx.fragment.app.DialogFragment
 
 import com.fpondarts.foodie.R
-import com.fpondarts.foodie.data.repository.Repository
+import com.fpondarts.foodie.data.repository.UserRepository
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_user_profile.*
 import androidx.lifecycle.Observer
@@ -53,7 +53,7 @@ class UserProfileFragment : DialogFragment(), KodeinAware {
     lateinit var imageView: ImageView
 
     override val kodein by kodein()
-    val repository : Repository by instance()
+    val repository : UserRepository by instance()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?

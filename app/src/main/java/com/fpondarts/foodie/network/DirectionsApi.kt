@@ -56,7 +56,7 @@ interface DirectionsApi {
         const val USERS_PREFIX="users"
         const val SHOPS_PREFIX="shops"
         const val API_PREFIX = "maps/api/directions/json"
-        const val API_KEY = "AIzaSyDfTfWIPJRWTHeYn89oMhiPi4LYn7IjKRI"
+        const val API_KEY = BuildConfig.directions_api_key
     }
 
 }

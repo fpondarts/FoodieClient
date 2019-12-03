@@ -7,11 +7,10 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import android.widget.Toast
 import androidx.lifecycle.Observer
 import com.fpondarts.foodie.R
-import com.fpondarts.foodie.data.repository.Repository
+import com.fpondarts.foodie.data.repository.UserRepository
 import com.fpondarts.foodie.model.Directions
 import com.fpondarts.foodie.model.Route
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -38,7 +37,7 @@ class WaitingOrderMapFragment : Fragment(), OnMapReadyCallback, KodeinAware {
 
     override val kodein by kodein()
 
-    val repository: Repository by instance()
+    val repository: UserRepository by instance()
 
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
     private lateinit var destLatLng: LatLng

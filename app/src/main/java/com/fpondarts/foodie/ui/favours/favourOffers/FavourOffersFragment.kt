@@ -19,11 +19,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 
 import com.fpondarts.foodie.R
 import com.fpondarts.foodie.model.OfferItem
-import com.fpondarts.foodie.data.repository.Repository
-import com.fpondarts.foodie.ui.delivery.offers.OfferAdapter
+import com.fpondarts.foodie.data.repository.UserRepository
 import com.fpondarts.foodie.ui.delivery.offers.OnOfferItemClickListener
 import kotlinx.android.synthetic.main.fragment_favour_offers.*
-import kotlinx.android.synthetic.main.fragment_offers.*
 import kotlinx.android.synthetic.main.fragment_offers.offers_recycler_view
 import kotlinx.android.synthetic.main.fragment_offers.progress_bar
 import org.kodein.di.KodeinAware
@@ -91,7 +89,7 @@ class FavourOffersFragment : Fragment(), KodeinAware, OnOfferItemClickListener, 
 
     override val kodein by kodein()
 
-    private val repository: Repository by instance()
+    private val repository: UserRepository by instance()
 
     private var make_favours: Boolean = false
 

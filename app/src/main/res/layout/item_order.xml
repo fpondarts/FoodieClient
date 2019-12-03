@@ -35,18 +35,20 @@
             app:layout_constraintTop_toBottomOf="@id/order_date"
             app:layout_constraintVertical_bias="1.0" />
 
-        <Button
+        <ImageView
             android:id="@+id/view_order_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="116dp"
+            android:layout_width="61dp"
+            android:layout_height="43dp"
+            android:layout_marginStart="34dp"
+            android:layout_marginEnd="34dp"
             android:layout_marginBottom="16dp"
-            android:text="Ver"
+            android:src="@drawable/ic_visibility_foreground"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toEndOf="@id/order_date"
-            app:layout_constraintTop_toTopOf="@+id/order_card_price" />
+            app:layout_constraintHorizontal_bias="0.333"
+            app:layout_constraintStart_toEndOf="@id/order_card_price"
+            app:layout_constraintTop_toTopOf="@+id/order_card_price"
+            app:layout_constraintVertical_bias="1.0" />
 
         <TextView
             android:id="@+id/order_card_price"

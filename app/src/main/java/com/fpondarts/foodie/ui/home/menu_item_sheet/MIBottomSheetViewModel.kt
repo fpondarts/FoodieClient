@@ -2,12 +2,12 @@ package com.fpondarts.foodie.ui.home.menu_item_sheet
 
 import android.view.View
 import androidx.lifecycle.ViewModel
-import com.fpondarts.foodie.data.repository.Repository
+import com.fpondarts.foodie.data.repository.UserRepository
 import com.fpondarts.foodie.model.OrderItem
 import com.fpondarts.foodie.ui.auth.AuthListener
 import java.lang.NullPointerException
 
-class MIBottomSheetViewModel(val repository:Repository): ViewModel(){
+class MIBottomSheetViewModel(val repository:UserRepository): ViewModel(){
 
     var itemId:Long?=null
     var itemPrice:Float?=null

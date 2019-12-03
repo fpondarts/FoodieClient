@@ -1,27 +1,17 @@
 package com.fpondarts.foodie.ui.home
 
 
-import android.app.Activity
-import android.app.Dialog
-import android.media.Image
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.Window
 import android.widget.*
 import androidx.fragment.app.DialogFragment
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
-import com.fpondarts.foodie.FoodieApp
 
 import com.fpondarts.foodie.R
-import com.fpondarts.foodie.data.db.entity.Delivery
-import com.fpondarts.foodie.data.db.entity.Order
-import com.fpondarts.foodie.data.repository.Repository
+import com.fpondarts.foodie.data.repository.UserRepository
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_delivery_option.*
 import org.kodein.di.KodeinAware
@@ -38,7 +28,7 @@ class DeliveryDialog(
 
     override val kodein by kodein()
 
-    val repository: Repository by instance()
+    val repository: UserRepository by instance()
 
     var imageView : ImageView? = null
 

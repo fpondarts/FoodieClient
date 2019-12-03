@@ -29,6 +29,13 @@
             android:name=".services.MyLocationService"
             android:enabled="true"
             android:exported="true"></service>
+        <service
+            android:name=".services.fcm.MyFirebaseMessagingService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
         <receiver
             android:name=".services.MyLocationService"
             android:enabled="true"
@@ -70,7 +77,7 @@
         -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="@string/google_maps_key" />
+            android:value="@string/directions_api_key" />
 
         <activity android:name=".ui.auth2.AuthActivity"
             android:screenOrientation="portrait">

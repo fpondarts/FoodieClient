@@ -12,6 +12,9 @@ import com.google.android.gms.common.api.ApiException
 import android.util.Log
 import com.fpondarts.foodie.data.db.entity.*
 import com.fpondarts.foodie.data.parser.RoutesParser
+import com.fpondarts.foodie.data.repository.interfaces.OrderRepository
+import com.fpondarts.foodie.data.repository.interfaces.RepositoryInterface
+import com.fpondarts.foodie.data.repository.interfaces.ShopRepository
 import com.fpondarts.foodie.model.*
 import com.fpondarts.foodie.model.OrderItem
 import com.fpondarts.foodie.network.DirectionsApi
@@ -24,11 +27,14 @@ import com.google.firebase.database.DatabaseReference
 import kotlinx.coroutines.delay
 import java.lang.Exception
 
-class Repository(
+class UserRepository(
     private val api: FoodieApi,
     private val directionsApi: DirectionsApi,
     private val db : FoodieDatabase
-):SafeApiRequest(), PositionUpdater{
+):SafeApiRequest()
+    ,PositionUpdater
+    ,RepositoryInterface
+    {
 
 
 
@@ -209,7 +215,7 @@ class Repository(
         currentOrder = OrderModel(currentUser.value!!.user_id,shopId)
     }
 
-    fun getShopMenu(shopId:Long): LiveData<List<MenuItem>>{
+    override fun getMenu(shopId:Long): LiveData<List<MenuItem>>{
         val liveMenu = db.getMenuItemDao().loadMenu(shopId)
         if (liveMenu.value.isNullOrEmpty()){
             Coroutines.io {
@@ -287,7 +293,7 @@ class Repository(
         return liveData
     }
 
-    fun getShop(id:Long):LiveData<Shop>{
+    override fun getShop(id:Long):LiveData<Shop>{
         val shop = db.getShopDao().loadShop(id)
         shop.value?: Coroutines.io {
             try{
@@ -341,7 +347,7 @@ class Repository(
         return liveData
     }
 
-    fun getOrder(id:Long): LiveData<Order>{
+    override fun getOrder(id:Long): LiveData<Order>{
         val order = db.getOrderDao().getOrder(id)
         if (order.value == null || order.value?.state == "created" || order.value?.state=="onWay")  {
             Coroutines.io {
@@ -424,15 +430,6 @@ class Repository(
             }
         }
         return res
-    }
-
-    fun sendMessage(orderId:Long, message:String, to: String){
-        val newMessage = ChatMessage(orderId,currentUser.value!!.firebase_uid!!, to,message,System.currentTimeMillis()/1000)
-        val key = fbDb.child("chats").child(orderId.toString()).child("messages").push().key
-        if (key == null){
-
-        }
-        fbDb.child("chats").child(orderId.toString()).child("messages/$key").setValue(newMessage)
     }
 
     fun getUserPoints():Int{
@@ -528,7 +525,7 @@ class Repository(
         return live
     }
 
-    fun getOrderItems(order_id:Long):LiveData<List<com.fpondarts.foodie.data.db.entity.OrderItem>>{
+    override fun getOrderItems(order_id:Long):LiveData<List<com.fpondarts.foodie.data.db.entity.OrderItem>>{
         var liveData = db.getOrderItemDao().getOrderItems(order_id)
         if (liveData.value.isNullOrEmpty()){
             liveData = MutableLiveData<List<com.fpondarts.foodie.data.db.entity.OrderItem>>().apply {
@@ -547,7 +544,7 @@ class Repository(
         return liveData
     }
 
-    fun getMenuItem(product_id:Long):LiveData<MenuItem>{
+    override fun getMenuItem(product_id:Long):LiveData<MenuItem>{
         val item = db.getMenuItemDao().loadItem(product_id)
         if (item.value == null){
             Coroutines.io{
@@ -602,7 +599,7 @@ class Repository(
         return live
     }
 
-    fun getUser(user_id:Long):LiveData<User>{
+    override fun getUser(user_id:Long):LiveData<User>{
          val liveUser = MutableLiveData<User>().apply {
              value = null
          }

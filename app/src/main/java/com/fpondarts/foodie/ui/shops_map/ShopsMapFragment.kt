@@ -7,14 +7,13 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.core.os.bundleOf
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.fpondarts.foodie.R
 import com.fpondarts.foodie.data.db.entity.Shop
-import com.fpondarts.foodie.data.repository.Repository
+import com.fpondarts.foodie.data.repository.UserRepository
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -35,7 +34,7 @@ class ShopsMapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClick
 
     override val kodein by kodein()
 
-    private val repository: Repository by instance()
+    private val repository: UserRepository by instance()
 
 
     private lateinit var shops: LiveData<List<Shop>>

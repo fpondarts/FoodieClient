@@ -17,7 +17,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.fpondarts.foodie.R
 import com.fpondarts.foodie.data.db.entity.Order
 import com.fpondarts.foodie.data.db.entity.Shop
-import com.fpondarts.foodie.data.repository.Repository
+import com.fpondarts.foodie.data.repository.UserRepository
 import com.fpondarts.foodie.model.OrderPricedItem
 import com.fpondarts.foodie.ui.delivery.offers.OrderAdapter
 import com.squareup.picasso.Picasso
@@ -38,7 +38,7 @@ class WorkingFavourFragment : Fragment(), KodeinAware {
 
     override val kodein by kodein()
 
-    val repository: Repository by instance()
+    val repository: UserRepository by instance()
 
     var order_id:Long? = null
     var shop_id: Long? = null
@@ -105,7 +105,7 @@ class WorkingFavourFragment : Fragment(), KodeinAware {
                     finish_order_tv.text = "Finalizar pedido"
 
 
-                val menu = repository.getShopMenu(shop_id!!)
+                val menu = repository.getMenu(shop_id!!)
                 menu.observe(this, Observer {
                     it?.let{
                         val orderItems = repository.getOrderItems(order_id!!)

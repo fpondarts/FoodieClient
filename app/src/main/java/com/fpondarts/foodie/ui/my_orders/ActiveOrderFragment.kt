@@ -15,23 +15,18 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.fpondarts.foodie.R
 import com.fpondarts.foodie.data.db.entity.Order
 import com.fpondarts.foodie.data.db.entity.Shop
-import com.fpondarts.foodie.data.repository.Repository
+import com.fpondarts.foodie.data.repository.UserRepository
 import com.fpondarts.foodie.model.OrderPricedItem
 import com.fpondarts.foodie.ui.FoodieViewModelFactory
 import com.fpondarts.foodie.ui.delivery.offers.OrderAdapter
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.OnMapReadyCallback
-import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
-import com.google.android.gms.maps.model.MarkerOptions
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.card_prices.*
 import kotlinx.android.synthetic.main.card_shop.*
 import kotlinx.android.synthetic.main.card_user.*
 import kotlinx.android.synthetic.main.content_order.*
-import kotlinx.android.synthetic.main.fragment_active_order.*
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.kodein
 import org.kodein.di.generic.instance
@@ -46,7 +41,7 @@ open class ActiveOrderFragment : Fragment(), KodeinAware {
 
     val factory: FoodieViewModelFactory by instance()
 
-    val repository: Repository by instance()
+    val repository: UserRepository by instance()
 
     private lateinit var mMap:GoogleMap
 
@@ -88,7 +83,7 @@ open class ActiveOrderFragment : Fragment(), KodeinAware {
         order.observe(this, Observer {
             it?.let {
                 this.order = it
-                val menu = repository.getShopMenu(it.shop_id!!)
+                val menu = repository.getMenu(it.shop_id!!)
                 menu.observe(this, Observer {
                     it?.let {
                         val orderItems = repository.getOrderItems(orderId!!)

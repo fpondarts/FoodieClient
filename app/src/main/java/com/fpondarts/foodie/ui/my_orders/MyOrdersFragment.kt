@@ -1,7 +1,6 @@
 package com.fpondarts.foodie.ui.my_orders
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,12 +9,10 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.fpondarts.foodie.R
-import com.fpondarts.foodie.data.db.entity.Order
-import com.fpondarts.foodie.data.repository.Repository
+import com.fpondarts.foodie.data.repository.UserRepository
 import com.fpondarts.foodie.databinding.FragmentMyOrdersBinding
 import com.fpondarts.foodie.ui.FoodieViewModelFactory
 import kotlinx.android.synthetic.main.fragment_my_orders.*
@@ -29,7 +26,7 @@ class MyOrdersFragment : Fragment(), KodeinAware, OnMyOrderClickListener{
 
     private var viewModel : MyOrdersViewModel? = null
 
-    val repository: Repository by instance()
+    val repository: UserRepository by instance()
 
     val factory: FoodieViewModelFactory by instance()
 
@@ -56,10 +53,6 @@ class MyOrdersFragment : Fragment(), KodeinAware, OnMyOrderClickListener{
         recycler_past_orders.apply{
             layoutManager = LinearLayoutManager(activity)
         }
-
-
-
-
 
         repository.getActiveOrders().observe(this, Observer {
             it?.let{

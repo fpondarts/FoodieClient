@@ -8,7 +8,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.core.os.bundleOf
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.fpondarts.foodie.R
 import com.fpondarts.foodie.data.repository.DeliveryRepository
@@ -23,23 +25,21 @@ import org.kodein.di.generic.instance
  * [DeliveredOrdersFragment.OnFragmentInteractionListener] interface
  * to handle interaction events.
  */
-class DeliveredOrdersFragment : Fragment(), KodeinAware, OnMyOrderClickListener {
+class DeliveredOrdersFragment : Fragment(), KodeinAware, OnDeliveredOrderClickListener {
 
 
-    override fun onActiveOrderClick(
-        active: Boolean,
-        orderId: Long,
-        shopId: Long?,
-        deliveryId: Long?
-    ) {
-        
+    override fun onOrderClick(order_id: Long, shop_id: Long, user_id: Long) {
+        val bundle = bundleOf().apply {
+            putLong("order_id", order_id)
+            putLong("shop_id",shop_id)
+            putLong("user_id",user_id)
+        }
+        findNavController().navigate(R.id.action_delivered_orders_to_delivered_order,bundle)
     }
 
     override val kodein by kodein()
 
     val repository : DeliveryRepository by instance()
-
-    private var listener: OnFragmentInteractionListener? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -49,21 +49,6 @@ class DeliveredOrdersFragment : Fragment(), KodeinAware, OnMyOrderClickListener 
         return inflater.inflate(R.layout.fragment_delivered_orders,container,false)
     }
 
-
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        if (context is OnFragmentInteractionListener) {
-            listener = context
-        } else {
-            throw RuntimeException(context.toString() + " must implement OnFragmentInteractionListener")
-        }
-    }
-
-    override fun onDetach() {
-        super.onDetach()
-        listener = null
-    }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -76,26 +61,13 @@ class DeliveredOrdersFragment : Fragment(), KodeinAware, OnMyOrderClickListener 
             it?.let{
                 if (! it.isNullOrEmpty() ){
                     delivered_recycler_view.adapter = DeliveredOrdersAdapter(it,this)
+                    delivered_recycler_view.adapter!!.notifyDataSetChanged()
                 }
             }
         })
 
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     *
-     *
-     * See the Android Training lesson [Communicating with Other Fragments]
-     * (http://developer.android.com/training/basics/fragments/communicating.html)
-     * for more information.
-     */
-    interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        fun onFragmentInteraction(uri: Uri)
-    }
+
 
 }

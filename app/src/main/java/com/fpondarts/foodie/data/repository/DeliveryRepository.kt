@@ -6,6 +6,9 @@ import androidx.lifecycle.MutableLiveData
 import com.fpondarts.foodie.data.db.FoodieDatabase
 import com.fpondarts.foodie.data.db.entity.*
 import com.fpondarts.foodie.data.parser.RoutesParser
+import com.fpondarts.foodie.data.repository.interfaces.OrderRepository
+import com.fpondarts.foodie.data.repository.interfaces.RepositoryInterface
+import com.fpondarts.foodie.data.repository.interfaces.ShopRepository
 import com.fpondarts.foodie.model.Coordinates
 import com.fpondarts.foodie.model.Directions
 import com.fpondarts.foodie.network.DirectionsApi
@@ -27,7 +30,9 @@ class DeliveryRepository(
     private val api:FoodieApi,
     private val directionsApi: DirectionsApi,
     private val db:FoodieDatabase
-): SafeApiRequest() , PositionUpdater{
+): SafeApiRequest()
+    ,PositionUpdater
+    ,RepositoryInterface{
 
     val apiError = MutableLiveData<FoodieApiException>().apply {
         value = null
@@ -154,7 +159,7 @@ class DeliveryRepository(
         return successResponse
     }
 
-    fun getOrder(order_id:Long):LiveData<Order>{
+    override fun getOrder(order_id:Long):LiveData<Order>{
         val liveData = MutableLiveData<Order>().apply {
             value = null
         }
@@ -170,7 +175,7 @@ class DeliveryRepository(
         return liveData
     }
 
-    fun getOrderItems(order_id:Long):LiveData<List<OrderItem>>{
+    override fun getOrderItems(order_id:Long):LiveData<List<OrderItem>>{
         var liveData = db.getOrderItemDao().getOrderItems(order_id)
         if (liveData.value.isNullOrEmpty()){
             liveData = MutableLiveData<List<OrderItem>>().apply {
@@ -189,7 +194,7 @@ class DeliveryRepository(
         return liveData
     }
 
-    fun getMenu(shop_id:Long):LiveData<List<MenuItem>>{
+    override fun getMenu(shop_id:Long):LiveData<List<MenuItem>>{
         val menu = db.getMenuItemDao().loadMenu(shop_id)
         if (menu.value.isNullOrEmpty()){
             Coroutines.io {
@@ -204,7 +209,7 @@ class DeliveryRepository(
         return menu
     }
 
-    fun getMenuItem(product_id:Long):LiveData<MenuItem>{
+    override fun getMenuItem(product_id:Long):LiveData<MenuItem>{
         val item = db.getMenuItemDao().loadItem(product_id)
         if (item.value == null){
             Coroutines.io{
@@ -296,7 +301,7 @@ class DeliveryRepository(
         return liveData
     }
 
-    fun getShop(id:Long):LiveData<Shop>{
+    override fun getShop(id:Long):LiveData<Shop>{
         val shop = db.getShopDao().loadShop(id)
         shop.value?: Coroutines.io {
             try{
@@ -346,7 +351,7 @@ class DeliveryRepository(
         return live
     }
 
-    fun getUser(user_id:Long):LiveData<User>{
+    override fun getUser(user_id:Long):LiveData<User>{
         val liveUser = MutableLiveData<User>().apply {
             value = null
         }

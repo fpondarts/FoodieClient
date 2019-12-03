@@ -1,7 +1,6 @@
 package com.fpondarts.foodie.ui.favours.singleFavourOffer
 
 
-import android.app.AlertDialog
 import android.app.ProgressDialog
 import android.os.Bundle
 import android.util.Log
@@ -17,7 +16,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 
 import com.fpondarts.foodie.R
-import com.fpondarts.foodie.data.repository.Repository
+import com.fpondarts.foodie.data.repository.UserRepository
 import com.fpondarts.foodie.model.OrderPricedItem
 import com.fpondarts.foodie.ui.delivery.offers.OrderAdapter
 import com.google.android.gms.maps.model.LatLng
@@ -45,7 +44,7 @@ class SingleFavourOfferFragment : Fragment() , KodeinAware {
     override val kodein by kodein()
 
 
-    val repository: Repository by instance()
+    val repository: UserRepository by instance()
 
 
     override fun onCreateView(
@@ -148,7 +147,7 @@ class SingleFavourOfferFragment : Fragment() , KodeinAware {
                 order_price.text = "$${(round(it.price * 100.0) / 100.0).toString()}"
                 delivery_price_title.text = "Tu ganancia"
 
-                val menu = repository.getShopMenu(shop_id!!)
+                val menu = repository.getMenu(shop_id!!)
                 menu.observe(this@SingleFavourOfferFragment, Observer {
                     it?.let{
                         val orderItems = repository.getOrderItems(order_id!!)

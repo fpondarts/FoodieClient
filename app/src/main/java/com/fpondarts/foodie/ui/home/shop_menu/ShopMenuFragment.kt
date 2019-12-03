@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 
 import com.fpondarts.foodie.R
 import com.fpondarts.foodie.data.db.entity.MenuItem
-import com.fpondarts.foodie.data.repository.Repository
+import com.fpondarts.foodie.data.repository.UserRepository
 import com.fpondarts.foodie.databinding.FragmentShopMenuBinding
 import com.fpondarts.foodie.ui.auth.AuthListener
 import com.fpondarts.foodie.ui.FoodieViewModelFactory
@@ -43,7 +43,7 @@ class ShopMenuFragment : Fragment(), KodeinAware, AuthListener,
 
     override val kodein by kodein()
 
-    private val repository: Repository by instance()
+    private val repository: UserRepository by instance()
 
     private val factory: FoodieViewModelFactory by instance()
 

@@ -1,28 +1,19 @@
 package com.fpondarts.foodie.services
 
-import android.app.Service
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.os.IBinder
 import android.util.Log
-import android.widget.Toast
 import com.fpondarts.foodie.FoodieApp
 import com.fpondarts.foodie.data.repository.DeliveryRepository
 import com.fpondarts.foodie.data.repository.PositionUpdater
-import com.fpondarts.foodie.data.repository.Repository
-import com.fpondarts.foodie.ui.delivery.DeliveryHomeActivity
+import com.fpondarts.foodie.data.repository.UserRepository
 import com.google.android.gms.location.LocationResult
 import org.kodein.di.Kodein
-import org.kodein.di.android.x.kodein
 import org.kodein.di.generic.instance
 import org.kodein.di.KodeinAware
-import org.kodein.di.LazyKodein
-import org.kodein.di.android.closestKodein
-import org.kodein.di.android.kodein
 
 import java.lang.Exception
-import java.lang.StringBuilder
 
 class MyLocationService() : BroadcastReceiver(),KodeinAware{
 
@@ -47,7 +38,7 @@ class MyLocationService() : BroadcastReceiver(),KodeinAware{
             val action = intent!!.action
             Log.d("LocationService","Action es "+action)
             if (action.equals(ACTION_PROCESS_UPDATE_USER)){
-                val repository: Repository by instance()
+                val repository: UserRepository by instance()
                 updater = repository
             }
             else if (action.equals(ACTION_PROCESS_UPDATE_DELIVERY)) {

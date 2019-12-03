@@ -4,7 +4,7 @@ import android.app.Application
 import com.fpondarts.foodie.data.db.FoodieDatabase
 import com.fpondarts.foodie.data.repository.AuthRepository
 import com.fpondarts.foodie.data.repository.DeliveryRepository
-import com.fpondarts.foodie.data.repository.Repository
+import com.fpondarts.foodie.data.repository.UserRepository
 import com.fpondarts.foodie.network.DirectionsApi
 import com.fpondarts.foodie.network.FoodieApi
 import com.fpondarts.foodie.ui.FoodieViewModelFactory
@@ -25,7 +25,7 @@ class FoodieApp: Application(), KodeinAware {
         bind() from singleton { FoodieApi() }
         bind() from singleton { AuthRepository(instance())}
         bind() from singleton { FoodieDatabase(instance()) }
-        bind() from singleton { Repository(instance(),instance(),instance()) }
+        bind() from singleton { UserRepository(instance(),instance(),instance()) }
         bind() from singleton { DeliveryRepository(instance() , instance(), instance()) }
         bind() from provider { AuthViewModelFactory(instance()) }
         bind() from provider { FoodieViewModelFactory(instance()) }

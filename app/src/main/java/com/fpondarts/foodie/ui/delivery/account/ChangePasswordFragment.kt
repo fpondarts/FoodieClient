@@ -2,7 +2,6 @@ package com.fpondarts.foodie.ui.delivery.account
 
 
 import android.app.ProgressDialog
-import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -15,7 +14,7 @@ import androidx.lifecycle.Observer
 
 import com.fpondarts.foodie.R
 import com.fpondarts.foodie.data.repository.DeliveryRepository
-import com.fpondarts.foodie.data.repository.Repository
+import com.fpondarts.foodie.data.repository.UserRepository
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.fragment_change_password.*
@@ -43,7 +42,7 @@ class ChangePasswordFragment : DialogFragment(), KodeinAware {
     var isDelivery:Boolean = false
 
     val del_repository : DeliveryRepository by instance()
-    val user_repo: Repository by instance()
+    val user_repo: UserRepository by instance()
 
     var newPassword = ""
 

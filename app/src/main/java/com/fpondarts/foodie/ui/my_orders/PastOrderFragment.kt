@@ -12,19 +12,16 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 
 import com.fpondarts.foodie.R
-import com.fpondarts.foodie.data.repository.Repository
+import com.fpondarts.foodie.data.repository.UserRepository
 import com.fpondarts.foodie.model.OrderPricedItem
 import com.fpondarts.foodie.ui.delivery.offers.OrderAdapter
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.card_prices.*
-import kotlinx.android.synthetic.main.card_prices.view.*
 import kotlinx.android.synthetic.main.card_shop.*
 import kotlinx.android.synthetic.main.card_to_rate.view.*
 import kotlinx.android.synthetic.main.card_user.*
 import kotlinx.android.synthetic.main.content_order.*
-import kotlinx.android.synthetic.main.fragment_delivery_option.*
 import kotlinx.android.synthetic.main.fragment_past_order.*
-import org.kodein.di.Kodein
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.kodein
 import org.kodein.di.generic.instance
@@ -39,7 +36,7 @@ class PastOrderFragment : Fragment(), KodeinAware {
 
     var progressDialog: ProgressDialog? = null
 
-    val repository: Repository by instance()
+    val repository: UserRepository by instance()
 
     private var orderId:Long? = null
 
@@ -69,7 +66,7 @@ class PastOrderFragment : Fragment(), KodeinAware {
             it?.let {
                 shopId = it.shop_id
                 deliveryId = it.delivery_id
-                val menu = repository.getShopMenu(it.shop_id!!)
+                val menu = repository.getMenu(it.shop_id!!)
                 menu.observe(this, Observer {
                     it?.let {
                         val orderItems = repository.getOrderItems(orderId!!)

@@ -7,7 +7,7 @@ import com.fpondarts.foodie.data.db.entity.Order
 import com.fpondarts.foodie.ui.my_orders.OnMyOrderClickListener
 import com.fpondarts.foodie.ui.my_orders.OrderViewHolder
 
-class DeliveredOrdersAdapter(private val list: List<Order>, val listener: OnMyOrderClickListener)
+class DeliveredOrdersAdapter(private val list: List<Order>, val listener: OnDeliveredOrderClickListener)
     : RecyclerView.Adapter<DeliveredOrderViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DeliveredOrderViewHolder {

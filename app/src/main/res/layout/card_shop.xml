@@ -7,8 +7,8 @@
     android:id="@+id/shop_card"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="16dp"
-    android:layout_marginBottom="16dp"
+    android:layout_marginTop="8dp"
+    android:layout_marginBottom="8dp"
     >
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -33,8 +33,9 @@
             android:layout_height="64dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            style="ima"
+            android:layout_marginBottom="8dp"
             android:background="@color/common_google_signin_btn_text_light_disabled"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/shop_card_title" />
 
@@ -43,7 +44,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="6dp"
+            android:layout_marginTop="0dp"
             android:hint="McDonalds"
             app:layout_constraintStart_toEndOf="@+id/shopPic"
             app:layout_constraintTop_toTopOf="@id/shopPic" />
