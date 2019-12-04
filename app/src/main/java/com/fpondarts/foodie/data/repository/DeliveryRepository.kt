@@ -278,7 +278,7 @@ class DeliveryRepository(
         return liveData
     }
 
-    fun getDeliveredByMe():LiveData<List<Order>>{
+    override fun getDeliveredByMe():LiveData<List<Order>>{
         val liveData = db.getOrderDao().getAll()
 
         if (liveData.value.isNullOrEmpty()){

@@ -35,6 +35,7 @@ import com.karumi.dexter.listener.PermissionDeniedResponse
 import com.karumi.dexter.listener.PermissionGrantedResponse
 import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.single.PermissionListener
+import kotlinx.android.synthetic.main.nav_header_delivery_home.*
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.kodein
 import org.kodein.di.generic.instance
@@ -87,6 +88,13 @@ class DeliveryHomeActivity : AppCompatActivity(), KodeinAware {
 
         repository.initUser(token,id)
 
+        repository.currentUser.observe(this, Observer {
+            it?.let{
+                drawer_user_name.text = it.name
+                drawer_user_email.text = it.email
+            }
+        })
+
         repository.apiError.observe(this, Observer {
             it?.let {
                 Toast.makeText(this,"${it.code}: ${it.message}",Toast.LENGTH_SHORT).show()
@@ -95,8 +103,8 @@ class DeliveryHomeActivity : AppCompatActivity(), KodeinAware {
 
         askLocationPermission()
 
-        // 2 es el índice del item logout
-        navView.menu.getItem(2).setOnMenuItemClickListener {
+        // 3 es el índice del item logout
+        navView.menu.getItem(3).setOnMenuItemClickListener {
             FirebaseAuth.getInstance().signOut()
             val repository : AuthRepository by instance()
             repository.role = null

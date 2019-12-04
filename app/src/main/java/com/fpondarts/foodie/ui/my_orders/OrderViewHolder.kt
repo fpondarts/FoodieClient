@@ -23,8 +23,8 @@ class OrderViewHolder(inflater:LayoutInflater, parent:ViewGroup):
 
     init{
         mOrderId = itemView.findViewById(R.id.tv_order_id)
-        mDate = itemView.findViewById(R.id.order_date)
-        mPrice = itemView.findViewById(R.id.order_card_price)
+        mDate = itemView.findViewById(R.id.tv_order_date)
+        mPrice = itemView.findViewById(R.id.tv_earnings)
         mCard = itemView.findViewById(R.id.order_card)
         mViewOrder = itemView.findViewById(R.id.view_button)
     }

@@ -31,9 +31,8 @@
             android:layout_height="26dp"
             android:layout_marginStart="68dp"
             android:layout_marginTop="28dp"
-            style="@style/TextAppearance.MaterialComponents.Headline4"
+            style="@style/TextAppearance.MaterialComponents.Headline5"
             android:text="Ver pedido"
-            android:textSize="18sp"
             app:layout_constraintStart_toEndOf="@+id/cart_icon"
             app:layout_constraintTop_toTopOf="parent" />
 

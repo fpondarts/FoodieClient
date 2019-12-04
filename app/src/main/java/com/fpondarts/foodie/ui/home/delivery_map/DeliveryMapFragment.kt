@@ -33,6 +33,7 @@ import androidx.navigation.NavOptions
 import androidx.navigation.NavOptionsBuilder
 import androidx.navigation.fragment.findNavController
 import com.fpondarts.foodie.data.db.entity.Order
+import com.fpondarts.foodie.data.db.entity.User
 import com.fpondarts.foodie.model.Coordinates
 import com.fpondarts.foodie.ui.home.DeliveryDialog
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -74,21 +75,15 @@ class DeliveryMapFragment : Fragment()
             this, Observer {
                 it?.let{
                     val user = it
-                    viewModel.repository.askDeliveryPrice(user_lat!!,user_lon!!,shop_id!!,it.user_id).observe(
-                        this, Observer {
-                            it?.let {
-                                val dialog = DeliveryDialog.newInstance(
-                                    isFavour
-                                    ,user.user_id
-                                    ,order_id
-                                    ,it.price
-                                    ,it.pay
-                                    ,user.rating.toDouble()
-                                    ,user.picture)
-                                dialog.show(childFragmentManager,"Ofrece tu pedido")
-                            }
-                        }
-                    )
+                    val dialog = DeliveryDialog.newInstance(
+                        isFavour
+                        ,user.user_id
+                        ,order_id
+                        ,0.toDouble()
+                        ,0.toDouble()
+                        ,user.rating.toDouble()
+                        ,user.picture)
+                    dialog.show(childFragmentManager,"Ofrece tu pedido")
                     liveDel.removeObservers(this)
                 }
             }
@@ -180,6 +175,10 @@ class DeliveryMapFragment : Fragment()
             showCancelDialog()
         }
 
+
+        viewModel.repository.availableDeliveries.postValue(ArrayList<User>())
+        viewModel.repository.currentOfferId.postValue(-1)
+
         isFavour = arguments!!.getBoolean("isFavour",false)
 
         return inflater.inflate(R.layout.delivery_map_fragment, container, false)
@@ -196,7 +195,6 @@ class DeliveryMapFragment : Fragment()
         user_lon = arguments!!.getDouble("user_lon")
         shop_id = arguments!!.getLong("shop_id")
 
-        viewModel.repository.currentOfferId.postValue(-1)
 
     }
 
@@ -300,29 +298,59 @@ class DeliveryMapFragment : Fragment()
                         ,"Esperando respuesta (Max 2 min)"
                     )
                     val timeMilis = System.currentTimeMillis()
-                    val liveOffer = viewModel.repository.getOffer(it)
-                    liveOffer.observe(this, Observer {
-                        it?.let {
-                            if (it.state == "offered"){
-                                if (System.currentTimeMillis() >= (timeMilis + (1000 * 65 * 2))){
+                    if (isFavour){
+                        val liveOffer = viewModel.repository.getFavourOffer(it)
+                        liveOffer.observe(this, Observer {
+                            it?.let {
+                                if (it.state == "offered"){
+                                    if (System.currentTimeMillis() >= (timeMilis + (1000 * 65 * 2))){
+                                        progressDialog!!.dismiss()
+                                        Toast.makeText(activity,"Oferta rechazada",Toast.LENGTH_LONG).show()
+                                        viewModel.repository.currentOfferId.postValue(-1)
+                                    } else
+                                        viewModel.repository.updateObservedOffer(it.id)
+                                } else if (it.state == "accepted"){
+                                    progressDialog!!.dismiss()
+                                    findNavController().navigate(R.id.action_deliveryMapFragment_to_nav_home,
+                                        null,
+                                        NavOptions.Builder().setPopUpTo(R.id.nav_home,true).build())
+                                    viewModel.repository.currentOfferId.postValue(-1)
+                                    Toast.makeText(activity,"Pedido en camino!",Toast.LENGTH_LONG).show()
+                                } else {
                                     progressDialog!!.dismiss()
                                     Toast.makeText(activity,"Oferta rechazada",Toast.LENGTH_LONG).show()
                                     viewModel.repository.currentOfferId.postValue(-1)
-                                } else
-                                    viewModel.repository.updateObservedOffer(it.id)
-                            } else if (it.state == "accepted"){
-                                progressDialog!!.dismiss()
-                                findNavController().navigate(R.id.action_deliveryMapFragment_to_nav_home,
-                                    null,
-                                    NavOptions.Builder().setPopUpTo(R.id.nav_home,true).build())
-                                viewModel.repository.currentOfferId.postValue(-1)
-                            } else {
-                                progressDialog!!.dismiss()
-                                Toast.makeText(activity,"Oferta rechazada",Toast.LENGTH_LONG).show()
-                                viewModel.repository.currentOfferId.postValue(-1)
+                                }
                             }
-                        }
-                    })
+                        })
+                    }
+                    else {
+                        val liveOffer = viewModel.repository.getOffer(it)
+                        liveOffer.observe(this, Observer {
+                            it?.let {
+                                if (it.state == "offered"){
+                                    if (System.currentTimeMillis() >= (timeMilis + (1000 * 65 * 2))){
+                                        progressDialog!!.dismiss()
+                                        Toast.makeText(activity,"Oferta rechazada",Toast.LENGTH_LONG).show()
+                                        viewModel.repository.currentOfferId.postValue(-1)
+                                    } else
+                                        viewModel.repository.updateObservedOffer(it.id)
+                                } else if (it.state == "accepted"){
+                                    progressDialog!!.dismiss()
+                                    findNavController().navigate(R.id.action_deliveryMapFragment_to_nav_home,
+                                        null,
+                                        NavOptions.Builder().setPopUpTo(R.id.nav_home,true).build())
+                                    viewModel.repository.currentOfferId.postValue(-1)
+                                    Toast.makeText(activity,"Pedido en camino!",Toast.LENGTH_LONG).show()
+                                } else {
+                                    progressDialog!!.dismiss()
+                                    Toast.makeText(activity,"Oferta rechazada",Toast.LENGTH_LONG).show()
+                                    viewModel.repository.currentOfferId.postValue(-1)
+                                }
+                            }
+                        })
+                    }
+
                 }
             }
         })
@@ -361,7 +389,7 @@ class DeliveryMapFragment : Fragment()
 
     fun useHandler() {
         mHandler = Handler()
-        mHandler!!.postDelayed(mRunnable, 5000)
+        mHandler!!.postDelayed(mRunnable, 2000)
     }
 
     private val mRunnable = object : Runnable {
@@ -370,7 +398,7 @@ class DeliveryMapFragment : Fragment()
 
             viewModel.repository.refreshDeliveries(user_lat!!,user_lon!!,isFavour)
 
-            mHandler?.postDelayed(this, 5000)
+            mHandler?.postDelayed(this, 2000)
         }
     }
 

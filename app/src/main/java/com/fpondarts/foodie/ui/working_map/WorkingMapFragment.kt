@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.lifecycle.Observer
 import com.fpondarts.foodie.R
+import com.fpondarts.foodie.data.repository.DeliveryRepository
 import com.fpondarts.foodie.data.repository.UserRepository
 import com.fpondarts.foodie.model.Directions
 import com.fpondarts.foodie.model.Route
@@ -38,7 +39,7 @@ class WorkingMapFragment : Fragment(), OnMapReadyCallback, KodeinAware {
     override val kodein by kodein()
 
     val repository: UserRepository by instance()
-    val deliveryRepository: UserRepository by instance()
+    val deliveryRepository: DeliveryRepository by instance()
 
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
     private lateinit var destLatLng: LatLng
@@ -65,7 +66,7 @@ class WorkingMapFragment : Fragment(), OnMapReadyCallback, KodeinAware {
 
         pickedUp = arguments!!.getBoolean("pickedUp")
 
-        isFavour = arguments!!.getBoolean("isFavour")
+        isFavour = arguments!!.getBoolean("isFavour",false)
 
         return inflater.inflate(R.layout.delivery_map_fragment, container, false)
     }

@@ -26,7 +26,10 @@ import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.card_prices.*
 import kotlinx.android.synthetic.main.card_shop.*
 import kotlinx.android.synthetic.main.card_user.*
+import kotlinx.android.synthetic.main.content_active_order.*
 import kotlinx.android.synthetic.main.content_order.*
+import kotlinx.android.synthetic.main.content_order.choose_location_card
+import kotlinx.android.synthetic.main.recycler_order_items.*
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.kodein
 import org.kodein.di.generic.instance
@@ -52,6 +55,8 @@ open class ActiveOrderFragment : Fragment(), KodeinAware {
     private lateinit var order: Order
 
     private lateinit var shop: Shop
+
+    private lateinit var theirFbId:String
 
     private var deliveryMarker:Marker? = null
 
@@ -110,7 +115,7 @@ open class ActiveOrderFragment : Fragment(), KodeinAware {
                                         }
                                     })
                                 }
-
+                                dialog?.dismiss()
                             }
                         })
                     }
@@ -126,13 +131,13 @@ open class ActiveOrderFragment : Fragment(), KodeinAware {
                 })
 
                 if (it.payWithPoints){
-
                     repository.getUser(it.delivery_id).observe(this, Observer {
                         it?.let{
                             tv_user_name.text = it.name
                             tv_email.text = it.email
                             tv_phone.text = it.phone_number
                             Picasso.get().load(it.picture).rotate(90.0.toFloat()).into(profilePic)
+                            theirFbId = it.firebase_uid!!
                         }
                     })
                 } else {
@@ -142,8 +147,18 @@ open class ActiveOrderFragment : Fragment(), KodeinAware {
                             tv_email.text = it.email
                             tv_phone.text = it.phone_number
                             Picasso.get().load(it.picture).rotate(90.0.toFloat()).into(profilePic)
+                            theirFbId = it.firebase_uid!!
                         }
                     })
+                }
+
+                chat_card.setOnClickListener {
+                    val bundle = Bundle().apply {
+                        putLong("order_id", orderId!!)
+                        putString("my_id", repository.currentUser.value!!.firebase_uid)
+                        putString("their_id", theirFbId)
+                    }
+                    findNavController().navigate(R.id.action_activeOrderFragment_to_conversationFragment3,bundle)
                 }
 
 

@@ -21,11 +21,15 @@ import com.fpondarts.foodie.data.repository.UserRepository
 import com.fpondarts.foodie.model.OrderPricedItem
 import com.fpondarts.foodie.ui.delivery.offers.OrderAdapter
 import com.squareup.picasso.Picasso
+import kotlinx.android.synthetic.main.card_pick_up.*
 import kotlinx.android.synthetic.main.card_prices.*
 import kotlinx.android.synthetic.main.card_shop.*
 import kotlinx.android.synthetic.main.card_user.*
+import kotlinx.android.synthetic.main.content_active_order.*
 import kotlinx.android.synthetic.main.content_order.*
+import kotlinx.android.synthetic.main.content_order.choose_location_card
 import kotlinx.android.synthetic.main.fragment_working.*
+import kotlinx.android.synthetic.main.recycler_order_items.*
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.kodein
 import org.kodein.di.generic.instance
@@ -46,6 +50,7 @@ class WorkingFavourFragment : Fragment(), KodeinAware {
 
     private lateinit var shop: Shop
     private lateinit var order: Order
+    private lateinit var theirFbId: String
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -94,6 +99,7 @@ class WorkingFavourFragment : Fragment(), KodeinAware {
                         tv_user_name.text = it.name
                         tv_email.text = it.email
                         tv_phone.text = it.phone_number
+                        theirFbId= it.firebase_uid!!
                     }
                 })
 
@@ -130,9 +136,21 @@ class WorkingFavourFragment : Fragment(), KodeinAware {
                         })
                     }
                 })
+
+                chat_card.setOnClickListener {
+                    val bundle = Bundle().apply {
+                        putLong("order_id",order_id!!)
+                        putString("my_id",repository.currentUser.value!!.firebase_uid)
+                        putString("their_id",theirFbId)
+                    }
+                    findNavController().navigate(R.id.action_workingFavourFragment_to_conversationFragment,bundle)
+                }
+
                 order.removeObservers(this)
             }
         })
+
+
 
         finish_order_card.setOnClickListener(View.OnClickListener {
             if (this.order.state == "pickedUp"){

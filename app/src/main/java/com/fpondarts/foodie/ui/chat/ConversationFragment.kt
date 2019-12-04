@@ -40,7 +40,10 @@ class ConversationFragment : Fragment(), KodeinAware, ChildEventListener {
     override fun onChildAdded(p0: DataSnapshot, p1: String?) {
         val message = p0.getValue(ChatMessage::class.java)
         message?.let{
+            if (it.from != their_id && it.from == my_id)
+                return
             messageList.add(message)
+            recyclerview_message_list.adapter!!.notifyItemInserted(messageList.size - 1)
         }
     }
 
@@ -64,6 +67,9 @@ class ConversationFragment : Fragment(), KodeinAware, ChildEventListener {
     ): View? {
 
         database = FirebaseDatabase.getInstance().reference
+        if (database == null){
+            Toast.makeText(activity,"No se pudo conectar al chat",Toast.LENGTH_LONG).show()
+        }
 
         order_id = arguments!!.getLong("order_id")
         my_id = arguments!!.getString("my_id", "")
@@ -74,6 +80,9 @@ class ConversationFragment : Fragment(), KodeinAware, ChildEventListener {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+
+        sending_message.visibility = View.GONE
+
 
         recyclerview_message_list.apply {
             layoutManager = LinearLayoutManager(activity)

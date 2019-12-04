@@ -7,14 +7,13 @@
     xmlns:tools="http://schemas.android.com/tools">
 
 <androidx.constraintlayout.widget.ConstraintLayout
-
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     >
 
     <include
         android:id="@+id/order_content"
-        layout="@layout/content_order"
+        layout="@layout/content_active_order"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"

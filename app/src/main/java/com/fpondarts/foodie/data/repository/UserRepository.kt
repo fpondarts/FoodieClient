@@ -124,6 +124,23 @@ class UserRepository(
         return offers
     }
 
+
+    fun getFavourOffer(offer_id:Long):LiveData<FavourOffer>{
+        val observedOffer = MutableLiveData<FavourOffer>().apply {
+            value = null
+        }
+
+        Coroutines.io {
+            try {
+                val apiResponse = apiRequest { api.getFavourOffer(token!!,offer_id) }
+                observedOffer!!.postValue(apiResponse)
+            } catch (e:FoodieApiException){
+                apiError.postValue(e)
+            }
+        }
+        return observedOffer!!
+    }
+
     fun acceptOffer(offer_id:Long):LiveData<Boolean>{
 
         val successResponse = MutableLiveData<Boolean>().apply{
@@ -321,6 +338,9 @@ class UserRepository(
                    availableDeliveries.postValue(response)
                } else {
                    val response = apiRequest { api.getFavourUsers(token!!,lat_rounded,lon_roundded) }
+                   response.removeIf {
+                       it.user_id == userId
+                   }
                    availableDeliveries.postValue(response)
                }
            } catch (e: FoodieApiException){
@@ -391,7 +411,7 @@ class UserRepository(
                     ,"onWay") }
                 val pickedUp = apiRequest { api.getOrdersByState(token!!
                     ,currentUser.value!!.user_id!!
-                    ,"onWay") }
+                    ,"pickedUp") }
                 val ans = ArrayList<Order>()
                 ans.addAll(onWay)
                 ans.addAll(pickedUp)
@@ -449,8 +469,8 @@ class UserRepository(
                         Coordinates(latitude,longitude))
                 }
                 liveData.postValue(true)
-                currentUser.value!!.latitude = latitude
-                currentUser.value!!.longitude = longitude
+                currentUser.value?.latitude = latitude
+                currentUser.value?.longitude = longitude
             } catch (e:FoodieApiException){
                 apiError.postValue(e)
                 liveData.postValue(false)
@@ -614,6 +634,30 @@ class UserRepository(
         }
         return liveUser
     }
+
+    override fun getDeliveredByMe():LiveData<List<Order>>{
+        val liveData = db.getOrderDao().getAll()
+
+        if (liveData.value.isNullOrEmpty()){
+            Coroutines.io {
+                try {
+                    val response = apiRequest { api.getDeliveredBy(token!!,userId!!) }
+                    db.getOrderDao().upsert(response)
+                } catch (e: FoodieApiException){
+                    if (e.code == 500){
+                        delay(500)
+                        getDeliveredByMe()
+                    }
+                }
+            }
+
+
+        }
+
+
+        return liveData
+    }
+
 
 
     fun changeOrderState(order_id:Long, state:String="delivery"):LiveData<Boolean>{

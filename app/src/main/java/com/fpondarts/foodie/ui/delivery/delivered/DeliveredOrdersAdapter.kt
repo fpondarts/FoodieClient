@@ -20,7 +20,8 @@ class DeliveredOrdersAdapter(private val list: List<Order>, val listener: OnDeli
     }
 
     override fun onBindViewHolder(holder: DeliveredOrderViewHolder, position: Int) {
-
+        val order = list[position]
+        holder.bind(order,listener)
     }
 
 

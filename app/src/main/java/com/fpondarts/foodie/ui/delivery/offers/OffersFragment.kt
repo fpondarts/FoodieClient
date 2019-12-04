@@ -163,7 +163,7 @@ class OffersFragment : Fragment(), OnOfferItemClickListener, KodeinAware {
                             Log.d("OfferItem: ","${offer.id.toString()}")
                             val item = OfferItem(
                                 offer.created_at_seconds!!,
-                                offer.delivery_price,
+                                offer.delivery_pay,
                                 offer.id,
                                 offer.order_id
                             )

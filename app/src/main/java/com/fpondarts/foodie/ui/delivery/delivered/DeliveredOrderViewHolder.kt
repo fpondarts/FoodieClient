@@ -21,13 +21,13 @@ class DeliveredOrderViewHolder(inflater: LayoutInflater, parent: ViewGroup):
 
     init{
         mOrderId = itemView.findViewById(R.id.tv_order_id)
-        mDate = itemView.findViewById(R.id.order_date)
-        mPrice = itemView.findViewById(R.id.order_card_price)
+        mDate = itemView.findViewById(R.id.tv_order_date)
+        mPrice = itemView.findViewById(R.id.tv_earnings)
         mCard = itemView.findViewById(R.id.order_card)
 
     }
 
-    fun bind(order: Order, listener: OnMyOrderClickListener, active:Boolean){
+    fun bind(order: Order, listener: OnDeliveredOrderClickListener){
         mOrderId!!.text = "Orden # ${order.order_id}"
         mDate!!.text = order.created_at.substring(0,17)
         if (!order.payWithPoints){
@@ -35,7 +35,7 @@ class DeliveredOrderViewHolder(inflater: LayoutInflater, parent: ViewGroup):
             mPrice!!.text = "Ganancia: $${number2digits.toString()}"
         }
         mCard.setOnClickListener(View.OnClickListener {
-            listener.onActiveOrderClick(active,order.order_id,order.shop_id,order.delivery_id)
+            listener.onOrderClick(order.order_id,order.payWithPoints)
         })
     }
 

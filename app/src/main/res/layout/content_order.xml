@@ -26,48 +26,20 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/user_card" />
 
-    <com.google.android.material.card.MaterialCardView
+    <include
+        layout="@layout/card_choose_location"
         android:layout_width="match_parent"
-        android:layout_height="64dp"
+        android:layout_height="wrap_content"
         android:id="@+id/choose_location_card"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="16dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/shop_card">
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <ImageView
-                android:id="@+id/choose_location_iv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="24dp"
-                android:layout_marginLeft="24dp"
-                android:layout_marginTop="17dp"
-                android:src="@android:drawable/ic_menu_mapmode"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <TextView
-                android:layout_width="158dp"
-                android:layout_height="26dp"
-                android:layout_marginStart="68dp"
-                android:layout_marginTop="17dp"
-                android:text="Ver Mapa"
-                android:textSize="18sp"
-                app:layout_constraintStart_toEndOf="@+id/choose_location_iv"
-                app:layout_constraintTop_toTopOf="parent" />
+    </include>
 
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-    </com.google.android.material.card.MaterialCardView>
-
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/items_recycler_view"
+    <include
+        layout="@layout/recycler_order_items"
+        android:id="@+id/recycler_object"
         android:layout_width="match_parent"
         android:layout_height="128dp"
         android:layout_marginTop="8dp"
@@ -80,7 +52,7 @@
         layout="@layout/card_prices"
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
-        app:layout_constraintTop_toBottomOf="@id/items_recycler_view"
+        app:layout_constraintTop_toBottomOf="@id/recycler_object"
         app:layout_constraintStart_toStartOf="parent"
         android:layout_marginTop="8dp"
         />

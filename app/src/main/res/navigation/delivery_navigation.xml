@@ -25,6 +25,10 @@
         <action
             android:id="@+id/action_delivered_orders_to_delivered_order"
             app:destination="@id/delivered_order" />
+        <argument
+            android:name="is_delivery"
+            app:argType="boolean"
+            android:defaultValue="true" />
     </fragment>
 
     <fragment
@@ -37,12 +41,7 @@
             app:argType="long"
             />
         <argument
-            android:name="shop_id"
-            app:argType="long"
-            />
-        <argument
-            android:name="user_id"
-            app:argType="long"
-            />
+            android:name="is_favour"
+            app:argType="boolean" />
     </fragment>
 </navigation>

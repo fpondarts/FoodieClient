@@ -22,14 +22,14 @@ import com.fpondarts.foodie.model.OrderItem
 import com.fpondarts.foodie.model.OrderPricedItem
 import com.google.android.gms.maps.model.LatLng
 import com.squareup.picasso.Picasso
+import kotlinx.android.synthetic.main.card_accept_reject.*
 import kotlinx.android.synthetic.main.card_prices.*
 import kotlinx.android.synthetic.main.card_shop.*
 import kotlinx.android.synthetic.main.card_user.*
 import kotlinx.android.synthetic.main.content_order.*
 import kotlinx.android.synthetic.main.fragment_sign_in.*
 import kotlinx.android.synthetic.main.fragment_single_offer.*
-import kotlinx.android.synthetic.main.fragment_single_offer.button_accept
-import kotlinx.android.synthetic.main.item_offer.*
+import kotlinx.android.synthetic.main.recycler_order_items.*
 import org.kodein.di.KodeinAware
 import org.kodein.di.generic.instance
 import org.kodein.di.android.x.kodein

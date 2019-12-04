@@ -86,7 +86,7 @@ interface FoodieApi {
     suspend fun putTakingFavours(@Header(API_KEY_HEADER)token:String, @Path("id")user_id: Long,@Body request: TakeFavoursRequest):Response<SuccessResponse>
 
     @GET(USERS_PREFIX+"/favours")
-    suspend fun getFavourUsers(@Header(API_KEY_HEADER)token: String, @Query("latitude") lat:Double, @Query("longitude") long:Double,@Query("cantidad")cantidad:Int=10):Response<List<User>>
+    suspend fun getFavourUsers(@Header(API_KEY_HEADER)token: String, @Query("latitude") lat:Double, @Query("longitude") long:Double,@Query("cantidad")cantidad:Int=10):Response<ArrayList<User>>
 
 
     // PRODUCTS
@@ -137,6 +137,9 @@ interface FoodieApi {
 
     @GET("users/{id}/favour_offers")
     suspend fun getCurrentFavourOffers(@Header(API_KEY_HEADER) token:String, @Path("id")user_id:Long):Response<List<FavourOffer>>
+
+    @GET("favour_offers/{id}")
+    suspend fun getFavourOffer(@Header(API_KEY_HEADER) token: String, @Path("id") offer_id:Long):Response<FavourOffer>
 
     companion object {
 

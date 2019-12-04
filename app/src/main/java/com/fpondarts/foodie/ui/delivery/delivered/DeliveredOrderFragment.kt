@@ -25,6 +25,7 @@ import kotlinx.android.synthetic.main.card_rated.*
 import kotlinx.android.synthetic.main.card_shop.*
 import kotlinx.android.synthetic.main.card_user.*
 import kotlinx.android.synthetic.main.content_order.*
+import kotlinx.android.synthetic.main.recycler_order_items.*
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.kodein
 import org.kodein.di.generic.instance
@@ -54,7 +55,6 @@ class DeliveredOrderFragment : Fragment(), KodeinAware {
         //fragment
 
         order_id = arguments!!.getLong("order_id")
-
         favour = arguments!!.getBoolean("is_favour")
 
         if (favour){
@@ -112,6 +112,7 @@ class DeliveredOrderFragment : Fragment(), KodeinAware {
                                     })
                                 }
                             }
+                            dialog?.dismiss()
                         })
                     }
                 })

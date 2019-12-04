@@ -14,25 +14,24 @@
 
         <ImageView
             android:id="@+id/choose_location_iv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="24dp"
-            android:layout_marginLeft="24dp"
-            android:layout_marginTop="17dp"
-            android:src="@android:drawable/ic_menu_mapmode"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:layout_marginStart="28dp"
+            android:layout_marginTop="8dp"
+            android:src="@drawable/ic_map_foreground"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/choose_location_title"
-            android:layout_width="158dp"
-            android:layout_height="26dp"
-            android:layout_marginStart="68dp"
-            android:layout_marginTop="17dp"
+            style="@style/TextAppearance.MaterialComponents.Headline5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:text="Ver Mapa"
-            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="@id/choose_location_iv"
             app:layout_constraintStart_toEndOf="@+id/choose_location_iv"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="@+id/choose_location_iv" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

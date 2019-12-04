@@ -6,10 +6,10 @@ import com.google.firebase.database.Exclude
 @Entity
 data class ChatMessage(
    // val orderId: Long,
-    val from: String,
-    val to: String,
-    val body: String,
-    val timestamp: Long
+    var from: String="",
+    var to: String="",
+    var body: String="",
+    var timestamp: Long=0
 ) {
 
     @Exclude
@@ -21,4 +21,6 @@ data class ChatMessage(
             "timestamp" to timestamp
         )
     }
+
+
 }

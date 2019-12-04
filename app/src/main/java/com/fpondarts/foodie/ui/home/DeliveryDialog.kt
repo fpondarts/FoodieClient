@@ -128,15 +128,36 @@ class DeliveryDialog(
             if (withPoints){
                 if (points.text.isNullOrBlank()){
                     Toast.makeText(activity,"Debe ingresar los puntos a ofrecer",Toast.LENGTH_LONG).show()
+                    progressBar.visibility = View.GONE
+
                 }
                 else {
                     val number = points.text.toString().toInt()
                     if (number <= 0){
                         Toast.makeText(activity,"Debe ofrecer al menos 1 punto",Toast.LENGTH_LONG).show()
+                        progressBar.visibility = View.GONE
+
                     } else if (number > repository.currentUser.value!!.favourPoints){
                         Toast.makeText(activity,"No tienes suficientes puntos",Toast.LENGTH_LONG).show()
+                        progressBar.visibility = View.GONE
+
                     } else {
-                        repository.postFavourOffer(delivery_id,order_id,number)
+                        repository.postFavourOffer(delivery_id,order_id,number).observe(
+                            this, Observer {
+                                it?.let {
+                                    if (it > 0){
+                                        repository.currentOfferId.postValue(it)
+                                        Toast.makeText(activity,"Esperando respuesta del delivery",Toast.LENGTH_LONG).show()
+                                        dismiss()
+                                    } else {
+                                        Toast.makeText(activity,"No se pudo realizar la oferta",Toast.LENGTH_LONG).show()
+                                        offer_button.isEnabled = true
+                                        cancel_button.isEnabled = true
+                                    }
+                                    progressBar.visibility = View.GONE
+                                }
+                            }
+                        )
                     }
                 }
             } else {
@@ -169,43 +190,51 @@ class DeliveryDialog(
         val delivery_id = arguments!!.getLong("delivery_id")
 
 
+        delivery_rating.isEnabled = false
+
         if (withPoints){
             price_tv.text = "No aplica"
 
             repository.getUser(delivery_id).observe(this, Observer {
+                it?.let{
+                    delivery_rating.rating = it.rating.toFloat()
+                    delivery_name.text = it.name
 
-                delivery_rating.rating = it.rating.toFloat()
-                delivery_name.text = it.name
+                    Picasso.get().load(it.picture)
+                        .resize(80,80)
+                        .rotate(270.0.toFloat()).into(delivery_pic)
 
-                Picasso.get().load(it.picture)
-                    .resize(80,80)
-                    .rotate(270.0.toFloat()).into(delivery_pic)
+                    caption_user_points.text = "Tienes ${repository.currentUser.value!!.favourPoints} puntos"
+                }
 
             })
+        } else {
+            repository.getDelivery(delivery_id).observe(this, Observer {
+                it?.let{
+                    delivery_rating.rating = it.rating.toFloat()
+                    delivery_name.text = it.name
+                    caption_user_points.visibility = View.INVISIBLE
+
+                    val price = arguments!!.getDouble("price",0.0)
+
+                    if (withPoints){
+                        price_tv.text = "No aplica"
+                    } else {
+                        if (price == 0.0)
+                            price_tv.text = "Gratis!"
+                        else
+                            price_tv.text = "$${(round(price * 100.0) / 100.0)}}"
+                    }
+
+                    Picasso.get().load(it.picture)
+                        .resize(80,80)
+                        .rotate(270.0.toFloat()).into(delivery_pic)
+                }
+            })
+
         }
 
 
-        repository.getDelivery(delivery_id).observe(this, Observer {
-            it?.let{
-                delivery_rating.rating = it.rating.toFloat()
-                delivery_name.text = it.name
-
-                val price = arguments!!.getDouble("price",0.0)
-
-                if (withPoints){
-                    price_tv.text = "No aplica"
-                } else {
-                    if (price == 0.0)
-                        price_tv.text = "Gratis!"
-                    else
-                        price_tv.text = "$${(round(price * 100.0) / 100.0)}}"
-                }
-
-                Picasso.get().load(it.picture)
-                    .resize(80,80)
-                    .rotate(270.0.toFloat()).into(delivery_pic)
-            }
-        })
 
     }
 

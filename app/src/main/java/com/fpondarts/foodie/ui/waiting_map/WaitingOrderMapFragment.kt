@@ -109,17 +109,30 @@ class WaitingOrderMapFragment : Fragment(), OnMapReadyCallback, KodeinAware {
                     pickedUp = (it.state == "pickedUp")
                     if (pickedUp)
                         shopLatLng = null
+                    if (isFavour){
+                        repository.getUser(it.delivery_id).observe(this@WaitingOrderMapFragment, Observer {
+                            it?.let{
+                                deliveryLatLng = LatLng(it.latitude,it.longitude)
+                                repository.getRoute(deliveryLatLng,destLatLng,shopLatLng).observe(this@WaitingOrderMapFragment, Observer{
+                                    it?.let{
+                                        drawRoutes(it)
+                                    }
+                                })
+                            }
+                        })
+                    } else {
+                        repository.getDelivery(it.delivery_id).observe(this@WaitingOrderMapFragment, Observer {
+                            it?.let{
+                                deliveryLatLng = LatLng(it.latitude,it.longitude)
+                                repository.getRoute(deliveryLatLng,destLatLng,shopLatLng).observe(this@WaitingOrderMapFragment, Observer{
+                                    it?.let{
+                                        drawRoutes(it)
+                                    }
+                                })
+                            }
+                        })
+                    }
 
-                    repository.getUser(it.delivery_id).observe(this@WaitingOrderMapFragment, Observer {
-                        it?.let{
-                            deliveryLatLng = LatLng(it.latitude,it.longitude)
-                            repository.getRoute(deliveryLatLng,destLatLng,shopLatLng).observe(this@WaitingOrderMapFragment, Observer{
-                                it?.let{
-                                    drawRoutes(it)
-                                }
-                            })
-                        }
-                    })
                 }
 
             })

@@ -14,6 +14,8 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.fpondarts.foodie.R
 import com.fpondarts.foodie.data.repository.DeliveryRepository
+import com.fpondarts.foodie.data.repository.UserRepository
+import com.fpondarts.foodie.data.repository.interfaces.OrderRepository
 import com.fpondarts.foodie.ui.my_orders.OnMyOrderClickListener
 import kotlinx.android.synthetic.main.fragment_delivered_orders.*
 import org.kodein.di.KodeinAware
@@ -28,23 +30,34 @@ import org.kodein.di.generic.instance
 class DeliveredOrdersFragment : Fragment(), KodeinAware, OnDeliveredOrderClickListener {
 
 
-    override fun onOrderClick(order_id: Long, shop_id: Long, user_id: Long) {
+    override fun onOrderClick(order_id: Long, isFavour: Boolean) {
         val bundle = bundleOf().apply {
             putLong("order_id", order_id)
-            putLong("shop_id",shop_id)
-            putLong("user_id",user_id)
+            putBoolean("is_favour",isFavour)
         }
         findNavController().navigate(R.id.action_delivered_orders_to_delivered_order,bundle)
     }
 
     override val kodein by kodein()
 
-    val repository : DeliveryRepository by instance()
+    private lateinit var repository: OrderRepository
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
+
+        val isDelivery = arguments!!.getBoolean("is_delivery",false)
+
+        if (isDelivery){
+            val delRepo : DeliveryRepository by instance()
+            repository = delRepo
+        } else {
+            val userRepo : UserRepository by instance()
+            repository = userRepo
+
+        }
 
         return inflater.inflate(R.layout.fragment_delivered_orders,container,false)
     }

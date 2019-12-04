@@ -14,5 +14,6 @@ data class Offer(
     val delivery_id:Long,
     val state: String,
     val created_at_seconds:Long?,
-    val delivery_price:Float
+    val delivery_price:Float,
+    val delivery_pay:Float
 )

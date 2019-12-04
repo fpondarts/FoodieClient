@@ -92,6 +92,9 @@
             <action
                 android:id="@+id/action_activeOrderFragment_to_waitingOrderMapFragment"
                 app:destination="@id/waitingOrderMapFragment" />
+            <action
+                android:id="@+id/action_activeOrderFragment_to_conversationFragment3"
+                app:destination="@id/conversationFragment3" />
         </fragment>
         <fragment
             android:id="@+id/pastOrderFragment"
@@ -126,6 +129,20 @@
                 android:name="pickedUp"
                 app:argType="boolean" />
         </fragment>
+        <fragment
+            android:id="@+id/conversationFragment3"
+            android:name="com.fpondarts.foodie.ui.chat.ConversationFragment"
+            android:label="Chat">
+            <argument
+                android:name="my_id"
+                app:argType="string" />
+            <argument
+                android:name="their_id"
+                app:argType="string" />
+            <argument
+                android:name="order_id"
+                app:argType="long" />
+        </fragment>
     </navigation>
     <fragment
         android:id="@+id/favours_nav_home"
@@ -139,5 +156,28 @@
         <action
             android:id="@+id/action_shopsMapFragment_to_shopFragment"
             app:destination="@id/shopFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/deliveredOrdersFragment"
+        android:name="com.fpondarts.foodie.ui.delivery.delivered.DeliveredOrdersFragment"
+        android:label="DeliveredOrdersFragment" >
+        <action
+            android:id="@+id/action_deliveredOrdersFragment_to_deliveredOrderFragment"
+            app:destination="@id/deliveredOrderFragment" />
+        <argument
+            android:name="is_delivery"
+            app:argType="boolean"
+            android:defaultValue="false" />
+    </fragment>
+    <fragment
+        android:id="@+id/deliveredOrderFragment"
+        android:name="com.fpondarts.foodie.ui.delivery.delivered.DeliveredOrderFragment"
+        android:label="fragment_delivered_order"
+        tools:layout="@layout/fragment_delivered_order" >
+        <argument android:name="order_id"
+            app:argType="long" />
+        <argument
+            android:name="is_favour"
+            app:argType="boolean" />
     </fragment>
 </navigation>

@@ -21,11 +21,15 @@ import com.fpondarts.foodie.data.repository.DeliveryRepository
 import com.fpondarts.foodie.model.OrderPricedItem
 import com.fpondarts.foodie.ui.delivery.offers.OrderAdapter
 import com.squareup.picasso.Picasso
+import kotlinx.android.synthetic.main.card_pick_up.*
 import kotlinx.android.synthetic.main.card_prices.*
 import kotlinx.android.synthetic.main.card_shop.*
 import kotlinx.android.synthetic.main.card_user.*
+import kotlinx.android.synthetic.main.content_active_order.*
 import kotlinx.android.synthetic.main.content_order.*
+import kotlinx.android.synthetic.main.content_order.choose_location_card
 import kotlinx.android.synthetic.main.fragment_working.*
+import kotlinx.android.synthetic.main.recycler_order_items.*
 import org.kodein.di.generic.instance
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.kodein
@@ -46,6 +50,7 @@ class WorkingFragment : Fragment(), KodeinAware {
 
     private lateinit var shop: Shop
     private lateinit var order: Order
+    private lateinit var theirFbId:String
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -92,6 +97,7 @@ class WorkingFragment : Fragment(), KodeinAware {
                         tv_user_name.text = it.name
                         tv_email.text = it.email
                         tv_phone.text = it.phone_number
+                        theirFbId = it.firebase_uid!!
                     }
                 })
 
@@ -127,16 +133,26 @@ class WorkingFragment : Fragment(), KodeinAware {
                         })
                     }
                 })
+
+                chat_card.setOnClickListener {
+                    val bundle = Bundle().apply {
+                        putLong("order_id", order_id!!)
+                        putString("my_id", repository.currentUser.value!!.firebase_uid)
+                        putString("their_id", theirFbId)
+                    }
+                    findNavController().navigate(R.id.action_workingFragment_to_conversationFragment2,bundle)
+                }
+
                 order.removeObservers(this)
             }
         })
 
         choose_location_card.setOnClickListener {
             val bundle = bundleOf(
-                "shop_lat" to this.shop.latitude,
-                "shop_lon" to this.shop.longitude,
-                "dest_lat" to this.order.latitud,
-                "dest_lon" to this.order.longitud,
+                "shop_lat" to this.shop.latitude.toFloat(),
+                "shop_lon" to this.shop.longitude.toFloat(),
+                "dest_lat" to this.order.latitud.toFloat(),
+                "dest_lon" to this.order.longitud.toFloat(),
                 "pickedUp" to (this.order.state == "pickedUp"),
                 "isFavour" to this.order.payWithPoints
             )

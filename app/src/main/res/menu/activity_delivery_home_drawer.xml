@@ -12,7 +12,10 @@
             android:id="@+id/nav_profile"
             android:title="Cuenta"
             />
-
+        <item
+            android:id="@+id/delivered_orders"
+            android:title="Pedidos entregados"
+            />
         <item android:id="@+id/nav_sign_out"
             android:title="Cerrar sesion"
             />

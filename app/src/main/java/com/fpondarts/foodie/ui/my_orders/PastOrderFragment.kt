@@ -22,6 +22,7 @@ import kotlinx.android.synthetic.main.card_to_rate.view.*
 import kotlinx.android.synthetic.main.card_user.*
 import kotlinx.android.synthetic.main.content_order.*
 import kotlinx.android.synthetic.main.fragment_past_order.*
+import kotlinx.android.synthetic.main.recycler_order_items.*
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.kodein
 import org.kodein.di.generic.instance
