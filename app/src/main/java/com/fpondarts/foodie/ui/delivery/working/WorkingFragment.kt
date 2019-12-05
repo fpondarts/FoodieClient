@@ -168,6 +168,7 @@ class WorkingFragment : Fragment(), KodeinAware {
                         if (it){
                             repository.isWorking.postValue(false)
                             repository.current_order = -1
+                            repository.notifyOrderDelivered(theirFbId,order_id!!)
                             findNavController().navigate(R.id.action_workingFragment_to_offersFragment,null,
                                 NavOptions.Builder().setPopUpTo(R.id.workingFragment,true).build())
                         } else {
@@ -181,6 +182,8 @@ class WorkingFragment : Fragment(), KodeinAware {
                         if (it){
                             this.order.state = "pickedUp"
                             finish_order_tv.text = "Finalizar pedido"
+                            repository.notifyOrderPickedUp(theirFbId,order_id!!)
+
                         } else {
                             Toast.makeText(activity,"Error en la entrega del pedido",Toast.LENGTH_LONG).show()
                         }

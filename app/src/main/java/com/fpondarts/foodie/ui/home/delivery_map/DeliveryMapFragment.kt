@@ -308,7 +308,7 @@ class DeliveryMapFragment : Fragment()
                                         Toast.makeText(activity,"Oferta rechazada",Toast.LENGTH_LONG).show()
                                         viewModel.repository.currentOfferId.postValue(-1)
                                     } else
-                                        viewModel.repository.updateObservedOffer(it.id)
+                                        viewModel.repository.updateObservedOffer(it.id,isFavour)
                                 } else if (it.state == "accepted"){
                                     progressDialog!!.dismiss()
                                     findNavController().navigate(R.id.action_deliveryMapFragment_to_nav_home,

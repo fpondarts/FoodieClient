@@ -15,11 +15,12 @@
             android:id="@+id/rating_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="44dp"
+            style="@style/TextAppearance.MaterialComponents.Headline6"
             android:layout_marginTop="8dp"
             android:text="Tu puntuación"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/reviews_title"/>
 
         <RatingBar
             android:id="@+id/rating"
@@ -29,11 +30,12 @@
             android:layout_marginBottom="8dp"
             android:scaleX="0.5"
             android:scaleY="0.5"
+            android:isIndicator="true"
             android:transformPivotX="0dp"
             android:transformPivotY="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@+id/rating_title"
-            app:layout_constraintHorizontal_bias="0.105"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="@+id/rating_title"
             app:layout_constraintTop_toBottomOf="@id/rating_title"
             app:layout_constraintVertical_bias="0.0" />
@@ -42,9 +44,8 @@
             android:id="@+id/reviews_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="0dp"
             android:text="Calificaciones"
+            style="@style/TextAppearance.MaterialComponents.Headline6"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/rating_title"
             app:layout_constraintTop_toTopOf="@id/rating_title" />
@@ -53,10 +54,10 @@
             android:id="@+id/reviews_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="24dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="4dp"
             android:hint="255"
-            android:textSize="24dp"
+            style="@style/TextAppearance.MaterialComponents.Headline6"
+            app:layout_constraintEnd_toEndOf="@+id/reviews_title"
             app:layout_constraintStart_toStartOf="@id/reviews_title"
             app:layout_constraintTop_toBottomOf="@id/reviews_title" />
 

@@ -223,7 +223,7 @@ class DeliveryDialog(
                         if (price == 0.0)
                             price_tv.text = "Gratis!"
                         else
-                            price_tv.text = "$${(round(price * 100.0) / 100.0)}}"
+                            price_tv.text = "$${(round(price * 100.0) / 100.0)}"
                     }
 
                     Picasso.get().load(it.picture)

@@ -4,10 +4,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import com.fpondarts.foodie.data.repository.UserRepository
 import com.fpondarts.foodie.ui.auth.AuthListener
+import kotlin.math.round
 
 class ConfirmOrderViewModel(val repository: UserRepository) : ViewModel() {
 
-    val priceStr = "$" + repository.currentOrder?.price!!.toString()
+    val priceStr = "$${(round(repository.currentOrder?.price!! * 100.0) / 100.0).toString()}"
 
 
 
@@ -15,8 +16,8 @@ class ConfirmOrderViewModel(val repository: UserRepository) : ViewModel() {
 
 
 
-    fun confirmOrder(favour:Boolean = false):LiveData<Boolean>{
-        return repository.confirmOrder(favour)
+    fun confirmOrder(discount:Boolean,favour:Boolean = false):LiveData<Boolean>{
+        return repository.confirmOrder(discount,favour)
     }
 
 }

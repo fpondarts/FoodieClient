@@ -25,6 +25,7 @@ data class Order(
     val delivery_review:Float?,
     val delivery_pay:Float?,
     val delivery_price: Float?,
+    var discount: Boolean?,
     val favourPoints:Int?
     ) {
 }

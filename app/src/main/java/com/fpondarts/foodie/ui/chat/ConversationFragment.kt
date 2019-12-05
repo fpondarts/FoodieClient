@@ -1,6 +1,7 @@
 package com.fpondarts.foodie.ui.chat
 
 
+import android.app.ProgressDialog
 import android.opengl.Visibility
 import android.os.Bundle
 import android.util.Log
@@ -40,10 +41,11 @@ class ConversationFragment : Fragment(), KodeinAware, ChildEventListener {
     override fun onChildAdded(p0: DataSnapshot, p1: String?) {
         val message = p0.getValue(ChatMessage::class.java)
         message?.let{
-            if (it.from != their_id && it.from == my_id)
+            if (it.from != their_id && it.from != my_id)
                 return
             messageList.add(message)
             recyclerview_message_list.adapter!!.notifyItemInserted(messageList.size - 1)
+            dialog?.dismiss()
         }
     }
 
@@ -51,6 +53,8 @@ class ConversationFragment : Fragment(), KodeinAware, ChildEventListener {
 
     }
 
+
+    private var dialog: ProgressDialog? = null
     override val kodein by kodein()
 
     private lateinit var database: DatabaseReference
@@ -71,9 +75,11 @@ class ConversationFragment : Fragment(), KodeinAware, ChildEventListener {
             Toast.makeText(activity,"No se pudo conectar al chat",Toast.LENGTH_LONG).show()
         }
 
+
         order_id = arguments!!.getLong("order_id")
         my_id = arguments!!.getString("my_id", "")
         their_id = arguments!!.getString("their_id","")
+
 
         return inflater.inflate(R.layout.fragment_conversation,container,false)
     }
@@ -83,6 +89,9 @@ class ConversationFragment : Fragment(), KodeinAware, ChildEventListener {
 
         sending_message.visibility = View.GONE
 
+        Toast.makeText(activity,"My id: $my_id \n Their id: $their_id",Toast.LENGTH_LONG).show()
+
+        dialog = ProgressDialog.show(activity,"Espere","Cargando mensajes")
 
         recyclerview_message_list.apply {
             layoutManager = LinearLayoutManager(activity)

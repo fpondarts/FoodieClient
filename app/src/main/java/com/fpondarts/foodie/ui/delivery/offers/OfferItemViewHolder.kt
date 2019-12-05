@@ -8,6 +8,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.fpondarts.foodie.R
 import com.fpondarts.foodie.model.OfferItem
+import java.lang.Math.round
 
 class OfferItemViewHolder(inflater: LayoutInflater, parent:ViewGroup):
     RecyclerView.ViewHolder(inflater.inflate(R.layout.item_offer,parent,false)) {
@@ -19,7 +20,7 @@ class OfferItemViewHolder(inflater: LayoutInflater, parent:ViewGroup):
 
     fun bind(item:OfferItem,listener: OnOfferItemClickListener){
         time.text = item.remainingSeconds.toString()
-        earnings.text = "$${(item.earnings * 100.0 / 100.0).toString()}"
+        earnings.text = "$${(round(item.earnings * 100.0) / 100.0).toString()}"
         itemView.findViewById<Button>(R.id.button_accept).setOnClickListener(View.OnClickListener {
             listener.onAcceptClick(item.offer_id,item.order_id)
         })

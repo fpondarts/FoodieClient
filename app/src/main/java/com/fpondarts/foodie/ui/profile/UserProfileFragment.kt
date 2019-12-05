@@ -28,6 +28,8 @@ import kotlinx.android.synthetic.main.fragment_user_profile.*
 import androidx.lifecycle.Observer
 import com.fpondarts.foodie.ui.delivery.account.ChangePasswordFragment
 import com.google.firebase.storage.FirebaseStorage
+import kotlinx.android.synthetic.main.card_change_suscription.*
+import kotlinx.android.synthetic.main.card_suscription.*
 
 /**
  * A simple [Fragment] subclass.
@@ -91,6 +93,12 @@ class UserProfileFragment : DialogFragment(), KodeinAware {
         val suscription = suscription_card.findViewById<TextView>(R.id.suscription_tv)
 
 
+        password_card.setOnClickListener {
+            changePassword()
+        }
+
+
+
 
         repository.refreshUser()
         repository.currentUser.observe(this, Observer {
@@ -110,6 +118,33 @@ class UserProfileFragment : DialogFragment(), KodeinAware {
 
                 points.text = it.favourPoints.toString()
                 suscription.text = it.suscripcion.toString()
+
+                if (it.suscripcion.toString() == "flat"){
+                    change_suscription_title.text = "Obtener suscripción"
+                    change_suscription_card.setOnClickListener {
+                        val dialog = ChangeSuscriptionDialog()
+                        dialog.show(fragmentManager!!,"Change Suscription")
+                        dialog.setTargetFragment(this,1)
+                    }
+                } else {
+                    change_suscription_title.text = "Cancelar suscripción"
+                    change_suscription_card.setOnClickListener {
+                        progressDialog = ProgressDialog.show(activity,"Cancelando suscripcion","Espere")
+                        repository.cancelSuscription().observe(this, Observer {
+                            it?.let{
+                                if (it){
+                                    changeSuscriptionStatus()
+                                    Toast.makeText(activity,"Suscripcion cancelada",Toast.LENGTH_LONG).show()
+                                } else {
+                                    Toast.makeText(activity,"No pudo cancelarse",Toast.LENGTH_LONG).show()
+                                }
+                                progressDialog?.dismiss()
+                            }
+                        })
+                    }
+                }
+
+
             }
         })
 
@@ -239,4 +274,42 @@ class UserProfileFragment : DialogFragment(), KodeinAware {
         val passDialog = ChangePasswordFragment.newInstance(false)
         passDialog.show(fragmentManager!!,"ChangePassword")
     }
+
+    fun changeSuscriptionStatus(){
+        if (suscription_tv.text == "flat"){
+            suscription_tv.text = "premium"
+            change_suscription_title.text = "Cancelar suscripcion"
+            change_suscription_card.setOnClickListener {
+                progressDialog = ProgressDialog.show(activity,"Cancelando suscripcion","Espere")
+                repository.cancelSuscription().observe(this, Observer {
+                    it?.let{
+                        if (it){
+                            changeSuscriptionStatus()
+                            Toast.makeText(activity,"Suscripcion cancelada",Toast.LENGTH_LONG).show()
+                        } else {
+                            Toast.makeText(activity,"No pudo cancelarse",Toast.LENGTH_LONG).show()
+                        }
+                        progressDialog?.dismiss()
+                    }
+                })
+            }
+        }
+        else {
+            if (suscription_tv.text == "premium"){
+                suscription_tv.text = "flat"
+                change_suscription_title.text = "Obtener suscripcion"
+                change_suscription_card.setOnClickListener {
+                    change_suscription_card.setOnClickListener {
+                        val dialog = ChangeSuscriptionDialog()
+                        dialog.setTargetFragment(this,1)
+                        dialog.show(fragmentManager!!,"Change Suscription")
+                    }
+                }
+            }
+        }
+
+    }
+
+
+
 }

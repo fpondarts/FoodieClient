@@ -27,6 +27,8 @@ import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.location.*
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.iid.FirebaseInstanceId
+import com.google.firebase.messaging.FirebaseMessaging
 import com.karumi.dexter.Dexter
 import com.karumi.dexter.PermissionToken
 import com.karumi.dexter.listener.PermissionDeniedResponse
@@ -50,6 +52,8 @@ class HomeActivity : AppCompatActivity(), KodeinAware {
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
 
     private lateinit var appBarConfiguration: AppBarConfiguration
+
+    private lateinit var fb_uid: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -75,10 +79,14 @@ class HomeActivity : AppCompatActivity(), KodeinAware {
 
         repository.initUser(token,id)
 
+
+
         repository.currentUser.observe(this, Observer {
             it?.let{
                 drawer_user_name?.text = it.name
                 drawer_user_email?.text = it.email
+                fb_uid = it.firebase_uid!!
+                connectToFcm(it.firebase_uid!!)
             }
         })
 
@@ -234,4 +242,23 @@ class HomeActivity : AppCompatActivity(), KodeinAware {
 
     }
 
+    fun connectToFcm(uid:String){
+        FirebaseMessaging.getInstance().subscribeToTopic(uid)
+        .addOnCompleteListener{
+            if (it.isSuccessful){
+
+            } else {
+                connectToFcm(uid)
+            }
+        }
+
+    }
+
+
+    override fun onDestroy() {
+        super.onDestroy()
+        FirebaseMessaging.getInstance().unsubscribeFromTopic(fb_uid)
+    }
+
 }
+

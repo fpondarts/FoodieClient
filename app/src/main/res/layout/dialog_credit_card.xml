@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/credit_card_dialog_title"
+        style="@style/TextAppearance.MaterialComponents.Headline6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text="Ingrese sus datos"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.02"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        style="@style/TextAppearance.MaterialComponents.Subtitle2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Número de tarjeta"
+        app:layout_constraintBottom_toTopOf="@+id/card_number_et"
+        app:layout_constraintStart_toStartOf="@+id/card_number_et" />
+
+    <EditText
+        android:id="@+id/card_number_et"
+        android:layout_width="310dp"
+        android:layout_height="57dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="44dp"
+        android:inputType="number"
+        android:maxLength="16"
+        app:layout_constraintStart_toStartOf="@+id/credit_card_dialog_title"
+        app:layout_constraintTop_toBottomOf="@+id/credit_card_dialog_title" />
+
+
+    <TextView
+        style="@style/TextAppearance.MaterialComponents.Subtitle2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="CVV"
+        android:inputType="number"
+        app:layout_constraintBottom_toTopOf="@+id/card_cvv_et"
+        app:layout_constraintStart_toStartOf="@+id/card_cvv_et" />
+
+    <EditText
+        android:id="@+id/card_cvv_et"
+        android:layout_width="120dp"
+        android:layout_height="55dp"
+        android:layout_marginTop="24dp"
+        android:maxLength="4"
+        app:layout_constraintStart_toStartOf="@id/card_number_et"
+        app:layout_constraintTop_toBottomOf="@id/card_number_et" />
+
+
+    <Button
+        android:id="@+id/suscribe_accept"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="28dp"
+        android:text="ACEPTAR"
+        app:layout_constraintEnd_toStartOf="@id/suscribe_cancel"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/card_cvv_et" />
+
+    <Button
+        android:id="@+id/suscribe_cancel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="CANCELAR"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/suscribe_accept"
+        app:layout_constraintTop_toTopOf="@+id/suscribe_accept" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

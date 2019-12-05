@@ -18,11 +18,13 @@ import com.fpondarts.foodie.R
 import com.fpondarts.foodie.databinding.ConfirmOrderFragmentBinding
 import com.fpondarts.foodie.ui.auth.AuthListener
 import com.fpondarts.foodie.ui.FoodieViewModelFactory
+import kotlinx.android.synthetic.main.card_choose_discount.*
 import kotlinx.android.synthetic.main.confirm_order_fragment.*
 import kotlinx.android.synthetic.main.confirm_order_fragment.view.*
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.kodein
 import org.kodein.di.generic.instance
+import kotlin.math.round
 
 class ConfirmOrderFragment : Fragment(), AuthListener, KodeinAware {
 
@@ -68,11 +70,18 @@ class ConfirmOrderFragment : Fragment(), AuthListener, KodeinAware {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
+        rb_money_price.isChecked = true
+
+        val price_with_discount = viewModel!!.repository.currentOrder!!.price * 0.8
+
+        tv_price_with_discount.text = "$${(round(100.0 * price_with_discount) / 100.0).toString()}"
 
         button_confirm_order.setOnClickListener(View.OnClickListener {
 
+            val discount = discount_checkbox.isChecked
+
             if (rb_money_price.isChecked){
-                viewModel!!.confirmOrder().observe(this, Observer {
+                viewModel!!.confirmOrder(discount,false).observe(this, Observer {
                     it?.let {
                         if (it) {
 
@@ -99,7 +108,7 @@ class ConfirmOrderFragment : Fragment(), AuthListener, KodeinAware {
                     }
                 })
             } else {
-                viewModel!!.confirmOrder(true).observe(this, Observer {
+                viewModel!!.confirmOrder(discount,true).observe(this, Observer {
                     it?.let {
                         if (it) {
 

@@ -101,7 +101,8 @@ class OffersFragment : Fragment(), OnOfferItemClickListener, KodeinAware {
     override fun onResume() {
         super.onResume()
         Log.d("Offers","Resumed")
-        useHandler()
+        if (mHandler == null)
+            useHandler()
     }
 
 

@@ -29,6 +29,7 @@ import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.location.*
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.messaging.FirebaseMessaging
 import com.karumi.dexter.Dexter
 import com.karumi.dexter.PermissionToken
 import com.karumi.dexter.listener.PermissionDeniedResponse
@@ -52,6 +53,8 @@ class DeliveryHomeActivity : AppCompatActivity(), KodeinAware {
     private lateinit var locationRequest: LocationRequest
 
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
+
+    private lateinit var fb_uid:String
 
     private val REQUEST_CHECK_SETTINGS = 999
 
@@ -92,6 +95,8 @@ class DeliveryHomeActivity : AppCompatActivity(), KodeinAware {
             it?.let{
                 drawer_user_name.text = it.name
                 drawer_user_email.text = it.email
+                fb_uid = it.firebase_uid
+                connectToFcm(it.firebase_uid)
             }
         })
 
@@ -106,6 +111,7 @@ class DeliveryHomeActivity : AppCompatActivity(), KodeinAware {
         // 3 es el índice del item logout
         navView.menu.getItem(3).setOnMenuItemClickListener {
             FirebaseAuth.getInstance().signOut()
+            FirebaseMessaging.getInstance().unsubscribeFromTopic(repository.currentUser.value!!.firebase_uid)
             val repository : AuthRepository by instance()
             repository.role = null
             repository.userId = null
@@ -221,6 +227,22 @@ class DeliveryHomeActivity : AppCompatActivity(), KodeinAware {
     }
 
 
+    fun connectToFcm(uid:String){
+        FirebaseMessaging.getInstance().subscribeToTopic(uid)
+            .addOnCompleteListener{
+                if (it.isSuccessful){
+
+                } else {
+                    connectToFcm(uid)
+                }
+            }
+    }
+
+
+    override fun onDestroy() {
+        super.onDestroy()
+        FirebaseMessaging.getInstance().unsubscribeFromTopic(fb_uid)
+    }
 
 
 }

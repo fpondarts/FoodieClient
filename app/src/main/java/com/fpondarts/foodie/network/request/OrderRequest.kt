@@ -11,6 +11,7 @@ data class OrderRequest (
     val favourPoints:Int?,
     val price:Float?,
     val user_id:Long,
+    var discount:Boolean,
     val state:String = "created"
 ){
 

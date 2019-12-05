@@ -1,5 +1,6 @@
 package com.fpondarts.foodie.network
 
+import androidx.lifecycle.LiveData
 import com.fpondarts.foodie.data.db.entity.*
 import com.fpondarts.foodie.model.Coordinates
 import com.fpondarts.foodie.network.request.*
@@ -76,7 +77,7 @@ interface FoodieApi {
     @PATCH(USERS_PREFIX+"/{user_id}/position")
     suspend fun updateCoordinates(@Header(API_KEY_HEADER)token: String, @Path("user_id") userId:Long, @Body coordinates:Coordinates):Response<SuccessResponse>
 
-    @PUT(USERS_PREFIX+"/{user_id}/password")
+    @PATCH(USERS_PREFIX+"/{user_id}")
     suspend fun changePassword(@Header(API_KEY_HEADER)token: String, @Path("user_id") userId:Long, @Body passwordRequest:ChangePasswordRequest):Response<SuccessResponse>
 
     @PUT(USERS_PREFIX+"/{user_id}/picture")
@@ -88,6 +89,14 @@ interface FoodieApi {
     @GET(USERS_PREFIX+"/favours")
     suspend fun getFavourUsers(@Header(API_KEY_HEADER)token: String, @Query("latitude") lat:Double, @Query("longitude") long:Double,@Query("cantidad")cantidad:Int=10):Response<ArrayList<User>>
 
+    @PATCH(USERS_PREFIX+"/{id}")
+    suspend fun patchFcmToken(@Header(API_KEY_HEADER)token:String,@Path("id")id:Long,@Body tokenRequest:UpdateFcmRequest):Response<SuccessResponse>
+
+    @PUT(USERS_PREFIX+"/{id}/premium_subscription")
+    suspend fun upgradeSuscription(@Header(API_KEY_HEADER)token:String,@Path("id")id:Long,@Body suscriptionRequest: SuscriptionRequest):Response<SuccessResponse>
+
+    @DELETE(USERS_PREFIX+"/{id}/premium_subscription")
+    suspend fun cancelSuscription(@Header(API_KEY_HEADER)token:String,@Path("id")id:Long):Response<SuccessResponse>
 
     // PRODUCTS
     @GET("products/{order_id}")

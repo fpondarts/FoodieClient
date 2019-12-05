@@ -12,10 +12,12 @@ import com.fpondarts.foodie.data.repository.interfaces.ShopRepository
 import com.fpondarts.foodie.model.Coordinates
 import com.fpondarts.foodie.model.Directions
 import com.fpondarts.foodie.network.DirectionsApi
+import com.fpondarts.foodie.network.FcmApi
 import com.fpondarts.foodie.network.FoodieApi
 import com.fpondarts.foodie.network.SafeApiRequest
 import com.fpondarts.foodie.network.request.ChangePasswordRequest
 import com.fpondarts.foodie.network.request.StateChangeRequest
+import com.fpondarts.foodie.network.request.UpdateFcmRequest
 import com.fpondarts.foodie.network.request.UpdatePictureRequest
 import com.fpondarts.foodie.network.response.SuccessResponse
 import com.fpondarts.foodie.util.Coroutines
@@ -25,10 +27,15 @@ import com.google.android.gms.maps.model.PolylineOptions
 import com.google.gson.JsonObject
 import kotlinx.coroutines.delay
 import java.lang.Exception
+import org.json.JSONObject
+import android.icu.lang.UCharacter.GraphemeClusterBreak.T
+import com.fpondarts.foodie.network.fcm_data.FcmMessageData
+
 
 class DeliveryRepository(
     private val api:FoodieApi,
     private val directionsApi: DirectionsApi,
+    private val fcmApi: FcmApi,
     private val db:FoodieDatabase
 ): SafeApiRequest()
     ,PositionUpdater
@@ -56,6 +63,9 @@ class DeliveryRepository(
     }
 
     fun initUser(token:String, id:Long){
+        if (token==null || id == null){
+            return
+        }
         this.token = token
         userId = id
         Coroutines.io{
@@ -105,6 +115,27 @@ class DeliveryRepository(
 
         return response
     }
+
+    fun updateFcmToken(token:String):LiveData<Boolean>{
+        val liveBool = MutableLiveData<Boolean>().apply {
+            value = null
+        }
+        Coroutines.io {
+            while (liveBool.value!! == null){
+                try {
+                    val res = apiRequest { api.patchFcmToken(token!!,userId!!, UpdateFcmRequest(token)) }
+                    liveBool.postValue(true)
+                } catch (e: FoodieApiException){
+                    if (e.code!=500){
+                        liveBool.postValue(false)
+                        apiError.postValue(e)
+                    }
+                }
+            }
+        }
+        return liveBool
+    }
+
 
     fun getCurrentOffers():LiveData<List<Offer>>{
         val offers = MutableLiveData<List<Offer>>().apply {
@@ -245,21 +276,23 @@ class DeliveryRepository(
             value = null
         }
         Coroutines.io {
-            try {
-
-                val apiResponse = apiRequest {
-                    api.updateCoordinates(token!!,userId!!,
-                        Coordinates(latitude ,longitude)
-                    )
+            token?.let {
+                try {
+                    val apiResponse = apiRequest {
+                        api.updateCoordinates(token!!,userId!!,
+                            Coordinates(latitude ,longitude)
+                        )
+                    }
+                    liveData.postValue(true)
+                } catch (e:FoodieApiException){
+                    apiError.postValue(e)
+                    liveData.postValue(false)
                 }
-                liveData.postValue(true)
-            } catch (e:FoodieApiException){
-                apiError.postValue(e)
-                liveData.postValue(false)
             }
         }
-        return liveData
+            return liveData
     }
+
 
 
     fun refreshOrder(order_id: Long):LiveData<Order>{
@@ -366,4 +399,51 @@ class DeliveryRepository(
         }
         return liveUser
     }
+
+    fun notifyOrderDelivered(userFbId:String,order_id:Long):LiveData<Boolean>{
+        val live = MutableLiveData<Boolean>().apply {
+            value = null
+        }
+        Coroutines.io{
+            try {
+                val jsonObject = JsonObject()
+                jsonObject.addProperty("to","/topics/$userFbId")
+                val data = JsonObject()
+                data.addProperty("title","Orden $order_id")
+                data.addProperty("message","La orden ha sido entregada")
+                jsonObject.add("data",data)
+                val res = apiRequest { fcmApi.pushNotification(jsonObject) }
+                live.postValue(true)
+            } catch (e:Exception){
+                live.postValue(false)
+            }
+        }
+        return live
+    }
+
+
+    fun notifyOrderPickedUp(userFbId:String,order_id:Long):LiveData<Boolean>{
+        val live = MutableLiveData<Boolean>().apply {
+            value = null
+        }
+        Coroutines.io{
+            try {
+                val jsonObject = JsonObject()
+                jsonObject.addProperty("to","/topics/$userFbId")
+                val data = JsonObject()
+                data.addProperty("title","Orden $order_id")
+                data.addProperty("message","La orden ha sido recogida de la tienda")
+                jsonObject.add("data",data)
+                val res = apiRequest { fcmApi.pushNotification(jsonObject) }
+                live.postValue(true)
+            } catch (e:Exception){
+                live.postValue(false)
+            }
+        }
+        return live
+    }
+
+
+
+
 }
