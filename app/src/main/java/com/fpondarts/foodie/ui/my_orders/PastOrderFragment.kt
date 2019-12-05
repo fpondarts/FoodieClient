@@ -124,6 +124,7 @@ class PastOrderFragment : Fragment(), KodeinAware {
                         it?.let{
                             tv_user_name.text = it.name
                             tv_email.text = it.email
+                            delivery_rating_card.card_rating_name.text = it.name
                             tv_phone.text = it.phone_number
                             Picasso.get().load(it.picture).rotate(90.0.toFloat()).into(profilePic)
                         }

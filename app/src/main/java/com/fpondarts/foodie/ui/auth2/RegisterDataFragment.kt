@@ -151,6 +151,7 @@ class RegisterDataFragment : DialogFragment(), KodeinAware {
                             it?.let {
                                 progressDialog?.dismiss()
                                 if (it) {
+                                    Toast.makeText(activity,"Usuario registrado",Toast.LENGTH_LONG).show()
                                     navController.navigate(
                                         R.id.action_registerDataFragment_to_signInFragment, null,
                                         NavOptions.Builder().setPopUpTo(
@@ -158,6 +159,8 @@ class RegisterDataFragment : DialogFragment(), KodeinAware {
                                             true
                                         ).build()
                                     )
+                                } else {
+                                    Toast.makeText(activity,"Registro fallido, revise sus datos",Toast.LENGTH_LONG).show()
                                 }
                             }
                         })

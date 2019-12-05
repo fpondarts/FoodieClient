@@ -1,6 +1,7 @@
 package com.fpondarts.foodie.ui.auth2
 
 import android.app.Activity
+import android.app.ProgressDialog
 import android.content.Intent
 import androidx.lifecycle.ViewModelProviders
 import android.os.Bundle
@@ -41,6 +42,8 @@ class SignUpFragment : Fragment(),KodeinAware {
         fun newInstance() = SignUpFragment()
     }
 
+    private var progressDialog : ProgressDialog? = null
+
     private val factory:AuthViewModelFactory by instance()
 
     private lateinit var viewModel: SignUpViewModel
@@ -67,8 +70,10 @@ class SignUpFragment : Fragment(),KodeinAware {
         })
 
         signUpButton.setOnClickListener(View.OnClickListener {
+            progressDialog = ProgressDialog.show(activity,"Creando nuevo usuario","Espere")
             if (viewModel.email.value.isNullOrBlank() || viewModel.password.value.isNullOrBlank() || viewModel.name.value.isNullOrBlank()) {
                 Toast.makeText(activity, "Los campos son obligatorios", Toast.LENGTH_LONG).show()
+                progressDialog?.dismiss()
                 return@OnClickListener
             }
             FirebaseAuth.getInstance().createUserWithEmailAndPassword(viewModel.email.value!!,viewModel.password.value!!)
@@ -82,6 +87,7 @@ class SignUpFragment : Fragment(),KodeinAware {
                     } else {
                         Toast.makeText(activity,task.exception?.message,Toast.LENGTH_SHORT).show()
                     }
+                    progressDialog?.dismiss()
                 })
 
 

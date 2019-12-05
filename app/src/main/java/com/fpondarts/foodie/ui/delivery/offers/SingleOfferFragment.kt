@@ -96,7 +96,7 @@ class SingleOfferFragment : Fragment(),KodeinAware{
                 it?.let {
                     if (it){
                         Toast.makeText(activity,"Oferta rechazada",Toast.LENGTH_SHORT).show()
-                        fragmentManager!!.popBackStack()
+                        findNavController().navigate(R.id.offersFragment)
                     }
                 }
             })
